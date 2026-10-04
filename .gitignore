@@ -1,33 +1,79 @@
+# ==========================================
+# 1. BUILD ARTIFACTS & LIBS
+# ==========================================
 target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-### STS ###
+# ==========================================
+# 2. DATABASE & SENSITIVE USER DATA
+# ==========================================
+# Database files (H2, SQLite, DB files)
+*.mv.db
+*.trace.db
+*.db
+*.sqlite
+*.sqlite3
+
+# SQL files containing sensitive personnel data / seed records
+data.sql
+**/data.sql
+seed_*.sql
+backup*.sql
+*.dump
+
+# ==========================================
+# 3. ENVIRONMENT & CREDENTIALS / SECRETS
+# ==========================================
+# Application properties containing passwords / API keys
+application-local.properties
+application-dev.properties
+application-prod.properties
+application-secret.properties
+*.env
+.env*
+secrets.*
+
+# ==========================================
+# 4. LOGS & TEMPORARY FILES
+# ==========================================
+*.log
+logs/
+*.tmp
+*.py
+*.bak
+*.swp
+
+# ==========================================
+# 5. IDE & EDITOR SETTINGS
+# ==========================================
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+out/
+
+# Eclipse / Spring Tool Suite (STS)
 .apt_generated
 .classpath
 .factorypath
 .project
-.settings
+.settings/
 .springBeans
 .sts4-cache
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
+# NetBeans
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbproject/load-from-incubation.xml
 
-### VS Code ###
+# Visual Studio Code
 .vscode/
 
-### Temp scripts ###
-*.py
-*.tmp
-*.log
+# OS metadata
+Thumbs.db
+Desktop.ini
+.DS_Store
