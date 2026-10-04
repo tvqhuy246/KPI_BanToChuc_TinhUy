@@ -1,0 +1,143 @@
+/* GIAO DIỆN HỆ THỐNG ĐÁNH GIÁ KPI - BAN TỔ CHỨC TỈNH ỦY ĐẮK LẮK */
+:root {
+    --primary-red: #a71d2a;
+    --dark-red: #80131d;
+    --navy-blue: #1a365d;
+    --accent-gold: #d4af37;
+    --light-bg: #f8fafc;
+    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--light-bg);
+    color: #334155;
+}
+
+/* Header & Banner Đảng */
+.dang-header {
+    background: linear-gradient(135deg, var(--dark-red) 0%, var(--primary-red) 100%);
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    border-bottom: 3px solid var(--accent-gold);
+}
+
+.dang-logo {
+    width: 48px;
+    height: 48px;
+    margin-right: 12px;
+}
+
+.brand-text h1 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.brand-text small {
+    font-size: 0.82rem;
+    color: #fef08a;
+    font-weight: 500;
+}
+
+/* Thanh điều hướng */
+.navbar-custom {
+    background-color: var(--navy-blue);
+}
+
+.navbar-custom .nav-link {
+    color: #e2e8f0;
+    font-weight: 500;
+    padding: 0.6rem 1rem;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.navbar-custom .nav-link:hover, .navbar-custom .nav-link.active {
+    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Thẻ Dashboard (Cards) */
+.stat-card {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 1.25rem;
+    box-shadow: var(--card-shadow);
+    border-left: 4px solid var(--navy-blue);
+    transition: transform 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+}
+
+.stat-card.red { border-left-color: var(--primary-red); }
+.stat-card.green { border-left-color: #10b981; }
+.stat-card.gold { border-left-color: #f59e0b; }
+
+.stat-card h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0.5rem 0 0 0;
+}
+
+.stat-card span {
+    font-size: 0.85rem;
+    color: #64748b;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* Bảng dữ liệu */
+.table-custom {
+    background: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+}
+
+.table-custom thead {
+    background-color: #f1f5f9;
+    color: #1e293b;
+    font-weight: 600;
+}
+
+/* Badges phân loại */
+.badge-vanban { background-color: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+.badge-hop { background-color: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+.badge-congtac { background-color: #f3e8ff; color: #7e22ce; border: 1px solid #e9d5ff; }
+.badge-congso { background-color: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+
+.badge-kho { background-color: #fee2e2; color: #b91c1c; font-weight: 600; }
+.badge-tb { background-color: #fef9c3; color: #854d0e; }
+.badge-de { background-color: #f1f5f9; color: #475569; }
+
+/* Thể thức văn bản Quyết định */
+.decision-paper {
+    background: #ffffff;
+    padding: 3rem;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 13pt;
+    line-height: 1.4;
+    color: #000000;
+}
+
+.decision-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.decision-title {
+    text-align: center;
+    font-weight: bold;
+    margin: 1.5rem 0;
+    text-transform: uppercase;
+}
