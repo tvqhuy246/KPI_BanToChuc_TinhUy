@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Phê duyệt kết quả - Ban Tổ chức Tỉnh ủy Đắk Lắk</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    
+    <header class="dang-header py-2 px-4 d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+            <i class="fa-solid fa-star text-warning fa-2x me-3"></i>
+            <div class="brand-text">
+                <h1>BAN TỔ CHỨC TỈNH ỦY ĐẮK LẮK</h1>
+                <small>HỆ THỐNG QUẢN LÝ VÀ ĐÁNH GIÁ KPI THEO QUY ĐỊNH 01-QĐ/BTCTU</small>
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-3 text-white">
+            <div class="text-end d-none d-md-block">
+                <div class="fw-bold" th:text="${user != null ? user.fullName : 'Cán bộ'}">Đồng chí</div>
+                <small class="text-warning" th:text="${user != null ? user.roleDisplayName : ''}">Chuyên viên</small>
+            </div>
+            <a th:href="@{/logout}" class="btn btn-outline-light btn-sm"><i class="fa-solid fa-right-from-bracket me-1"></i> Đăng xuất</a>
+        </div>
+    </header>
+    <nav class="navbar navbar-expand-lg navbar-custom py-1 px-4 mb-4">
+        <div class="container-fluid px-0">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1">
+                <li class="nav-item"><a class="nav-link " th:href="@{/}"><i class="fa-solid fa-chart-pie me-1"></i> Bàn làm việc (Dashboard)</a></li>
+                <li class="nav-item"><a class="nav-link " th:href="@{/tasks}"><i class="fa-solid fa-list-check me-1"></i> Nhiệm vụ công tác</a></li>
+                <li class="nav-item"><a class="nav-link " th:href="@{/evaluation}"><i class="fa-solid fa-file-signature me-1"></i> Tự chấm điểm KPI</a></li>
+                <li class="nav-item"><a class="nav-link active" th:href="@{/approvals}"><i class="fa-solid fa-stamp me-1"></i> Đánh giá & Phê duyệt</a></li>
+                <li class="nav-item"><a class="nav-link " th:href="@{/reports}"><i class="fa-solid fa-file-invoice me-1"></i> Báo cáo & Quyết định</a></li>
+                <li class="nav-item"><a class="nav-link" href="/h2-console" target="_blank"><i class="fa-solid fa-database me-1"></i> Tra cứu SQL</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <div class="container-fluid px-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h4 class="fw-bold text-navy mb-1">QUY TRÌNH ĐÁNH GIÁ VÀ PHÊ DUYỆT 2 CHIỀU</h4>
+                <p class="text-muted small mb-0">Thẩm định điểm cán bộ cá nhân và Ban Tổ chức đánh giá Tập thể Phòng chuyên môn</p>
+            </div>
+        </div>
+
+        <ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
+            <li class="nav-item"><button class="nav-link active fw-bold text-danger" id="staff-tab" data-bs-toggle="tab" data-bs-target="#staff" type="button"><i class="fa-solid fa-user-check me-2"></i>Duyệt điểm Cán bộ cá nhân</button></li>
+            <li class="nav-item"><button class="nav-link fw-bold text-navy" id="dept-tab" data-bs-toggle="tab" data-bs-target="#dept" type="button"><i class="fa-solid fa-users-rectangle me-2"></i>Ban Tổ chức đánh giá Tập thể Phòng</button></li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane fade show active" id="staff">
+                <div class="card border-0 shadow-sm rounded-3">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Cán bộ</th>
+                                    <th>Phòng ban</th>
+                                    <th>Điểm tự chấm</th>
+                                    <th>Điểm phê duyệt</th>
+                                    <th>Xếp loại đề xuất</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="ev : ${evaluations}">
+                                    <td class="fw-bold" th:text="${ev.user.fullName}">Đồng chí Phan Văn Cường</td>
+                                    <td th:text="${ev.department.name}">Văn phòng Ban</td>
+                                    <td th:text="${ev.selfScore}">95.0</td>
+                                    <form th:action="@{/approvals/approve}" method="post">
+                                        <input type="hidden" name="evalId" th:value="${ev.id}">
+                                        <td>
+                                            <input type="number" step="0.5" name="finalScore" class="form-control form-control-sm fw-bold" th:value="${ev.finalScore}" style="width: 100px;" required>
+                                        </td>
+                                        <td>
+                                            <select name="ranking" class="form-select form-select-sm">
+                                                <option value="XUAT_SAC" th:selected="${ev.ranking == 'XUAT_SAC'}">Hoàn thành xuất sắc</option>
+                                                <option value="TOT" th:selected="${ev.ranking == 'TOT'}">Hoàn thành tốt</option>
+                                                <option value="HOAN_THANH" th:selected="${ev.ranking == 'HOAN_THANH'}">Hoàn thành nhiệm vụ</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <button type="submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-stamp me-1"></i> Xác nhận duyệt</button>
+                                        </td>
+                                    </form>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="dept">
+                <div class="card border-0 shadow-sm rounded-3 p-4 bg-white">
+                    <h5 class="fw-bold text-danger mb-3"><i class="fa-solid fa-building me-2"></i>BẢNG CHẤM ĐIỂM TẬP THỂ CÁC PHÒNG THUỘC BAN TỔ CHỨC TỈNH ỦY</h5>
+                    <p class="small text-muted mb-4">Thang điểm 100: Tiến độ (30đ) + Chất lượng tham mưu (30đ) + Chuyển đổi số (15đ) + Kỷ cương (15đ) + Điểm trung bình chuyên viên (10đ)</p>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-bordered align-middle">
+                            <thead class="table-light text-center">
+                                <tr>
+                                    <th>Phòng chuyên môn</th>
+                                    <th>Tiến độ (30đ)</th>
+                                    <th>Chất lượng (30đ)</th>
+                                    <th>Số hóa (15đ)</th>
+                                    <th>Kỷ cương (15đ)</th>
+                                    <th>Điểm TB cán bộ (10đ)</th>
+                                    <th>Tổng điểm</th>
+                                    <th>Xếp loại tập thể</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="fw-bold">Phòng Cán bộ</td>
+                                    <td><input type="number" class="form-control form-control-sm text-center" value="28.5"></td>
+                                    <td><input type="number" class="form-control form-control-sm text-center" value="27.0"></td>
+                                    <td><input type="number" class="form-control form-control-sm text-center" value="14.0"></td>
+                                    <td><input type="number" class="form-control form-control-sm text-center" value="15.0"></td>
+                                    <td><input type="number" class="form-control form-control-sm text-center" value="8.9"></td>
+                                    <td class="fw-bold text-danger text-center">93.4</td>
+                                    <td class="text-center"><span class="badge bg-success p-2">Tập thể Xuất sắc</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">Văn phòng Ban</td>
+                                    <td><input type="number" class="form-control form-control-sm text-center" value="29.0"></td>
+                                    <td><input type="number" class="form-control form-control-sm text-center" value="28.0"></td>
+                                    <td><input type="number" class="form-control form-control-sm text-center" value="15.0"></td>
+                                    <td><input type="number" class="form-control form-control-sm text-center" value="15.0"></td>
+                                    <td><input type="number" class="form-control form-control-sm text-center" value="9.6"></td>
+                                    <td class="fw-bold text-danger text-center">96.6</td>
+                                    <td class="text-center"><span class="badge bg-success p-2">Tập thể Xuất sắc</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

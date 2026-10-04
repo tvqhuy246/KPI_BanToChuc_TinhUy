@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Báo cáo & Quyết định - Ban Tổ chức Tỉnh ủy Đắk Lắk</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    
+    <header class="dang-header py-2 px-4 d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+            <i class="fa-solid fa-star text-warning fa-2x me-3"></i>
+            <div class="brand-text">
+                <h1>BAN TỔ CHỨC TỈNH ỦY ĐẮK LẮK</h1>
+                <small>HỆ THỐNG QUẢN LÝ VÀ ĐÁNH GIÁ KPI THEO QUY ĐỊNH 01-QĐ/BTCTU</small>
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-3 text-white">
+            <div class="text-end d-none d-md-block">
+                <div class="fw-bold" th:text="${user != null ? user.fullName : 'Cán bộ'}">Đồng chí</div>
+                <small class="text-warning" th:text="${user != null ? user.roleDisplayName : ''}">Chuyên viên</small>
+            </div>
+            <a th:href="@{/logout}" class="btn btn-outline-light btn-sm"><i class="fa-solid fa-right-from-bracket me-1"></i> Đăng xuất</a>
+        </div>
+    </header>
+    <nav class="navbar navbar-expand-lg navbar-custom py-1 px-4 mb-4">
+        <div class="container-fluid px-0">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1">
+                <li class="nav-item"><a class="nav-link " th:href="@{/}"><i class="fa-solid fa-chart-pie me-1"></i> Bàn làm việc (Dashboard)</a></li>
+                <li class="nav-item"><a class="nav-link " th:href="@{/tasks}"><i class="fa-solid fa-list-check me-1"></i> Nhiệm vụ công tác</a></li>
+                <li class="nav-item"><a class="nav-link " th:href="@{/evaluation}"><i class="fa-solid fa-file-signature me-1"></i> Tự chấm điểm KPI</a></li>
+                <li class="nav-item"><a class="nav-link " th:href="@{/approvals}"><i class="fa-solid fa-stamp me-1"></i> Đánh giá & Phê duyệt</a></li>
+                <li class="nav-item"><a class="nav-link active" th:href="@{/reports}"><i class="fa-solid fa-file-invoice me-1"></i> Báo cáo & Quyết định</a></li>
+                <li class="nav-item"><a class="nav-link" href="/h2-console" target="_blank"><i class="fa-solid fa-database me-1"></i> Tra cứu SQL</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <div class="container px-4">
+        <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h4 class="fw-bold text-navy mb-1">BÁO CÁO TỔNG HỢP & DỰ THẢO QUYẾT ĐỊNH XẾP LOẠI</h4>
+                    <p class="text-muted small mb-0">Căn cứ Quy định số 01-QĐ/BTCTU ngày 28/11/2025 của Ban Tổ chức Tỉnh ủy</p>
+                </div>
+                <a th:href="@{/reports/draft-decision}" class="btn btn-danger py-2 px-3 fw-bold"><i class="fa-solid fa-file-signature me-2"></i> Xem Dự thảo Quyết định</a>
+            </div>
+            
+            <div class="alert alert-info py-2 small d-flex align-items-center mb-4">
+                <i class="fa-solid fa-circle-check fa-lg me-2"></i>
+                <span>Tỷ lệ hoàn thành xuất sắc nhiệm vụ của Ban hiện tại là <strong>18.5%</strong> (Đáp ứng đúng trần khống chế không quá 20% theo quy định của Đảng).</span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>STT</th>
+                            <th>Cán bộ</th>
+                            <th>Vị trí việc làm</th>
+                            <th>Phòng ban</th>
+                            <th>Điểm KPI chốt</th>
+                            <th>Xếp loại thi đua</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="ev, iter : ${evaluations}">
+                            <td th:text="${iter.index + 1}">1</td>
+                            <td class="fw-bold" th:text="${ev.user.fullName}">Phan Văn Cường</td>
+                            <td th:text="${ev.user.position.title}">Chuyên viên CNTT</td>
+                            <td th:text="${ev.department.name}">Văn phòng Ban</td>
+                            <td class="fw-bold text-danger" th:text="${ev.finalScore}">96.0</td>
+                            <td>
+                                <span class="badge bg-success p-2" th:text="${ev.rankingDisplayName}">Xuất sắc</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

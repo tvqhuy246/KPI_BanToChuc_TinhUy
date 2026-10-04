@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Bàn làm việc - Ban Tổ chức Tỉnh ủy Đắk Lắk</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    
+    <header class="dang-header py-2 px-4 d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+            <i class="fa-solid fa-star text-warning fa-2x me-3"></i>
+            <div class="brand-text">
+                <h1>BAN TỔ CHỨC TỈNH ỦY ĐẮK LẮK</h1>
+                <small>HỆ THỐNG QUẢN LÝ VÀ ĐÁNH GIÁ KPI THEO QUY ĐỊNH 01-QĐ/BTCTU</small>
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-3 text-white">
+            <div class="text-end d-none d-md-block">
+                <div class="fw-bold" th:text="${user != null ? user.fullName : 'Cán bộ'}">Đồng chí</div>
+                <small class="text-warning" th:text="${user != null ? user.roleDisplayName : ''}">Chuyên viên</small>
+            </div>
+            <a th:href="@{/logout}" class="btn btn-outline-light btn-sm"><i class="fa-solid fa-right-from-bracket me-1"></i> Đăng xuất</a>
+        </div>
+    </header>
+    <nav class="navbar navbar-expand-lg navbar-custom py-1 px-4 mb-4">
+        <div class="container-fluid px-0">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1">
+                <li class="nav-item"><a class="nav-link active" th:href="@{/}"><i class="fa-solid fa-chart-pie me-1"></i> Bàn làm việc (Dashboard)</a></li>
+                <li class="nav-item"><a class="nav-link " th:href="@{/tasks}"><i class="fa-solid fa-list-check me-1"></i> Nhiệm vụ công tác</a></li>
+                <li class="nav-item"><a class="nav-link " th:href="@{/evaluation}"><i class="fa-solid fa-file-signature me-1"></i> Tự chấm điểm KPI</a></li>
+                <li class="nav-item"><a class="nav-link " th:href="@{/approvals}"><i class="fa-solid fa-stamp me-1"></i> Đánh giá & Phê duyệt</a></li>
+                <li class="nav-item"><a class="nav-link " th:href="@{/reports}"><i class="fa-solid fa-file-invoice me-1"></i> Báo cáo & Quyết định</a></li>
+                <li class="nav-item"><a class="nav-link" href="/h2-console" target="_blank"><i class="fa-solid fa-database me-1"></i> Tra cứu SQL</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <div class="container-fluid px-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h4 class="fw-bold text-navy mb-1">BÀN LÀM VIỆC CHỈ ĐẠO & ĐIỀU HÀNH</h4>
+                <p class="text-muted small mb-0">Theo dõi kết quả thực hiện nhiệm vụ công tác theo thời gian thực</p>
+            </div>
+            <div class="btn-group shadow-sm" role="group">
+                <button type="button" class="btn btn-outline-danger btn-sm active"><i class="fa-regular fa-calendar-days me-1"></i> Hôm nay</button>
+                <button type="button" class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-calendar-week me-1"></i> Tuần này</button>
+                <button type="button" class="btn btn-outline-danger btn-sm"><i class="fa-regular fa-calendar me-1"></i> Tháng 10/2026</button>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="stat-card red">
+                    <span>Tổng số cán bộ, công chức</span>
+                    <h3 th:text="${totalUsers}">6</h3>
+                    <small class="text-muted">5 phòng ban chuyên môn</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card green">
+                    <span>Nhiệm vụ hoàn thành</span>
+                    <h3><span th:text="${completedTasks}">2</span> / <span th:text="${totalTasks}">4</span></h3>
+                    <small class="text-success"><i class="fa-solid fa-arrow-trend-up me-1"></i> Tiến độ chung đạt 85%</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card gold">
+                    <span>Điểm KPI trung bình cơ quan</span>
+                    <h3><span th:text="${avgScore}">92.5</span> <small class="fs-6 text-muted">/ 100đ</small></h3>
+                    <small class="text-warning fw-semibold">Xếp loại: Hoàn thành Tốt</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card">
+                    <span>An toàn thông tin & Uptime</span>
+                    <h3 class="text-primary">100%</h3>
+                    <small class="text-muted">0 sự cố an toàn dữ liệu Đảng</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-8">
+                <div class="card border-0 shadow-sm rounded-3 p-3">
+                    <h6 class="fw-bold text-navy mb-3"><i class="fa-solid fa-chart-column me-2 text-danger"></i>Tiến độ thực hiện nhiệm vụ các phòng chuyên môn</h6>
+                    <canvas id="deptChart" height="120"></canvas>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card border-0 shadow-sm rounded-3 p-3">
+                    <h6 class="fw-bold text-navy mb-3"><i class="fa-solid fa-chart-pie me-2 text-warning"></i>Tỷ lệ xếp loại thi đua tháng</h6>
+                    <canvas id="pieChart" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-3 mb-4">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h6 class="fw-bold text-navy mb-0"><i class="fa-solid fa-ranking-star me-2 text-warning"></i>Bảng kết quả xếp loại thi đua cán bộ kỳ gần nhất</h6>
+                <a th:href="@{/reports/draft-decision}" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-word me-1"></i> Xem Dự thảo Quyết định</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Họ và tên</th>
+                            <th>Phòng ban</th>
+                            <th>Điểm tự chấm</th>
+                            <th>Trưởng phòng thẩm định</th>
+                            <th>Lãnh đạo Ban chốt</th>
+                            <th>Xếp loại thi đua</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="ev : ${evaluations}">
+                            <td class="fw-semibold" th:text="${ev.user.fullName}">Đồng chí Phan Văn Cường</td>
+                            <td th:text="${ev.department.name}">Văn phòng Ban</td>
+                            <td th:text="${ev.selfScore}">95.0</td>
+                            <td th:text="${ev.managerScore}">96.0</td>
+                            <td class="fw-bold text-danger" th:text="${ev.finalScore}">96.0</td>
+                            <td>
+                                <span class="badge bg-success p-2" th:text="${ev.rankingDisplayName}">Hoàn thành xuất sắc</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-primary" th:text="${ev.status}">APPROVED</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        new Chart(document.getElementById('deptChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Phòng Cán bộ', 'Phòng TC Đảng', 'Phòng BVCTNB', 'Văn phòng Ban'],
+                datasets: [{
+                    label: 'Tỷ lệ hoàn thành (%)',
+                    data: [92, 88, 95, 96],
+                    backgroundColor: '#a71d2a'
+                }]
+            },
+            options: { scales: { y: { beginAtZero: true, max: 100 } } }
+        });
+
+        new Chart(document.getElementById('pieChart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Xuất sắc (18%)', 'Hoàn thành Tốt (72%)', 'Hoàn thành (10%)'],
+                datasets: [{
+                    data: [18, 72, 10],
+                    backgroundColor: ['#10b981', '#3b82f6', '#f59e0b']
+                }]
+            }
+        });
+    </script>
+</body>
+</html>
