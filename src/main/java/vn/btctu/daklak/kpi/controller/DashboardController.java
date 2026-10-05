@@ -24,27 +24,27 @@ public class DashboardController {
     @Autowired
     private EvaluationRepository evalRepo;
 
-    @GetMapping(/)
+    @GetMapping("/")
     public String index(HttpSession session, Model model) {
-        User currentUser = (User) session.getAttribute(CURRENT_USER);
-        model.addAttribute(user, currentUser);
+        User currentUser = (User) session.getAttribute("CURRENT_USER");
+        model.addAttribute("user", currentUser);
 
         long totalUsers = userRepo.count();
         long totalTasks = taskRepo.count();
         long completedTasks = taskRepo.countAllCompleted();
-        Double avgScore = evalRepo.getAverageScoreByPeriod(Tháng 09/2026);
+        Double avgScore = evalRepo.getAverageScoreByPeriod("Tháng 09/2026");
 
-        model.addAttribute(totalUsers, totalUsers);
-        model.addAttribute(totalTasks, totalTasks);
-        model.addAttribute(completedTasks, completedTasks);
-        model.addAttribute(avgScore, avgScore != null ? Math.round(avgScore * 10.0) / 10.0 : 92.5);
+        model.addAttribute("totalUsers", totalUsers);
+        model.addAttribute("totalTasks", totalTasks);
+        model.addAttribute("completedTasks", completedTasks);
+        model.addAttribute("avgScore", avgScore != null ? Math.round(avgScore * 10.0) / 10.0 : 92.5);
 
-        List<Evaluation> evals = evalRepo.findByPeriodValue(Tháng 09/2026);
-        model.addAttribute(evaluations, evals);
+        List<Evaluation> evals = evalRepo.findByPeriodValue("Tháng 09/2026");
+        model.addAttribute("evaluations", evals);
 
         List<Task> recentTasks = taskRepo.findAll();
-        model.addAttribute(recentTasks, recentTasks);
+        model.addAttribute("recentTasks", recentTasks);
 
-        return dashboard;
+        return "dashboard";
     }
 }
