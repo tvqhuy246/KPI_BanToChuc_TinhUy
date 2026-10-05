@@ -24,36 +24,36 @@ public class TaskController {
 
     @GetMapping
     public String listTasks(HttpSession session, Model model) {
-        User currentUser = (User) session.getAttribute(CURRENT_USER);
-        model.addAttribute(user, currentUser);
+        User currentUser = (User) session.getAttribute("CURRENT_USER");
+        model.addAttribute("user", currentUser);
 
         List<Task> tasks;
-        if (CHUYEN_VIEN.equals(currentUser.getRole())) {
+        if ("CHUYEN_VIEN".equals(currentUser.getRole())) {
             tasks = taskService.getTasksByUser(currentUser.getId());
-        } else if (TRUONG_PHONG.equals(currentUser.getRole())) {
+        } else if ("TRUONG_PHONG".equals(currentUser.getRole())) {
             tasks = taskService.getTasksByDepartment(currentUser.getDepartment().getId());
         } else {
             tasks = taskService.getAllTasks();
         }
-        model.addAttribute(tasks, tasks);
-        return tasks;
+        model.addAttribute("tasks", tasks);
+        return "tasks";
     }
 
     @PostMapping("/update-progress")
-    public String updateProgress(@RequestParam(taskId) Long taskId,
-                                 @RequestParam(progress) Integer progress,
-                                 @RequestParam(evidenceText) String evidenceText,
+    public String updateProgress(@RequestParam("taskId") Long taskId,
+                                 @RequestParam("progress") Integer progress,
+                                 @RequestParam("evidenceText") String evidenceText,
                                  HttpSession session,
                                  HttpServletRequest request) {
-        User currentUser = (User) session.getAttribute(CURRENT_USER);
+        User currentUser = (User) session.getAttribute("CURRENT_USER");
         Optional<Task> tOpt = taskService.findById(taskId);
         if (tOpt.isPresent()) {
             Task t = tOpt.get();
             t.setProgress(progress);
             t.setEvidenceText(evidenceText);
             taskService.saveTask(t);
-            auditLogService.log(currentUser.getId(), currentUser.getUsername(), UPDATE, tasks, taskId, Cập nhật tiến độ nhiệm vụ:  + progress + %, request.getRemoteAddr());
+            auditLogService.log(currentUser.getId(), currentUser.getUsername(), "ACTION", "system", 1L, "Thao tac", request.getRemoteAddr());
         }
-        return redirect:/tasks;
+        return "redirect:/tasks";
     }
 }
