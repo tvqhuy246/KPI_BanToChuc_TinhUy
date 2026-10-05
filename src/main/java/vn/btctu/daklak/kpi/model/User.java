@@ -33,7 +33,7 @@ public class User {
     @Column(nullable = false)
     private String role; // ADMIN, LANH_DAO_BAN, TRUONG_PHONG, CHUYEN_VIEN
 
-    private String status = ACTIVE;
+    private String status = "ACTIVE";
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -63,10 +63,15 @@ public class User {
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
+    
+    public String getRoleDisplayName() {
+        return getRoleBadge();
+    }
+
     public String getRoleBadge() {
-        if (ADMIN.equals(role)) return Quản trị hệ thống;
-        if (LANH_DAO_BAN.equals(role)) return Lãnh đạo Ban;
-        if (TRUONG_PHONG.equals(role)) return Trưởng phòng;
-        return Chuyên viên;
+        if ("ADMIN".equals(role)) return "Quản trị hệ thống";
+        if ("LANH_DAO_BAN".equals(role)) return "Lãnh đạo Ban";
+        if ("TRUONG_PHONG".equals(role)) return "Trưởng phòng";
+        return "Chuyên viên";
     }
 }
