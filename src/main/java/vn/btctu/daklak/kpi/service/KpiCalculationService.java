@@ -34,15 +34,15 @@ public class KpiCalculationService {
         double bonus = 0.0;
         for (Task t : userTasks) {
             // Họp: có bài phát biểu được duyệt
-            if (HOP.equals(t.getTaskType()) && Boolean.TRUE.equals(t.getSpeechApproved())) {
+            if ("HOP".equals(t.getTaskType()) && Boolean.TRUE.equals(t.getSpeechApproved())) {
                 bonus += 2.0;
             }
             // Đi công tác: có báo cáo kết quả thực tế
-            if (CONG_TAC.equals(t.getTaskType()) && t.getFieldTripResult() != null && !t.getFieldTripResult().isEmpty()) {
+            if ("CONG_TAC".equals(t.getTaskType()) && t.getFieldTripResult() != null && !t.getFieldTripResult().isEmpty()) {
                 bonus += 2.0;
             }
             // Văn bản khó hoàn thành đúng hạn
-            if (VAN_BAN.equals(t.getTaskType()) && KHO.equals(t.getComplexity()) && COMPLETED.equals(t.getStatus())) {
+            if ("VAN_BAN".equals(t.getTaskType()) && "KHO".equals(t.getComplexity()) && "COMPLETED".equals(t.getStatus())) {
                 bonus += 1.5;
             }
         }
@@ -62,13 +62,13 @@ public class KpiCalculationService {
 
         // Phân loại xếp loại tự động
         if (total >= 90.0 && overdueCount == 0) {
-            eval.setRanking(XUAT_SAC);
+            eval.setRanking("XUAT_SAC");
         } else if (total >= 70.0) {
-            eval.setRanking(TOT);
+            eval.setRanking("TOT");
         } else if (total >= 50.0) {
-            eval.setRanking(HOAN_THANH);
+            eval.setRanking("HOAN_THANH");
         } else {
-            eval.setRanking(KHONG_HOAN_THANH);
+            eval.setRanking("KHONG_HOAN_THANH");
         }
 
         eval.setEvaluatedAt(LocalDateTime.now());
@@ -87,13 +87,13 @@ public class KpiCalculationService {
         de.setTotalScore(total);
 
         if (total >= 90.0) {
-            de.setRanking(XUAT_SAC);
+            de.setRanking("XUAT_SAC");
         } else if (total >= 70.0) {
-            de.setRanking(TOT);
+            de.setRanking("TOT");
         } else if (total >= 50.0) {
-            de.setRanking(HOAN_THANH);
+            de.setRanking("HOAN_THANH");
         } else {
-            de.setRanking(KHONG_HOAN_THANH);
+            de.setRanking("KHONG_HOAN_THANH");
         }
         de.setEvaluatedAt(LocalDateTime.now());
         return deptEvalRepo.save(de);
