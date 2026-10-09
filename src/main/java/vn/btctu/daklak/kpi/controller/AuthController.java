@@ -22,35 +22,35 @@ public class AuthController {
     private AuditLogService auditLogService;
 
     @GetMapping("/login")
-    public String loginPage(@RequestParam(value = error, required = false) String error, Model model) {
+    public String loginPage(@RequestParam(value = "error", required = false) String error, Model model) {
         if (error != null) {
-            model.addAttribute(error, Tên đăng nhập hoặc mật khẩu không chính xác!);
+            model.addAttribute("error", "Tên đăng nhập hoặc mật khẩu không chính xác!");
         }
-        return login;
+        return "login";
     }
 
     @PostMapping("/login")
-    public String processLogin(@RequestParam(username) String username,
-                               @RequestParam(password) String password,
+    public String processLogin(@RequestParam("username") String username,
+                               @RequestParam("password") String password,
                                HttpServletRequest request,
                                HttpSession session) {
         Optional<User> uOpt = userService.authenticate(username, password);
         if (uOpt.isPresent()) {
             User user = uOpt.get();
-            session.setAttribute(CURRENT_USER, user);
-            auditLogService.log(user.getId(), user.getUsername(), LOGIN, users, user.getId(), Đăng nhập thành công, request.getRemoteAddr());
-            return redirect:/;
+            session.setAttribute("CURRENT_USER", user);
+            auditLogService.log(user.getId(), user.getUsername(), "LOGIN", "users", user.getId(), "Đăng nhập thành công", request.getRemoteAddr());
+            return "redirect:/";
         }
-        return redirect:/login?error=true;
+        return "redirect:/login?error=true";
     }
 
     @GetMapping("/logout")
     public String logout(HttpSession session, HttpServletRequest request) {
-        User user = (User) session.getAttribute(CURRENT_USER);
+        User user = (User) session.getAttribute("CURRENT_USER");
         if (user != null) {
-            auditLogService.log(user.getId(), user.getUsername(), LOGOUT, users, user.getId(), Đăng xuất khỏi hệ thống, request.getRemoteAddr());
+            auditLogService.log(user.getId(), user.getUsername(), "LOGOUT", "users", user.getId(), "Đăng xuất khỏi hệ thống", request.getRemoteAddr());
         }
         session.invalidate();
-        return redirect:/login;
+        return "redirect:/login";
     }
 }
