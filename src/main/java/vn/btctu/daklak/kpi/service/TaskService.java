@@ -27,12 +27,12 @@ public class TaskService {
 
     public Task saveTask(Task t) {
         if (t.getProgress() != null && t.getProgress() >= 100) {
-            t.setStatus(COMPLETED);
+            t.setStatus("COMPLETED");
             if (t.getCompletedDate() == null) {
                 t.setCompletedDate(LocalDate.now());
             }
         } else if (t.getDueDate() != null && t.getDueDate().isBefore(LocalDate.now())) {
-            t.setStatus(OVERDUE);
+            t.setStatus("OVERDUE");
         }
         return taskRepo.save(t);
     }
