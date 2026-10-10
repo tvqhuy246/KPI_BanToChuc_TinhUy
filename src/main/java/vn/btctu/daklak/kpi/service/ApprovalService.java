@@ -21,7 +21,7 @@ public class ApprovalService {
             e.setManagerScore(managerScore);
             e.setFinalScore(managerScore);
             e.setManagerNotes(managerNotes);
-            e.setStatus(REVIEWED);
+            e.setStatus("REVIEWED");
             return evalRepo.save(e);
         }
         return null;
@@ -36,7 +36,7 @@ public class ApprovalService {
             e.setFinalScore(finalScore);
             e.setRanking(ranking);
             e.setLeaderNotes(leaderNotes);
-            e.setStatus(APPROVED);
+            e.setStatus("APPROVED");
             e.setApprovedAt(LocalDateTime.now());
             return evalRepo.save(e);
         }
