@@ -32,6 +32,7 @@
                 <li class="nav-item"><a class="nav-link " th:href="@{/tasks}"><i class="fa-solid fa-list-check me-1"></i> Nhiệm vụ công tác</a></li>
                 <li class="nav-item"><a class="nav-link active" th:href="@{/evaluation}"><i class="fa-solid fa-file-signature me-1"></i> Tự chấm điểm KPI</a></li>
                 <li class="nav-item"><a class="nav-link " th:href="@{/approvals}"><i class="fa-solid fa-stamp me-1"></i> Đánh giá & Phê duyệt</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/org-chart}"><i class="fa-solid fa-sitemap me-1"></i> Cây sơ đồ Ban</a></li>
                 <li class="nav-item"><a class="nav-link " th:href="@{/reports}"><i class="fa-solid fa-file-invoice me-1"></i> Báo cáo & Quyết định</a></li>
                 <li class="nav-item"><a class="nav-link" href="/h2-console" target="_blank"><i class="fa-solid fa-database me-1"></i> Tra cứu SQL</a></li>
             </ul>
@@ -39,6 +40,61 @@
     </nav>
     
     <div class="container px-4">
+        
+        <!-- TIẾN ĐỘ VÀ KẾT QUẢ PHÊ DUYỆT ĐA CẤP (SMART ROUTING STATUS) -->
+        <div class="card border-0 shadow-sm rounded-4 mb-4" th:if="${myEval != null and myEval.status != null and myEval.status != 'DRAFT'}">
+            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center py-3 px-4">
+                <div class="d-flex align-items-center">
+                    <i class="fa-solid fa-route text-warning fs-4 me-3"></i>
+                    <div>
+                        <h6 class="mb-0 fw-bold">TIẾN TRÌNH THẨM ĐỊNH & PHÊ DUYỆT ĐA CẤP (SMART ROUTING)</h6>
+                        <small class="text-light opacity-75">Hồ sơ luân chuyển tự động theo Cây phân cấp Ban Tổ chức Tỉnh ủy</small>
+                    </div>
+                </div>
+                <span class="badge px-3 py-2 fs-6" 
+                      th:classappend="${myEval.status == 'APPROVED' ? 'bg-success' : 'bg-warning text-dark'}" 
+                      th:text="${myEval.statusDisplayName}">Chờ duyệt</span>
+            </div>
+            <div class="card-body p-4 bg-light">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <div class="p-3 bg-white rounded-3 border">
+                            <span class="badge bg-secondary mb-1">CẤP 5 — TỰ ĐÁNH GIÁ</span>
+                            <div class="fw-bold text-dark fs-5" th:text="${myEval.selfScore + ' điểm'}">95.0 điểm</div>
+                            <small class="text-muted d-block mt-1">Đã nộp ngày: <span th:text="${#temporals.format(myEval.evaluatedAt, 'dd/MM/yyyy HH:mm')}">11/10/2026</span></small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-3 bg-white rounded-3 border">
+                            <span class="badge bg-warning text-dark mb-1">CẤP 4 — PHÓ PHÒNG</span>
+                            <div class="fw-bold text-dark fs-5" th:text="${myEval.deputyHeadScore != null ? myEval.deputyHeadScore + ' điểm' : 'Chưa thẩm định'}">--</div>
+                            <small class="text-muted d-block mt-1" th:text="${myEval.deputyHeadNotes != null ? myEval.deputyHeadNotes : 'Đang chờ xử lý'}">Ghi chú</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-3 bg-white rounded-3 border">
+                            <span class="badge bg-success mb-1">CẤP 3 — TRƯỞNG PHÒNG</span>
+                            <div class="fw-bold text-dark fs-5" th:text="${myEval.deptHeadScore != null ? myEval.deptHeadScore + ' điểm' : 'Chưa đánh giá'}">--</div>
+                            <small class="text-muted d-block mt-1" th:text="${myEval.deptHeadNotes != null ? myEval.deptHeadNotes : 'Đang chờ xử lý'}">Ghi chú</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-3 bg-white rounded-3 border">
+                            <span class="badge bg-danger mb-1">CẤP 1 & 2 — LÃNH ĐẠO BAN</span>
+                            <div class="fw-bold text-danger fs-5" th:text="${myEval.finalScore != null and myEval.status == 'APPROVED' ? myEval.finalScore + ' điểm' : 'Chờ phê duyệt'}">--</div>
+                            <small class="fw-bold text-success d-block mt-1" th:text="${myEval.status == 'APPROVED' ? 'Xếp loại: ' + myEval.rankingDisplayName : 'Đang trình duyệt'}">Kết quả</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert alert-info border-0 mt-3 mb-0 py-2 px-3 small d-flex align-items-center" th:if="${myEval.currentApprover != null}">
+                    <i class="fa-solid fa-user-clock fs-5 me-2 text-primary"></i>
+                    <div>
+                        Người đang thụ lý duyệt trực tiếp: <strong class="text-dark" th:text="${myEval.currentApprover.fullName + ' (' + myEval.currentApprover.roleBadge + ')'}">Họ tên</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
             <div class="dang-header p-4 text-center text-white">
                 <h4 class="fw-bold text-uppercase mb-1">PHIẾU TỰ ĐÁNH GIÁ KẾT QUẢ THỰC HIỆN NHIỆM VỤ</h4>

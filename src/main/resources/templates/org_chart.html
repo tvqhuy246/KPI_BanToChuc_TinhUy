@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cây Sơ đồ Tổ chức - Ban Tổ chức Tỉnh ủy Đắk Lắk</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .org-tree-container {
+            overflow-x: auto;
+            padding: 2rem 1rem;
+            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
+            border-radius: 12px;
+            min-height: 700px;
+        }
+        .org-card {
+            background: #21262d;
+            border: 2px solid #30363d;
+            border-radius: 10px;
+            padding: 12px 14px;
+            color: #f0f6fc;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            transition: all 0.25s ease-in-out;
+            cursor: pointer;
+            position: relative;
+        }
+        .org-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 8px 24px rgba(220, 53, 69, 0.4);
+            border-color: #dc3545;
+        }
+        .org-card.level-1 {
+            background: linear-gradient(135deg, #7a0c14 0%, #a81c24 100%);
+            border-color: #ffc107;
+            max-width: 320px;
+            margin: 0 auto;
+        }
+        .org-card.level-2 {
+            background: linear-gradient(135deg, #1f3a5f 0%, #2b507d 100%);
+            border-color: #58a6ff;
+            min-width: 210px;
+        }
+        .org-card.level-3 {
+            background: linear-gradient(135deg, #1b4731 0%, #236544 100%);
+            border-color: #3fb950;
+            min-width: 200px;
+        }
+        .org-card.level-4 {
+            background: linear-gradient(135deg, #5c3818 0%, #7d4d23 100%);
+            border-color: #d29922;
+            min-width: 190px;
+        }
+        .org-card.level-5 {
+            background: #21262d;
+            border-color: #30363d;
+            min-width: 175px;
+            font-size: 0.85rem;
+        }
+        .tree-line-v {
+            width: 2px;
+            height: 24px;
+            background: #484f58;
+            margin: 0 auto;
+        }
+        .badge-level {
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+        .card-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            margin-bottom: 2px;
+        }
+        .card-title-role {
+            font-size: 0.8rem;
+            color: #8b949e;
+        }
+        .org-card.level-1 .card-title-role,
+        .org-card.level-2 .card-title-role,
+        .org-card.level-3 .card-title-role,
+        .org-card.level-4 .card-title-role {
+            color: #f0f6fc;
+            opacity: 0.9;
+        }
+        .legend-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.82rem;
+            color: #c9d1d9;
+        }
+        .legend-color {
+            width: 14px;
+            height: 14px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <header class="dang-header py-2 px-4 d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center">
+            <i class="fa-solid fa-star text-warning fa-2x me-3"></i>
+            <div class="brand-text">
+                <h1>BAN TỔ CHỨC TỈNH ỦY ĐẮK LẮK</h1>
+                <small>HỆ THỐNG QUẢN LÝ VÀ ĐÁNH GIÁ KPI THEO QUY ĐỊNH 01-QĐ/BTCTU</small>
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-3 text-white">
+            <a th:href="@{/}" class="btn btn-outline-light btn-sm"><i class="fa-solid fa-house me-1"></i> Bàn làm việc</a>
+            <a th:href="@{/tasks}" class="btn btn-outline-light btn-sm"><i class="fa-solid fa-list-check me-1"></i> Nhiệm vụ</a>
+            <a th:href="@{/approvals}" class="btn btn-outline-light btn-sm"><i class="fa-solid fa-check-to-slot me-1"></i> Phê duyệt</a>
+            <a th:href="@{/org-chart}" class="btn btn-warning btn-sm text-dark fw-bold"><i class="fa-solid fa-sitemap me-1"></i> Cây sơ đồ Ban</a>
+            <div class="dropdown">
+                <span class="user-badge" th:text="${user.fullName + ' (' + user.roleBadge + ')'}">Họ và tên</span>
+            </div>
+            <a th:href="@{/logout}" class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a>
+        </div>
+    </header>
+
+    <main class="container-fluid px-4 py-3">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h4 class="fw-bold text-danger mb-0"><i class="fa-solid fa-sitemap me-2"></i> CÂY SƠ ĐỒ PHÂN CÔNG NHIỆM VỤ BAN TỔ CHỨC TỈNH ỦY</h4>
+                <small class="text-muted">Căn cứ: Quyết định phân công nhiệm vụ và Cây sơ đồ 39 vị trí việc làm chính thức</small>
+            </div>
+            <div class="d-flex gap-3 bg-dark p-2 rounded">
+                <div class="legend-box"><div class="legend-color" style="background:#a81c24;"></div> Cấp 1: Trưởng ban</div>
+                <div class="legend-box"><div class="legend-color" style="background:#2b507d;"></div> Cấp 2: Phó Ban</div>
+                <div class="legend-box"><div class="legend-color" style="background:#236544;"></div> Cấp 3: Trưởng phòng</div>
+                <div class="legend-box"><div class="legend-color" style="background:#7d4d23;"></div> Cấp 4: Phó phòng</div>
+                <div class="legend-box"><div class="legend-color" style="background:#21262d; border:1px solid #484f58;"></div> Cấp 5: Chuyên viên</div>
+            </div>
+        </div>
+
+        <div class="org-tree-container text-center">
+            
+            <!-- CẤP 1: TRƯỞNG BAN -->
+            <div class="d-inline-block text-center mb-2" style="width: 100%;">
+                <div th:each="tb : ${level1}" class="org-card level-1 text-center" th:onclick="'showStaffDetail(' + ${tb.id} + ')'">
+                    <span class="badge bg-warning text-dark badge-level mb-1">CẤP 1 — BAN</span>
+                    <div class="card-name" th:text="${tb.fullName}">Nguyễn Thượng Hải</div>
+                    <div class="card-title-role fw-bold">Trưởng Ban Tổ chức Tỉnh ủy</div>
+                    <small class="d-block mt-1 text-light opacity-75" style="font-size:0.75rem;" th:text="${tb.assignedScope}">Chỉ đạo toàn diện</small>
+                </div>
+            </div>
+
+            <div class="tree-line-v"></div>
+
+            <!-- CẤP 2: PHÓ TRƯỞNG BAN (5 ĐỒNG CHÍ) -->
+            <div class="d-flex justify-content-center gap-3 flex-wrap my-2">
+                <div th:each="pb : ${level2}" class="org-card level-2 text-center" th:onclick="'showStaffDetail(' + ${pb.id} + ')'">
+                    <span class="badge bg-primary badge-level mb-1">CẤP 2 — PHÓ BAN</span>
+                    <div class="card-name" th:text="${pb.fullName}">Lưu Vĩnh Hưng</div>
+                    <div class="card-title-role fw-semibold" th:text="${pb.position.title}">Phó Trưởng ban</div>
+                    <small class="d-block mt-1 opacity-75" style="font-size:0.72rem;" th:text="${pb.assignedScope}">Nhiệm vụ phụ trách</small>
+                </div>
+            </div>
+
+            <div class="tree-line-v"></div>
+
+            <!-- CẤP 3: TRƯỞNG PHÒNG / CHÁNH VĂN PHÒNG (4 PHÒNG) -->
+            <div class="d-flex justify-content-center gap-4 flex-wrap my-2">
+                <div th:each="tp : ${level3}" class="org-card level-3 text-center" th:onclick="'showStaffDetail(' + ${tp.id} + ')'">
+                    <span class="badge bg-success badge-level mb-1">CẤP 3 — TRƯỞNG PHÒNG</span>
+                    <div class="card-name" th:text="${tp.fullName}">Trần Hải Triều</div>
+                    <div class="card-title-role fw-semibold" th:text="${tp.department.name}">Phòng Tổ chức cán bộ</div>
+                    <small class="d-block mt-1 opacity-75" style="font-size:0.72rem;" th:text="${tp.assignedScope}">Phụ trách chung</small>
+                </div>
+            </div>
+
+            <div class="tree-line-v"></div>
+
+            <!-- CẤP 4: PHÓ TRƯỞNG PHÒNG / PHÓ CHÁNH VĂN PHÒNG (9 ĐỒNG CHÍ) -->
+            <div class="d-flex justify-content-center gap-2 flex-wrap my-2">
+                <div th:each="pp : ${level4}" class="org-card level-4 text-center" th:onclick="'showStaffDetail(' + ${pp.id} + ')'">
+                    <span class="badge bg-warning text-dark badge-level mb-1">CẤP 4 — PHÓ PHÒNG</span>
+                    <div class="card-name" th:text="${pp.fullName}">Nguyễn Trần Thi</div>
+                    <div class="card-title-role" th:text="${pp.department.name}">Phòng TCCB</div>
+                    <small class="d-block mt-1 opacity-75" style="font-size:0.7rem;" th:text="${pp.assignedScope}">Mảng phụ trách</small>
+                </div>
+            </div>
+
+            <div class="tree-line-v"></div>
+
+            <!-- CẤP 5: CHUYÊN VIÊN, NHÂN VIÊN, VĂN THƯ (20 ĐỒNG CHÍ) -->
+            <div class="mt-3">
+                <h6 class="text-secondary text-uppercase fw-bold mb-3"><i class="fa-solid fa-users me-1"></i> ĐỘI NGŨ CHUYÊN VIÊN & NHÂN VIÊN TRỰC THUỘC (20 VỊ TRÍ)</h6>
+                <div class="d-flex justify-content-center gap-2 flex-wrap">
+                    <div th:each="cv : ${level5}" class="org-card level-5 text-start" th:onclick="'showStaffDetail(' + ${cv.id} + ')'">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="card-name" th:text="${cv.fullName}">Hồ Lê Nhân</span>
+                            <span class="badge bg-secondary badge-level" th:text="${cv.roleBadge}">Chuyên viên</span>
+                        </div>
+                        <div class="card-title-role mb-1" th:text="${cv.department.name}">Phòng TCCB</div>
+                        <div class="small text-warning" style="font-size:0.72rem;">
+                            <i class="fa-solid fa-user-tie me-1"></i>QL: <span th:text="${cv.manager != null ? cv.manager.fullName : 'Chưa gán'}">Phạm Phong Thu</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Modal Chi tiết Cán bộ -->
+    <div class="modal fade" id="staffDetailModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-light border-secondary">
+                <div class="modal-header border-secondary">
+                    <h5 class="modal-title text-danger fw-bold"><i class="fa-solid fa-id-card me-2"></i> THÔNG TIN VỊ TRÍ VIỆC LÀM</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="staffModalBody">
+                    Đang tải thông tin...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function showStaffDetail(staffId) {
+            fetch('/api/org-chart/data')
+                .then(res => res.json())
+                .then(data => {
+                    const staff = data.staff.find(s => s.id === staffId);
+                    if (staff) {
+                        const html = `
+                            <div class="text-center mb-3">
+                                <div class="avatar-circle mx-auto mb-2 bg-danger text-white rounded-circle d-flex align-items-center justify-content-center" style="width:60px;height:60px;font-size:24px;font-weight:bold;">
+                                    ${staff.name.charAt(0)}
+                                </div>
+                                <h5 class="fw-bold mb-0">${staff.name}</h5>
+                                <div class="text-warning fw-semibold">${staff.title}</div>
+                                <div class="text-muted small">${staff.department}</div>
+                            </div>
+                            <hr class="border-secondary">
+                            <div class="small">
+                                <p class="mb-2"><strong>Cấp bậc:</strong> Cấp ${staff.orgLevel} (${staff.role})</p>
+                                <p class="mb-2"><strong>Nhiệm vụ phụ trách:</strong> ${staff.scope || 'Theo phân công nhiệm vụ chuyên môn'}</p>
+                                <p class="mb-2"><strong>Thư điện tử:</strong> ${staff.email || 'Chưa cập nhật'}</p>
+                                <p class="mb-0"><strong>Điện thoại:</strong> ${staff.phone || 'Chưa cập nhật'}</p>
+                            </div>
+                        `;
+                        document.getElementById('staffModalBody').innerHTML = html;
+                        new bootstrap.Modal(document.getElementById('staffDetailModal')).show();
+                    }
+                });
+        }
+    </script>
+</body>
+</html>

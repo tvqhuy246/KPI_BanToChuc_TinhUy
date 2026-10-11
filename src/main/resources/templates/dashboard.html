@@ -32,7 +32,8 @@
                 <li class="nav-item"><a class="nav-link active" th:href="@{/}"><i class="fa-solid fa-chart-pie me-1"></i> Bàn làm việc (Dashboard)</a></li>
                 <li class="nav-item"><a class="nav-link " th:href="@{/tasks}"><i class="fa-solid fa-list-check me-1"></i> Nhiệm vụ công tác</a></li>
                 <li class="nav-item"><a class="nav-link " th:href="@{/evaluation}"><i class="fa-solid fa-file-signature me-1"></i> Tự chấm điểm KPI</a></li>
-                <li class="nav-item"><a class="nav-link " th:href="@{/approvals}"><i class="fa-solid fa-stamp me-1"></i> Đánh giá & Phê duyệt</a></li>
+                <li class="nav-item"><a class="nav-link " th:href="@{/approvals}"><i class="fa-solid fa-stamp me-1"></i> Đánh giá & Phê duyệt</a>
+            <a th:href="@{/org-chart}" class="btn btn-outline-warning btn-sm"><i class="fa-solid fa-sitemap me-1"></i> Cây sơ đồ Ban</a></li>
                 <li class="nav-item"><a class="nav-link " th:href="@{/reports}"><i class="fa-solid fa-file-invoice me-1"></i> Báo cáo & Quyết định</a></li>
                 <li class="nav-item"><a class="nav-link" href="/h2-console" target="_blank"><i class="fa-solid fa-database me-1"></i> Tra cứu SQL</a></li>
             </ul>
@@ -40,15 +41,28 @@
     </nav>
     
     <div class="container-fluid px-4">
+        <!-- PHÂN CẤP QUẢN LÝ (SCOPED DASHBOARD THEO VAI TRÒ) -->
+        <div class="alert alert-dark border-secondary d-flex align-items-center justify-content-between py-2 px-3 mb-3" th:if="${scopeTitle != null}">
+            <div class="d-flex align-items-center">
+                <i class="fa-solid fa-layer-group text-warning fs-5 me-2"></i>
+                <div>
+                    <span class="text-secondary small text-uppercase fw-bold">Phạm vi giám sát KPI:</span>
+                    <strong class="text-warning ms-1" th:text="${scopeTitle}">Toàn diện Ban Tổ chức Tỉnh ủy</strong>
+                </div>
+            </div>
+            <a th:href="@{/org-chart}" class="btn btn-outline-warning btn-sm py-1 px-2" style="font-size:0.8rem;">
+                <i class="fa-solid fa-sitemap me-1"></i> Xem Cây phân cấp
+            </a>
+        </div>
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h4 class="fw-bold text-navy mb-1">BÀN LÀM VIỆC CHỈ ĐẠO & ĐIỀU HÀNH</h4>
-                <p class="text-muted small mb-0">Theo dõi kết quả thực hiện nhiệm vụ công tác theo thời gian thực</p>
+                <p class="text-muted small mb-0">Theo dõi kết quả thực hiện nhiệm vụ công tác theo thời gian thực &bull; <span class="badge bg-danger ms-1 fw-semibold" th:text="${filterTitle}">Hôm nay</span></p>
             </div>
             <div class="btn-group shadow-sm" role="group">
-                <button type="button" class="btn btn-outline-danger btn-sm active"><i class="fa-regular fa-calendar-days me-1"></i> Hôm nay</button>
-                <button type="button" class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-calendar-week me-1"></i> Tuần này</button>
-                <button type="button" class="btn btn-outline-danger btn-sm"><i class="fa-regular fa-calendar me-1"></i> Tháng 10/2026</button>
+                <a th:href="@{/today}" class="btn btn-sm" th:classappend="${currentFilter == 'today' or currentFilter == null ? 'btn-danger text-white fw-bold active' : 'btn-outline-danger'}"><i class="fa-regular fa-calendar-days me-1"></i> Hôm nay</a>
+                <a th:href="@{/week}" class="btn btn-sm" th:classappend="${currentFilter == 'week' ? 'btn-danger text-white fw-bold active' : 'btn-outline-danger'}"><i class="fa-solid fa-calendar-week me-1"></i> Tuần này</a>
+                <a th:href="@{/month}" class="btn btn-sm" th:classappend="${currentFilter == 'month' ? 'btn-danger text-white fw-bold active' : 'btn-outline-danger'}"><i class="fa-regular fa-calendar me-1"></i> Tháng 10/2026</a>
             </div>
         </div>
 
@@ -95,6 +109,49 @@
                     <h6 class="fw-bold text-navy mb-3"><i class="fa-solid fa-chart-pie me-2 text-warning"></i>Tỷ lệ xếp loại thi đua tháng</h6>
                     <canvas id="pieChart" height="200"></canvas>
                 </div>
+            </div>
+        </div>
+
+        
+        <!-- Bảng Nhật ký công việc & Tiến độ thực tế theo chu kỳ -->
+        <div class="card border-0 shadow-sm rounded-3 mb-4">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h6 class="fw-bold text-navy mb-0">
+                    <i class="fa-solid fa-clock-rotate-left me-2 text-danger"></i>
+                    Nhật ký công tác & Tiến độ chi tiết: <span class="badge bg-danger ms-1" th:text="${filterTitle}">Hôm nay</span>
+                </h6>
+                <a th:href="@{/tasks}" class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-list-check me-1"></i> Quản lý nhiệm vụ</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>STT</th>
+                            <th>Cán bộ thực hiện</th>
+                            <th>Nhiệm vụ liên quan</th>
+                            <th>Nội dung công việc cụ thể</th>
+                            <th>Thời lượng</th>
+                            <th>Kết quả</th>
+                            <th>Ý kiến Lãnh đạo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="wl, iter : ${workLogs}">
+                            <td th:text="${iter.index + 1}">1</td>
+                            <td class="fw-bold text-navy" th:text="${wl.user.fullName}">Đồng chí Phan Văn Cường</td>
+                            <td>
+                                <span class="badge bg-secondary" th:text="${wl.task != null ? wl.task.title : 'Công việc thường xuyên'}">Nhiệm vụ</span>
+                            </td>
+                            <td th:text="${wl.workContent}">Nội dung công tác</td>
+                            <td><span class="badge bg-light text-dark border" th:text="${wl.hoursSpent + ' giờ'}">4.0 giờ</span></td>
+                            <td>
+                                <span class="badge bg-success" th:if="${wl.resultStatus == 'HOAN_THANH'}">Đã hoàn thành</span>
+                                <span class="badge bg-warning text-dark" th:if="${wl.resultStatus != 'HOAN_THANH'}">Đang xử lý</span>
+                            </td>
+                            <td class="text-muted small fst-italic" th:text="${wl.supervisorComment != null ? wl.supervisorComment : 'Đã duyệt ghi nhận'}">Tốt</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
