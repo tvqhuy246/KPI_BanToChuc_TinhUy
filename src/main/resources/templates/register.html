@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký tài khoản Cán bộ - Ban Tổ chức Tỉnh ủy Đắk Lắk</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .register-card {
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+            background: #ffffff;
+        }
+        .form-label {
+            font-size: 0.85rem;
+            color: #334155;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="d-flex align-items-center justify-content-center min-vh-100 py-5" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-7 col-lg-6">
+                <div class="card register-card border-0 overflow-hidden">
+                    <div class="dang-header login-header-glow text-center p-4">
+                        <img src="https://cdn11.dienmaycholon.vn/filewebdmclnew/public/userupload/files/kkt/ngoi-sao-vang-va-voi-hinh-nen-trong-dong-675.jpg" alt="Logo" class="rounded-circle shadow-sm mb-2 border border-2 border-warning" style="width: 70px; height: 70px; object-fit: cover;">
+                        <h2 class="h5 text-white fw-bold text-uppercase mb-1">Ban Tổ chức Tỉnh ủy Đắk Lắk</h2>
+                        <p class="small text-warning mb-0">ĐĂNG KÝ TÀI KHOẢN CÁN BỘ / CHUYÊN VIÊN MỚI</p>
+                    </div>
+                    <div class="card-body p-4 p-md-5">
+                        <div th:if="${error}" class="alert alert-danger py-2 small d-flex align-items-center mb-4">
+                            <i class="fa-solid fa-triangle-exclamation me-2"></i>
+                            <span th:text="${error}">Thông tin không hợp lệ!</span>
+                        </div>
+
+                        <form th:action="@{/register}" method="post">
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Tên đăng nhập <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i class="fa-solid fa-user text-muted"></i></span>
+                                        <input type="text" name="username" class="form-control" placeholder="vd: nguyen_van_a" required autofocus>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Họ và tên cán bộ <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i class="fa-solid fa-id-card text-muted"></i></span>
+                                        <input type="text" name="fullName" class="form-control" placeholder="vd: Nguyễn Văn A" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Mật khẩu <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i class="fa-solid fa-lock text-muted"></i></span>
+                                        <input type="password" name="password" class="form-control" placeholder="Nhập mật khẩu" required minlength="6">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Xác nhận mật khẩu <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i class="fa-solid fa-shield-halved text-muted"></i></span>
+                                        <input type="password" name="confirmPassword" class="form-control" placeholder="Nhập lại mật khẩu" required minlength="6">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Phòng ban chuyên môn <span class="text-danger">*</span></label>
+                                    <select name="departmentId" class="form-select" required>
+                                        <option value="" disabled selected>-- Chọn phòng ban công tác --</option>
+                                        <option th:each="d : ${departments}" th:value="${d.id}" th:text="${d.name}"></option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Vị trí chức danh</label>
+                                    <select name="positionId" class="form-select">
+                                        <option value="">-- Mặc định Chuyên viên --</option>
+                                        <option th:each="p : ${positions}" th:value="${p.id}" th:text="${p.title}"></option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Số thẻ Đảng viên (QĐ 308/VPTW)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i class="fa-solid fa-star text-danger"></i></span>
+                                        <input type="text" name="partyMemberCardId" class="form-control" placeholder="vd: 40.012345">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Số CCCD (Luật Dữ liệu)</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i class="fa-solid fa-address-card text-muted"></i></span>
+                                        <input type="text" name="citizenId" class="form-control" placeholder="12 chữ số CCCD">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <label class="form-label">Email cơ quan</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i class="fa-solid fa-envelope text-muted"></i></span>
+                                        <input type="email" name="email" class="form-control" placeholder="email@daklak.dcs.vn">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Số điện thoại</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light"><i class="fa-solid fa-phone text-muted"></i></span>
+                                        <input type="tel" name="phone" class="form-control" placeholder="Số điện thoại di động">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-danger w-100 py-2 fw-bold shadow-sm" style="background-color: var(--primary-red);">
+                                <i class="fa-solid fa-user-plus me-2"></i> HOÀN TẤT ĐĂNG KÝ
+                            </button>
+                        </form>
+
+                        <div class="text-center mt-4 pt-3 border-top">
+                            <span class="text-muted small">Đã có tài khoản cán bộ?</span>
+                            <a th:href="@{/login}" class="text-danger fw-bold text-decoration-none ms-1 small">
+                                <i class="fa-solid fa-arrow-left me-1"></i>Trở lại Đăng nhập
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

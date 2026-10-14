@@ -2,12 +2,18 @@
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nhiệm vụ công tác - Ban Tổ chức Tỉnh ủy Đắk Lắk</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <style>
+        .badge-secret { background: #dc2626; color: #ffffff; font-weight: 700; }
+        .badge-warning-hours { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; font-weight: 600; }
+        .table-tasks th { background-color: #f8fafc; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; color: #475569; }
+    </style>
 </head>
-<body>
+<body class="bg-light">
     
     <header class="dang-header py-2 px-4 d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center">
@@ -30,6 +36,7 @@
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1">
                 <li class="nav-item"><a class="nav-link " th:href="@{/}"><i class="fa-solid fa-chart-pie me-1"></i> Bàn làm việc (Dashboard)</a></li>
                 <li class="nav-item"><a class="nav-link active" th:href="@{/tasks}"><i class="fa-solid fa-list-check me-1"></i> Nhiệm vụ công tác</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/job-catalog}"><i class="fa-solid fa-book-bookmark me-1"></i> Danh mục công việc BTCTU (49 Mã)</a></li>
                 <li class="nav-item"><a class="nav-link " th:href="@{/evaluation}"><i class="fa-solid fa-file-signature me-1"></i> Tự chấm điểm KPI</a></li>
                 <li class="nav-item"><a class="nav-link " th:href="@{/approvals}"><i class="fa-solid fa-stamp me-1"></i> Đánh giá & Phê duyệt</a></li>
                 <li class="nav-item"><a class="nav-link" th:href="@{/org-chart}"><i class="fa-solid fa-sitemap me-1"></i> Cây sơ đồ Ban</a></li>
@@ -39,86 +46,119 @@
         </div>
     </nav>
     
-    <div class="container-fluid px-4">
+    <div class="container-fluid px-4 mb-5">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h4 class="fw-bold text-navy mb-1">DANH MỤC NHIỆM VỤ CÔNG TÁC</h4>
-                <p class="text-muted small mb-0">Phân loại: Văn bản (Dễ/Khó), Họp (Phát biểu duyệt), Đi công tác, Kỷ cương công sở</p>
+                <h4 class="fw-bold text-navy mb-1"><i class="fa-solid fa-list-check text-danger me-2"></i>QUẢN LÝ NHIỆM VỤ & KHỐI LƯỢNG CÔNG VIỆC</h4>
+                <p class="text-muted small mb-0">Tích hợp 49 mã công việc chuẩn BTCTU, định mức thời gian và kiểm soát văn bản Mật (Nghị định 63/2026/NĐ-CP).</p>
+            </div>
+            <div class="d-flex gap-2">
+                <a th:href="@{/job-catalog}" class="btn btn-outline-secondary btn-sm"><i class="fa-solid fa-book-bookmark me-1"></i> Tra cứu 49 mã chuẩn</a>
+                <button type="button" class="btn btn-danger btn-sm shadow-sm" data-bs-toggle="modal" data-bs-target="#modalCreateTask">
+                    <i class="fa-solid fa-plus-circle me-1"></i> Giao việc mới theo chuẩn BTCTU
+                </button>
             </div>
         </div>
 
         <div class="card border-0 shadow-sm rounded-3">
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
+                <table class="table table-hover table-tasks align-middle mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th>Nhiệm vụ</th>
-                            <th>Loại hình</th>
-                            <th>Độ phức tạp</th>
+                            <th>Nhiệm vụ & Mã chuẩn</th>
                             <th>Người thực hiện</th>
+                            <th>Định mức / Thực tế</th>
+                            <th>Mức độ & Bảo mật</th>
                             <th>Hạn xử lý</th>
                             <th>Tiến độ</th>
-                            <th>Thao tác</th>
+                            <th class="text-center">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="t : ${tasks}">
                             <td>
-                                <div class="fw-bold" th:text="${t.title}">Dự thảo đề án</div>
-                                <small class="text-muted" th:text="${t.description}">Chi tiết yêu cầu</small>
-                                <div th:if="${t.speechApproved}" class="mt-1">
-                                    <span class="badge bg-success-subtle text-success border border-success-subtle"><i class="fa-solid fa-check me-1"></i> Bài phát biểu đã được duyệt (+2đ)</span>
+                                <div class="d-flex align-items-center gap-2 mb-1">
+                                    <span th:if="${t.jobCatalog != null}" class="badge bg-primary-subtle text-primary border border-primary-subtle font-monospace fw-bold" th:text="${t.jobCatalog.jobCode}">A.001</span>
+                                    <div class="fw-bold text-dark" th:text="${t.title}">Dự thảo đề án</div>
                                 </div>
-                                <div th:if="${t.fieldTripLocation != null}" class="mt-1">
-                                    <span class="badge bg-purple-subtle text-primary border border-primary-subtle"><i class="fa-solid fa-car me-1"></i> Cơ sở: <span th:text="${t.fieldTripLocation}">Huyện ủy</span></span>
+                                <div class="small text-muted" th:text="${t.description}">Chi tiết yêu cầu</div>
+                                <div th:if="${t.deliverableProduct != null}" class="small text-secondary mt-1">
+                                    <i class="fa-solid fa-file-lines me-1 text-primary"></i><strong>Sản phẩm:</strong> <span th:text="${t.deliverableProduct}">Báo cáo chuyên đề</span>
                                 </div>
                             </td>
                             <td>
-                                <span class="badge badge-vanban p-2" th:text="${t.taskTypeBadge}">Văn bản</span>
+                                <div class="fw-semibold text-dark" th:text="${t.assignedTo.fullName}">Phan Văn Cường</div>
+                                <small class="text-muted" th:text="${t.department != null ? t.department.deptName : ''}">Phòng TCCB</small>
                             </td>
                             <td>
-                                <span class="badge badge-kho p-2" th:text="${t.complexityBadge}">Khó (x1.5)</span>
+                                <div>
+                                    <small class="text-muted">Định mức:</small> <span class="badge bg-light text-dark border" th:text="${t.standardHours != null ? t.standardHours : 8.0} + 'h'">8.0h</span>
+                                </div>
+                                <div class="mt-1">
+                                    <small class="text-muted">Thực tế:</small> <span class="badge" th:classappend="${t.isOverStandardHours() ? 'badge-warning-hours' : 'bg-light text-dark border'}" th:text="${t.actualHours != null ? t.actualHours : 0.0} + 'h'">8.0h</span>
+                                    <span th:if="${t.isOverStandardHours()}" class="badge bg-danger-subtle text-danger border border-danger-subtle ms-1" title="Vượt quá định mức chuẩn"><i class="fa-solid fa-triangle-exclamation"></i> Vượt</span>
+                                </div>
                             </td>
-                            <td th:text="${t.assignedTo.fullName}">Phan Văn Cường</td>
+                            <td>
+                                <div class="mb-1">
+                                    <span class="badge bg-secondary-subtle text-secondary" th:text="${t.complexityBadge}">Trung bình (x1.2)</span>
+                                </div>
+                                <div>
+                                    <span th:if="${t.isConfidential}" class="badge badge-secret py-1 px-2"><i class="fa-solid fa-shield-halved me-1"></i> MẬT (NĐ 63)</span>
+                                    <span th:unless="${t.isConfidential}" class="badge bg-light text-muted border">Thông thường</span>
+                                </div>
+                            </td>
                             <td>
                                 <span th:text="${t.dueDate}">2026-10-15</span>
-                                <div th:if="${t.isOverdue()}" class="badge bg-danger">Quá hạn (-3đ)</div>
+                                <div th:if="${t.isOverdue()}" class="badge bg-danger mt-1">Quá hạn (-3đ)</div>
                             </td>
-                            <td style="width: 15%;">
+                            <td style="width: 14%;">
                                 <div class="d-flex align-items-center gap-2">
                                     <div class="progress flex-grow-1" style="height: 8px;">
-                                        <div class="progress-bar bg-danger" role="progressbar" th:style="'width: ' + ${t.progress} + '%;'"></div>
+                                        <div class="progress-bar" th:classappend="${t.progress == 100 ? 'bg-success' : 'bg-danger'}" role="progressbar" th:style="'width: ' + ${t.progress} + '%;'"></div>
                                     </div>
                                     <span class="small fw-bold" th:text="${t.progress} + '%'">100%</span>
                                 </div>
                             </td>
-                            <td>
+                            <td class="text-center">
                                 <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" th:data-bs-target="'#modalTask' + ${t.id}">
                                     <i class="fa-solid fa-pen-to-square me-1"></i> Báo cáo
                                 </button>
                                 
+                                <!-- MODAL CẬP NHẬT KẾT QUẢ -->
                                 <div class="modal fade" th:id="'modalTask' + ${t.id}" tabindex="-1">
                                     <div class="modal-dialog">
-                                        <div class="modal-content">
+                                        <div class="modal-content text-start">
                                             <form th:action="@{/tasks/update-progress}" method="post">
                                                 <input type="hidden" name="taskId" th:value="${t.id}">
                                                 <div class="modal-header bg-danger text-white">
-                                                    <h6 class="modal-title fw-bold">CẬP NHẬT KẾT QUẢ THỰC HIỆN</h6>
+                                                    <h6 class="modal-title fw-bold"><i class="fa-solid fa-pen-to-square me-2"></i>CẬP NHẬT TIẾN ĐỘ & GIỜ THỰC HIỆN</h6>
                                                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="mb-3">
-                                                        <label class="form-label fw-semibold">Tiến độ hoàn thành (%)</label>
-                                                        <input type="number" name="progress" class="form-control" min="0" max="100" th:value="${t.progress}" required>
+                                                        <label class="form-label fw-semibold">Nhiệm vụ</label>
+                                                        <input type="text" class="form-control bg-light" th:value="${t.title}" readonly>
+                                                    </div>
+                                                    <div class="row g-2 mb-3">
+                                                        <div class="col-6">
+                                                            <label class="form-label fw-semibold">Tiến độ hoàn thành (%)</label>
+                                                            <input type="number" name="progress" class="form-control" min="0" max="100" th:value="${t.progress}" required>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <label class="form-label fw-semibold">Giờ thực tế (h)</label>
+                                                            <input type="number" step="0.5" name="actualHours" class="form-control" th:value="${t.actualHours}">
+                                                            <small class="text-muted">Định mức chuẩn: <strong th:text="${t.standardHours != null ? t.standardHours : 8.0} + 'h'">8.0h</strong></small>
+                                                        </div>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label class="form-label fw-semibold">Sản phẩm đầu ra / Minh chứng</label>
-                                                        <textarea name="evidenceText" class="form-control" rows="3" placeholder="Nhập số văn bản, đường link hoặc kết quả đạt được..." th:text="${t.evidenceText}"></textarea>
+                                                        <textarea name="evidenceText" class="form-control" rows="3" placeholder="Nhập số văn bản, sản phẩm hoàn thành, đường link tài liệu..." th:text="${t.evidenceText}"></textarea>
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Hủy</button>
-                                                    <button type="submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-floppy-disk me-1"></i> Lưu kết quả</button>
+                                                    <button type="submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-floppy-disk me-1"></i> Cập nhật kết quả</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -126,11 +166,145 @@
                                 </div>
                             </td>
                         </tr>
+                        <tr th:if="${#lists.isEmpty(tasks)}">
+                            <td colspan="7" class="text-center py-4 text-muted">
+                                <i class="fa-solid fa-folder-open fa-2x text-secondary mb-2"></i>
+                                <div>Chưa có nhiệm vụ nào được giao trong danh sách.</div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+
+    <!-- MODAL TẠO NHIỆM VỤ MỚI THEO CHUẨN BTCTU -->
+    <div class="modal fade" id="modalCreateTask" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form th:action="@{/tasks/create}" method="post">
+                    <div class="modal-header bg-danger text-white">
+                        <h6 class="modal-title fw-bold"><i class="fa-solid fa-plus-circle me-2"></i>GIAO NHIỆM VỤ MỚI (CHUẨN BTCTU 49 MÃ)</h6>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Chọn mã công việc chuẩn BTCTU (49 Mã)</label>
+                            <select id="selectJobCatalog" name="jobCatalogId" class="form-select" onchange="onSelectCatalog(this)">
+                                <option value="">-- Tự nhập tự do (Không theo mã chuẩn) --</option>
+                                <option th:each="c : ${jobCatalogs}" 
+                                        th:value="${c.id}" 
+                                        th:data-code="${c.jobCode}"
+                                        th:data-name="${c.jobName}"
+                                        th:data-hours="${c.standardHours}"
+                                        th:data-product="${c.deliverableProduct}"
+                                        th:data-confidential="${c.isConfidential}"
+                                        th:data-security="${c.securityLevel}"
+                                        th:text="'[' + ${c.jobCode} + '] ' + ${c.jobName} + ' (' + ${c.standardHours} + 'h - ' + ${c.benchmarkPoint} + 'đ)'">
+                                </option>
+                            </select>
+                            <div class="form-text small">Chọn mã để hệ thống tự động điền Định mức thời gian, Sản phẩm mẫu và Tiêu chuẩn Mật.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Tiêu đề nhiệm vụ <span class="text-danger">*</span></label>
+                            <input type="text" id="taskTitle" name="title" class="form-control" placeholder="Nhập tên nhiệm vụ cần thực hiện..." required>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Giao cho cán bộ <span class="text-danger">*</span></label>
+                                <select name="assignedToId" class="form-select" required>
+                                    <option th:each="u : ${users}" th:value="${u.id}" th:text="${u.fullName} + ' (' + ${u.roleDisplayName} + ' - ' + (${u.department != null ? u.department.deptName : ''}) + ')'"></option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Hạn xử lý (Due date) <span class="text-danger">*</span></label>
+                                <input type="date" name="dueDate" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Định mức thời gian (Giờ)</label>
+                                <input type="number" step="0.5" id="taskStandardHours" class="form-control bg-light" value="8.0" readonly>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Bảo mật văn bản</label>
+                                <div class="form-check form-switch mt-2">
+                                    <input class="form-check-input" type="checkbox" id="checkConfidential" name="isConfidential" value="true">
+                                    <label class="form-check-label fw-semibold text-danger" for="checkConfidential"><i class="fa-solid fa-shield-halved me-1"></i> Hồ sơ MẬT (NĐ 63)</label>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">Cấp độ bảo mật</label>
+                                <select id="selectSecurityLevel" name="securityLevel" class="form-select">
+                                    <option value="THUONG">Thông thường</option>
+                                    <option value="MAT">MẬT</option>
+                                    <option value="TOI_MAT">TỐI MẬT</option>
+                                    <option value="TUYET_MAT">TUYỆT MẬT</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Sản phẩm đầu ra yêu cầu</label>
+                            <input type="text" id="taskProduct" name="deliverableProduct" class="form-control" placeholder="Ví dụ: Tờ trình, Báo cáo chuyên đề, Quyết định...">
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Mô tả chi tiết / Hướng dẫn chỉ đạo</label>
+                            <textarea name="description" class="form-control" rows="3" placeholder="Nhập yêu cầu cụ thể của Lãnh đạo giao việc..."></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-danger btn-sm"><i class="fa-solid fa-paper-plane me-1"></i> Ban hành nhiệm vụ</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function onSelectCatalog(selectElem) {
+            const selectedOpt = selectElem.options[selectElem.selectedIndex];
+            if (!selectedOpt || !selectedOpt.value) return;
+
+            const name = selectedOpt.getAttribute('data-name');
+            const hours = selectedOpt.getAttribute('data-hours');
+            const product = selectedOpt.getAttribute('data-product');
+            const confidential = selectedOpt.getAttribute('data-confidential') === 'true';
+            const security = selectedOpt.getAttribute('data-security') || 'THUONG';
+
+            if (name && !document.getElementById('taskTitle').value) {
+                document.getElementById('taskTitle').value = name;
+            }
+            if (hours) {
+                document.getElementById('taskStandardHours').value = hours;
+            }
+            if (product) {
+                document.getElementById('taskProduct').value = product;
+            }
+            document.getElementById('checkConfidential').checked = confidential;
+            document.getElementById('selectSecurityLevel').value = security;
+        }
+
+        // Tự động mở modal nếu có tham số catalogId từ URL
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const catalogId = urlParams.get('catalogId');
+            if (catalogId) {
+                const select = document.getElementById('selectJobCatalog');
+                if (select) {
+                    select.value = catalogId;
+                    onSelectCatalog(select);
+                    const modal = new bootstrap.Modal(document.getElementById('modalCreateTask'));
+                    modal.show();
+                }
+            }
+        });
+    </script>
 </body>
 </html>

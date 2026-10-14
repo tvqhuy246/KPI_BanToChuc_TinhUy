@@ -6,10 +6,34 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .watermark-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 9999;
+            background-image: repeating-linear-gradient(45deg, rgba(200, 30, 30, 0.03) 0, rgba(200, 30, 30, 0.03) 150px, transparent 150px, transparent 300px);
+        }
+        .watermark-text {
+            position: fixed;
+            bottom: 12px;
+            right: 15px;
+            font-size: 0.75rem;
+            color: rgba(180, 20, 20, 0.45);
+            font-family: monospace;
+            pointer-events: none;
+            z-index: 10000;
+        }
+    </style>
 </head>
 <body>
-    
+    <!-- WATERMARKING CHỐNG RÒ RỈ DỮ LIỆU & BẢO MẬT CẤP ĐỘ 3 (NĐ 63/2026/NĐ-CP & NĐ 85/2016) -->
+    <div class="watermark-overlay"></div>
+    <div class="watermark-text" th:text="'BAN TỔ CHỨC TỈNH ỦY ĐẮK LẮK • ' + ${user != null ? user.fullName : 'CÁN BỘ'} + ' • ' + ${#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm')}">BTCTU DAKLAK</div>
+
     <header class="dang-header py-2 px-4 d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center">
             <i class="fa-solid fa-star text-warning fa-2x me-3"></i>
@@ -30,11 +54,12 @@
         <div class="container-fluid px-0">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1">
                 <li class="nav-item"><a class="nav-link active" th:href="@{/}"><i class="fa-solid fa-chart-pie me-1"></i> Bàn làm việc (Dashboard)</a></li>
-                <li class="nav-item"><a class="nav-link " th:href="@{/tasks}"><i class="fa-solid fa-list-check me-1"></i> Nhiệm vụ công tác</a></li>
-                <li class="nav-item"><a class="nav-link " th:href="@{/evaluation}"><i class="fa-solid fa-file-signature me-1"></i> Tự chấm điểm KPI</a></li>
-                <li class="nav-item"><a class="nav-link " th:href="@{/approvals}"><i class="fa-solid fa-stamp me-1"></i> Đánh giá & Phê duyệt</a>
-            <a th:href="@{/org-chart}" class="btn btn-outline-warning btn-sm"><i class="fa-solid fa-sitemap me-1"></i> Cây sơ đồ Ban</a></li>
-                <li class="nav-item"><a class="nav-link " th:href="@{/reports}"><i class="fa-solid fa-file-invoice me-1"></i> Báo cáo & Quyết định</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/tasks}"><i class="fa-solid fa-list-check me-1"></i> Nhiệm vụ công tác</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/job-catalog}"><i class="fa-solid fa-book-bookmark me-1"></i> Danh mục công việc BTCTU (49 Mã)</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/evaluation}"><i class="fa-solid fa-file-signature me-1"></i> Tự chấm điểm KPI</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/approvals}"><i class="fa-solid fa-stamp me-1"></i> Đánh giá & Phê duyệt</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/org-chart}"><i class="fa-solid fa-sitemap me-1"></i> Cây sơ đồ Ban</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/reports}"><i class="fa-solid fa-file-invoice me-1"></i> Báo cáo & Quyết định</a></li>
                 <li class="nav-item"><a class="nav-link" href="/h2-console" target="_blank"><i class="fa-solid fa-database me-1"></i> Tra cứu SQL</a></li>
             </ul>
         </div>
@@ -54,15 +79,18 @@
                 <i class="fa-solid fa-sitemap me-1"></i> Xem Cây phân cấp
             </a>
         </div>
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <div>
                 <h4 class="fw-bold text-navy mb-1">BÀN LÀM VIỆC CHỈ ĐẠO & ĐIỀU HÀNH</h4>
                 <p class="text-muted small mb-0">Theo dõi kết quả thực hiện nhiệm vụ công tác theo thời gian thực &bull; <span class="badge bg-danger ms-1 fw-semibold" th:text="${filterTitle}">Hôm nay</span></p>
             </div>
+            <!-- BỘ LỌC CHU KỲ TOÀN DIỆN 5 CẤP: HÔM NAY -> TUẦN -> THÁNG -> QUÝ -> NĂM (HD 05-HD/TU & QĐ 39-QĐ/TU) -->
             <div class="btn-group shadow-sm" role="group">
                 <a th:href="@{/today}" class="btn btn-sm" th:classappend="${currentFilter == 'today' or currentFilter == null ? 'btn-danger text-white fw-bold active' : 'btn-outline-danger'}"><i class="fa-regular fa-calendar-days me-1"></i> Hôm nay</a>
                 <a th:href="@{/week}" class="btn btn-sm" th:classappend="${currentFilter == 'week' ? 'btn-danger text-white fw-bold active' : 'btn-outline-danger'}"><i class="fa-solid fa-calendar-week me-1"></i> Tuần này</a>
-                <a th:href="@{/month}" class="btn btn-sm" th:classappend="${currentFilter == 'month' ? 'btn-danger text-white fw-bold active' : 'btn-outline-danger'}"><i class="fa-regular fa-calendar me-1"></i> Tháng 10/2026</a>
+                <a th:href="@{/month}" class="btn btn-sm" th:classappend="${currentFilter == 'month' ? 'btn-danger text-white fw-bold active' : 'btn-outline-danger'}"><i class="fa-regular fa-calendar me-1"></i> Tháng 10</a>
+                <a th:href="@{/quarter}" class="btn btn-sm" th:classappend="${currentFilter == 'quarter' ? 'btn-danger text-white fw-bold active' : 'btn-outline-danger'}"><i class="fa-solid fa-chart-line me-1"></i> Quý IV/2026</a>
+                <a th:href="@{/year}" class="btn btn-sm" th:classappend="${currentFilter == 'year' ? 'btn-danger text-white fw-bold active' : 'btn-outline-danger'}"><i class="fa-solid fa-award me-1"></i> Năm 2026</a>
             </div>
         </div>
 
@@ -70,153 +98,123 @@
             <div class="col-md-3">
                 <div class="stat-card red">
                     <span>Tổng số cán bộ, công chức</span>
-                    <h3 th:text="${totalUsers}">6</h3>
-                    <small class="text-muted">5 phòng ban chuyên môn</small>
+                    <h3 th:text="${totalUsers}">39</h3>
+                    <small class="text-muted">4 phòng ban chuyên môn + Lãnh đạo Ban</small>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="stat-card green">
                     <span>Nhiệm vụ hoàn thành</span>
-                    <h3><span th:text="${completedTasks}">2</span> / <span th:text="${totalTasks}">4</span></h3>
-                    <small class="text-success"><i class="fa-solid fa-arrow-trend-up me-1"></i> Tiến độ chung đạt 85%</small>
+                    <h3><span th:text="${completedTasks}">0</span> / <span th:text="${totalTasks}">4</span></h3>
+                    <small class="text-success"><i class="fa-solid fa-arrow-trend-up me-1"></i> Đang tích cực thực hiện đúng hạn</small>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="stat-card gold">
                     <span>Điểm KPI trung bình cơ quan</span>
-                    <h3><span th:text="${avgScore}">92.5</span> <small class="fs-6 text-muted">/ 100đ</small></h3>
+                    <h3><span th:text="${avgScore}">94.5</span> <small class="fs-6 text-muted">/ 100đ</small></h3>
                     <small class="text-warning fw-semibold">Xếp loại: Hoàn thành Tốt</small>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="stat-card">
-                    <span>An toàn thông tin & Uptime</span>
-                    <h3 class="text-primary">100%</h3>
-                    <small class="text-muted">0 sự cố an toàn dữ liệu Đảng</small>
+                <div class="stat-card blue">
+                    <span>Bảo mật & Bí mật Nhà nước</span>
+                    <h3>Cấp độ 3</h3>
+                    <small class="text-primary"><i class="fa-solid fa-shield-halved me-1"></i> Tuân thủ NĐ 63/2026 & NĐ 85/2016</small>
                 </div>
             </div>
         </div>
 
         <div class="row g-4 mb-4">
-            <div class="col-md-8">
-                <div class="card border-0 shadow-sm rounded-3 p-3">
-                    <h6 class="fw-bold text-navy mb-3"><i class="fa-solid fa-chart-column me-2 text-danger"></i>Tiến độ thực hiện nhiệm vụ các phòng chuyên môn</h6>
-                    <canvas id="deptChart" height="120"></canvas>
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm rounded-3">
+                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0 fw-bold text-navy"><i class="fa-solid fa-list-check me-2 text-danger"></i> NHIỆM VỤ CÔNG TÁC TRONG PHẠM VI GIÁM SÁT</h6>
+                        <a th:href="@{/tasks}" class="btn btn-outline-danger btn-sm">Xem tất cả</a>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Nhiệm vụ</th>
+                                    <th>Phụ trách</th>
+                                    <th>Thời hạn</th>
+                                    <th>Bảo mật</th>
+                                    <th>Tiến độ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="task : ${recentTasks}">
+                                    <td>
+                                        <div class="fw-bold" th:text="${task.title}">Tiêu đề nhiệm vụ</div>
+                                        <small class="text-muted" th:text="${task.description}">Mô tả</small>
+                                    </td>
+                                    <td th:text="${task.assignedTo.fullName}">Cán bộ</td>
+                                    <td th:text="${task.dueDate}">2026-10-15</td>
+                                    <td>
+                                        <span th:if="${task.isConfidential}" class="badge bg-danger py-1 px-2"><i class="fa-solid fa-shield-halved me-1"></i> MẬT</span>
+                                        <span th:unless="${task.isConfidential}" class="badge bg-light text-muted border">Thông thường</span>
+                                    </td>
+                                    <td style="width: 20%;">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="progress flex-grow-1" style="height: 6px;">
+                                                <div class="progress-bar bg-danger" role="progressbar" th:style="'width: ' + ${task.progress} + '%;'"></div>
+                                            </div>
+                                            <span class="small fw-bold" th:text="${task.progress} + '%'">0%</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr th:if="${#lists.isEmpty(recentTasks)}">
+                                    <td colspan="5" class="text-center py-4 text-muted">Không có nhiệm vụ nào trong phạm vi này.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card border-0 shadow-sm rounded-3 p-3">
-                    <h6 class="fw-bold text-navy mb-3"><i class="fa-solid fa-chart-pie me-2 text-warning"></i>Tỷ lệ xếp loại thi đua tháng</h6>
-                    <canvas id="pieChart" height="200"></canvas>
+
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm rounded-3 mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h6 class="mb-0 fw-bold text-navy"><i class="fa-solid fa-bullhorn me-2 text-danger"></i> THÔNG BÁO VÀ CHỈ ĐẠO MỚI</h6>
+                    </div>
+                    <div class="card-body p-3">
+                        <div class="alert alert-danger py-2 px-3 mb-2 small">
+                            <i class="fa-solid fa-circle-exclamation me-1"></i> <strong>HD số 05-HD/TU:</strong> Triển khai đánh giá KPI định kỳ hằng quý (Quý IV/2026) đối với cán bộ lãnh đạo, quản lý.
+                        </div>
+                        <div class="alert alert-warning py-2 px-3 mb-2 small">
+                            <i class="fa-solid fa-shield-halved me-1"></i> <strong>NĐ 63/2026/NĐ-CP:</strong> Toàn bộ văn bản mật phải tuân thủ đúng quy trình bảo mật nhà nước.
+                        </div>
+                        <div class="alert alert-info py-2 px-3 mb-0 small">
+                            <i class="fa-solid fa-link me-1"></i> <strong>QĐ 607-QĐ/BTCTW:</strong> Kích hoạt cổng REST API liên thông dữ liệu với Ban Tổ chức Trung ương.
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
 
-        
-        <!-- Bảng Nhật ký công việc & Tiến độ thực tế theo chu kỳ -->
-        <div class="card border-0 shadow-sm rounded-3 mb-4">
-            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                <h6 class="fw-bold text-navy mb-0">
-                    <i class="fa-solid fa-clock-rotate-left me-2 text-danger"></i>
-                    Nhật ký công tác & Tiến độ chi tiết: <span class="badge bg-danger ms-1" th:text="${filterTitle}">Hôm nay</span>
-                </h6>
-                <a th:href="@{/tasks}" class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-list-check me-1"></i> Quản lý nhiệm vụ</a>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th>STT</th>
-                            <th>Cán bộ thực hiện</th>
-                            <th>Nhiệm vụ liên quan</th>
-                            <th>Nội dung công việc cụ thể</th>
-                            <th>Thời lượng</th>
-                            <th>Kết quả</th>
-                            <th>Ý kiến Lãnh đạo</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="wl, iter : ${workLogs}">
-                            <td th:text="${iter.index + 1}">1</td>
-                            <td class="fw-bold text-navy" th:text="${wl.user.fullName}">Đồng chí Phan Văn Cường</td>
-                            <td>
-                                <span class="badge bg-secondary" th:text="${wl.task != null ? wl.task.title : 'Công việc thường xuyên'}">Nhiệm vụ</span>
-                            </td>
-                            <td th:text="${wl.workContent}">Nội dung công tác</td>
-                            <td><span class="badge bg-light text-dark border" th:text="${wl.hoursSpent + ' giờ'}">4.0 giờ</span></td>
-                            <td>
-                                <span class="badge bg-success" th:if="${wl.resultStatus == 'HOAN_THANH'}">Đã hoàn thành</span>
-                                <span class="badge bg-warning text-dark" th:if="${wl.resultStatus != 'HOAN_THANH'}">Đang xử lý</span>
-                            </td>
-                            <td class="text-muted small fst-italic" th:text="${wl.supervisorComment != null ? wl.supervisorComment : 'Đã duyệt ghi nhận'}">Tốt</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="card border-0 shadow-sm rounded-3 mb-4">
-            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
-                <h6 class="fw-bold text-navy mb-0"><i class="fa-solid fa-ranking-star me-2 text-warning"></i>Bảng kết quả xếp loại thi đua cán bộ kỳ gần nhất</h6>
-                <a th:href="@{/reports/draft-decision}" class="btn btn-danger btn-sm"><i class="fa-solid fa-file-word me-1"></i> Xem Dự thảo Quyết định</a>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th>Họ và tên</th>
-                            <th>Phòng ban</th>
-                            <th>Điểm tự chấm</th>
-                            <th>Trưởng phòng thẩm định</th>
-                            <th>Lãnh đạo Ban chốt</th>
-                            <th>Xếp loại thi đua</th>
-                            <th>Trạng thái</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="ev : ${evaluations}">
-                            <td class="fw-semibold" th:text="${ev.user.fullName}">Đồng chí Phan Văn Cường</td>
-                            <td th:text="${ev.department.name}">Văn phòng Ban</td>
-                            <td th:text="${ev.selfScore}">95.0</td>
-                            <td th:text="${ev.managerScore}">96.0</td>
-                            <td class="fw-bold text-danger" th:text="${ev.finalScore}">96.0</td>
-                            <td>
-                                <span class="badge bg-success p-2" th:text="${ev.rankingDisplayName}">Hoàn thành xuất sắc</span>
-                            </td>
-                            <td>
-                                <span class="badge bg-primary" th:text="${ev.status}">APPROVED</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="card border-0 shadow-sm rounded-3">
+                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0 fw-bold text-navy"><i class="fa-solid fa-award me-2 text-warning"></i> XẾP LOẠI KPI TRONG KỲ</h6>
+                        <a th:href="@{/reports}" class="small text-danger text-decoration-none">Báo cáo</a>
+                    </div>
+                    <div class="card-body p-3">
+                        <div th:each="ev : ${evaluations}" class="d-flex justify-content-between align-items-center border-bottom py-2">
+                            <div>
+                                <div class="fw-bold small" th:text="${ev.user.fullName}">Họ tên</div>
+                                <small class="text-muted" th:text="${ev.department.name}">Phòng</small>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge bg-success-subtle text-success border border-success-subtle fw-bold" th:text="${ev.finalScore != null ? ev.finalScore : ev.selfScore} + 'đ'">95đ</span>
+                                <div class="small text-muted" th:text="${ev.rankingDisplayName}">Tốt</div>
+                            </div>
+                        </div>
+                        <div th:if="${#lists.isEmpty(evaluations)}" class="text-center py-3 text-muted small">
+                            Chưa có dữ liệu đánh giá cho kỳ này.
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-    <script>
-        new Chart(document.getElementById('deptChart'), {
-            type: 'bar',
-            data: {
-                labels: ['Phòng Cán bộ', 'Phòng TC Đảng', 'Phòng BVCTNB', 'Văn phòng Ban'],
-                datasets: [{
-                    label: 'Tỷ lệ hoàn thành (%)',
-                    data: [92, 88, 95, 96],
-                    backgroundColor: '#a71d2a'
-                }]
-            },
-            options: { scales: { y: { beginAtZero: true, max: 100 } } }
-        });
-
-        new Chart(document.getElementById('pieChart'), {
-            type: 'doughnut',
-            data: {
-                labels: ['Xuất sắc (18%)', 'Hoàn thành Tốt (72%)', 'Hoàn thành (10%)'],
-                datasets: [{
-                    data: [18, 72, 10],
-                    backgroundColor: ['#10b981', '#3b82f6', '#f59e0b']
-                }]
-            }
-        });
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
