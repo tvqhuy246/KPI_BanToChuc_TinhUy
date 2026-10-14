@@ -28,12 +28,18 @@
                     <div class="dang-header login-header-glow text-center p-4">
                         <img src="https://cdn11.dienmaycholon.vn/filewebdmclnew/public/userupload/files/kkt/ngoi-sao-vang-va-voi-hinh-nen-trong-dong-675.jpg" alt="Logo" class="rounded-circle shadow-sm mb-2 border border-2 border-warning" style="width: 70px; height: 70px; object-fit: cover;">
                         <h2 class="h5 text-white fw-bold text-uppercase mb-1">Ban Tổ chức Tỉnh ủy Đắk Lắk</h2>
-                        <p class="small text-warning mb-0">ĐĂNG KÝ TÀI KHOẢN CÁN BỘ / CHUYÊN VIÊN MỚI</p>
+                        <p class="small text-warning mb-0">ĐĂNG KÝ TÀI KHOẢN CHUYÊN VIÊN / NHÂN VIÊN MỚI</p>
                     </div>
                     <div class="card-body p-4 p-md-5">
                         <div th:if="${error}" class="alert alert-danger py-2 small d-flex align-items-center mb-4">
                             <i class="fa-solid fa-triangle-exclamation me-2"></i>
                             <span th:text="${error}">Thông tin không hợp lệ!</span>
+                        </div>
+
+                        <!-- CẢNH BÁO QUY CHUẨN PHÂN CẤP: CHỈ DÀNH CHO CẤP 5 (CHUYÊN VIÊN / NHÂN VIÊN) -->
+                        <div class="alert alert-info border-0 p-3 mb-4 rounded-3 small">
+                            <i class="fa-solid fa-circle-info me-2 text-primary fs-6"></i>
+                            <strong>Quy định bảo mật & phân quyền:</strong> Form đăng ký công khai chỉ áp dụng cho <strong>Cấp 5 (Chuyên viên, Nhân viên, Văn thư)</strong>. Việc bổ nhiệm, phân công cán bộ Lãnh đạo quản lý từ <strong>Cấp 4 trở lên</strong> do Quản trị viên (Admin) hoặc Trưởng ban thực hiện theo quy trình tổ chức cán bộ.
                         </div>
 
                         <form th:action="@{/register}" method="post">
@@ -80,9 +86,8 @@
                                     </select>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label">Vị trí chức danh</label>
+                                    <label class="form-label">Vị trí chức danh (Cấp 5)</label>
                                     <select name="positionId" class="form-select">
-                                        <option value="">-- Mặc định Chuyên viên --</option>
                                         <option th:each="p : ${positions}" th:value="${p.id}" th:text="${p.title}"></option>
                                     </select>
                                 </div>
