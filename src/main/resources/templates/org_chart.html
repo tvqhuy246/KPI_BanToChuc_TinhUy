@@ -4,254 +4,794 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cây Sơ đồ Tổ chức - Ban Tổ chức Tỉnh ủy Đắk Lắk</title>
+    <!-- BOOTSTRAP 5 & FONT AWESOME -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    
     <style>
-        .org-tree-container {
-            overflow-x: auto;
-            padding: 2rem 1rem;
-            background: linear-gradient(135deg, #0d1117 0%, #161b22 100%);
-            border-radius: 12px;
-            min-height: 700px;
+        :root {
+            --color-l1: #991b1b;
+            --color-l2: #1e3a8a;
+            --color-l3: #065f46;
+            --color-l4: #92400e;
+            --color-l5: #1e293b;
         }
-        .org-card {
-            background: #21262d;
-            border: 2px solid #30363d;
+        body {
+            background-color: #0b1329;
+            color: #f1f5f9;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        
+        /* NAVBAR CUSTOM ADJUSTMENTS FOR DARK MODE */
+        .navbar-custom {
+            background: #111e38;
+            border-bottom: 2px solid #b91c1c;
+        }
+        .navbar-custom .nav-link {
+            color: #cbd5e1;
+            font-size: 0.85rem;
+            font-weight: 500;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+        .navbar-custom .nav-link:hover {
+            color: #ffffff;
+            background: rgba(185, 28, 28, 0.4);
+        }
+        .navbar-custom .nav-link.active {
+            color: #ffffff;
+            background: #b91c1c;
+            font-weight: 600;
+        }
+
+        .org-canvas {
+            background: radial-gradient(circle at 50% 5%, #16223f 0%, #0b1329 100%);
+            border-radius: 16px;
+            padding: 2rem 1.25rem;
+            min-height: 850px;
+            border: 1px solid #1e293b;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        /* CARD STYLING */
+        .staff-node {
             border-radius: 10px;
-            padding: 12px 14px;
-            color: #f0f6fc;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-            transition: all 0.25s ease-in-out;
+            padding: 10px 12px;
+            color: #ffffff;
             cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            text-align: left;
         }
-        .org-card:hover {
-            transform: translateY(-4px) scale(1.02);
-            box-shadow: 0 8px 24px rgba(220, 53, 69, 0.4);
-            border-color: #dc3545;
+        .staff-node:hover {
+            transform: translateY(-3px) scale(1.015);
+            box-shadow: 0 10px 20px rgba(220, 38, 38, 0.35);
+            z-index: 10;
         }
-        .org-card.level-1 {
-            background: linear-gradient(135deg, #7a0c14 0%, #a81c24 100%);
-            border-color: #ffc107;
-            max-width: 320px;
+        .staff-node.highlight-match {
+            animation: pulse-ring 1.5s infinite;
+            border-color: #f59e0b !important;
+            box-shadow: 0 0 18px rgba(245, 158, 11, 0.85) !important;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
+
+        /* 5 CẤP BẬC MÀU CHUẨN */
+        .node-l1 {
+            background: linear-gradient(135deg, #7f1d1d 0%, #b91c1c 100%);
+            border: 2px solid #f59e0b;
+            max-width: 440px;
             margin: 0 auto;
         }
-        .org-card.level-2 {
-            background: linear-gradient(135deg, #1f3a5f 0%, #2b507d 100%);
-            border-color: #58a6ff;
-            min-width: 210px;
+        .node-l2 {
+            background: linear-gradient(135deg, #1e3a8a 0%, #1d4ed8 100%);
+            border: 1.5px solid #60a5fa;
+            width: 100%;
+            height: 100%;
         }
-        .org-card.level-3 {
-            background: linear-gradient(135deg, #1b4731 0%, #236544 100%);
-            border-color: #3fb950;
-            min-width: 200px;
+        .node-l3 {
+            background: linear-gradient(135deg, #064e3b 0%, #059669 100%);
+            border: 1.5px solid #34d399;
         }
-        .org-card.level-4 {
-            background: linear-gradient(135deg, #5c3818 0%, #7d4d23 100%);
-            border-color: #d29922;
-            min-width: 190px;
+        .node-l4 {
+            background: linear-gradient(135deg, #78350f 0%, #d97706 100%);
+            border: 1.5px solid #fbbf24;
         }
-        .org-card.level-5 {
-            background: #21262d;
-            border-color: #30363d;
-            min-width: 175px;
-            font-size: 0.85rem;
+        .node-l5 {
+            background: #1e293b;
+            border: 1px solid #334155;
         }
-        .tree-line-v {
+        .node-l5:hover {
+            border-color: #64748b;
+            background: #253349;
+        }
+
+        /* GRID LAYOUTS CHO CÁC NHÓM */
+        .deputy-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.75rem;
+            width: 100%;
+        }
+        @media (max-width: 1200px) {
+            .deputy-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        @media (max-width: 768px) {
+            .deputy-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .tree-dept-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            align-items: start;
+            width: 100%;
+        }
+        @media (max-width: 1280px) {
+            .tree-dept-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 768px) {
+            .tree-dept-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .matrix-grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.85rem;
+        }
+        .matrix-grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.85rem;
+        }
+        .matrix-grid-5 {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.75rem;
+        }
+        @media (max-width: 1200px) {
+            .matrix-grid-3, .matrix-grid-4, .matrix-grid-5 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 768px) {
+            .matrix-grid-3, .matrix-grid-4, .matrix-grid-5 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* CỘT PHÒNG BAN */
+        .dept-column {
+            background: rgba(22, 33, 58, 0.75);
+            border: 1px solid #2d3f66;
+            border-radius: 12px;
+            padding: 1rem;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+        }
+        .dept-header {
+            padding: 10px 12px;
+            border-radius: 8px;
+            background: #0d172e;
+            border-left: 4px solid #ef4444;
+            margin-bottom: 1rem;
+            border-top: 1px solid #1e293b;
+            border-right: 1px solid #1e293b;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        /* TIÊU ĐỀ PHÂN MỨC TRONG PHÒNG */
+        .section-label {
+            font-size: 0.73rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 0.45rem;
+            display: flex;
+            align-items: center;
+        }
+        .label-l3 { color: #34d399; }
+        .label-l4 { color: #fbbf24; }
+        .label-l5 { color: #94a3b8; }
+
+        .empty-state-box {
+            border: 1.5px dashed rgba(148, 163, 184, 0.35);
+            border-radius: 8px;
+            padding: 0.75rem;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.75rem;
+            background: rgba(15, 23, 42, 0.35);
+        }
+
+        /* CONNECTOR LINES */
+        .tree-line-vertical {
             width: 2px;
             height: 24px;
-            background: #484f58;
+            background: #3b82f6;
             margin: 0 auto;
         }
-        .badge-level {
-            font-size: 0.7rem;
+
+        /* BADGES & TYPOGRAPHY */
+        .badge-lvl {
+            font-size: 0.65rem;
+            font-weight: 700;
             padding: 3px 8px;
-            border-radius: 12px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
             text-transform: uppercase;
+        }
+        .node-name {
+            font-size: 0.92rem;
             font-weight: 700;
+            line-height: 1.3;
         }
-        .card-name {
-            font-weight: 700;
-            font-size: 0.95rem;
-            margin-bottom: 2px;
+        .node-title {
+            font-size: 0.75rem;
+            opacity: 0.92;
         }
-        .card-title-role {
-            font-size: 0.8rem;
-            color: #8b949e;
+        .node-subtext {
+            font-size: 0.7rem;
+            opacity: 0.8;
+            line-height: 1.3;
         }
-        .org-card.level-1 .card-title-role,
-        .org-card.level-2 .card-title-role,
-        .org-card.level-3 .card-title-role,
-        .org-card.level-4 .card-title-role {
-            color: #f0f6fc;
-            opacity: 0.9;
-        }
-        .legend-box {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.82rem;
-            color: #c9d1d9;
-        }
-        .legend-color {
-            width: 14px;
-            height: 14px;
-            border-radius: 3px;
+
+        /* TOOLBAR */
+        .toolbar-panel {
+            background: #111e38;
+            border: 1px solid #1e2d4d;
+            border-radius: 12px;
+            padding: 12px 18px;
         }
     </style>
 </head>
 <body>
+
+    <!-- 1. HEADER CHUẨN CƠ QUAN ĐẢNG BỘ TỈNH ĐẮK LẮK -->
     <header class="dang-header py-2 px-4 d-flex align-items-center justify-content-between">
-        <div class="d-flex align-items-center">
-            <i class="fa-solid fa-star text-warning fa-2x me-3"></i>
+        <div class="header-brand-wrap">
+            <div class="d-inline-flex align-items-center gap-1 me-2">
+                <svg class="flag-icon-dang" viewBox="0 0 900 600" width="34" height="22" style="border-radius: 3px; box-shadow: 0 1px 3px rgba(0,0,0,0.5);" aria-label="Cờ Đảng Cộng sản Việt Nam"><rect width="900" height="600" fill="#da251d"/><path d="M 584.73 189.67 L 580.26 185.19 L 578.13 185.19 L 575.30 182.36 L 575.07 179.76 L 572.48 179.53 L 567.05 173.87 L 564.93 173.87 L 561.39 170.10 L 559.27 170.10 L 555.74 166.33 L 553.61 166.33 L 550.08 162.55 L 547.96 162.55 L 546.31 160.67 L 544.18 160.67 L 542.53 158.78 L 540.41 158.78 L 538.76 156.90 L 534.75 156.90 L 531.22 153.12 L 527.21 153.12 L 525.56 151.24 L 521.55 151.24 L 519.90 149.35 L 515.89 149.35 L 514.24 147.47 L 508.35 147.47 L 506.70 145.58 L 500.81 145.58 L 499.16 143.69 L 489.72 143.46 L 488.78 144.17 L 488.78 144.87 L 490.20 145.82 L 491.38 147.23 L 493.50 147.23 L 498.92 152.89 L 501.04 152.89 L 506.46 158.55 L 508.59 158.55 L 517.78 167.98 L 519.90 167.98 L 522.73 170.81 L 522.73 172.93 L 535.93 185.89 L 535.93 188.02 L 541.59 193.44 L 541.59 195.56 L 547.25 200.98 L 547.25 203.10 L 551.02 206.64 L 551.02 208.76 L 554.79 212.30 L 554.79 214.42 L 556.68 216.07 L 556.68 218.19 L 558.57 219.84 L 558.57 221.96 L 560.45 223.61 L 560.45 225.74 L 562.34 227.39 L 562.34 229.51 L 564.22 231.16 L 564.22 235.17 L 566.11 236.82 L 566.11 240.83 L 568.00 242.48 L 568.00 244.60 L 569.88 246.25 L 569.88 250.26 L 571.77 251.91 L 571.77 257.80 L 573.65 259.45 L 573.65 265.34 L 575.54 266.99 L 575.54 274.77 L 577.43 276.42 L 577.43 310.61 L 575.54 312.26 L 575.54 321.93 L 573.65 323.58 L 573.65 331.36 L 571.77 333.01 L 571.77 335.13 L 569.88 336.78 L 569.88 340.79 L 568.00 342.44 L 568.00 344.56 L 565.17 347.39 L 564.46 347.62 L 563.05 347.39 L 519.90 304.01 L 517.78 304.01 L 516.84 303.06 L 516.84 300.94 L 502.93 287.03 L 500.81 287.03 L 499.86 286.09 L 499.86 283.97 L 489.72 273.83 L 487.60 273.83 L 486.66 272.89 L 486.66 270.77 L 472.75 256.86 L 470.63 256.86 L 469.69 255.91 L 469.69 253.79 L 460.26 244.60 L 460.26 242.48 L 496.09 206.88 L 496.33 206.17 L 496.09 204.75 L 476.52 185.19 L 470.63 185.19 L 468.98 187.07 L 464.97 187.07 L 463.32 188.96 L 459.31 188.96 L 457.66 190.84 L 451.77 190.84 L 450.12 192.73 L 440.45 192.73 L 438.80 194.62 L 419.71 194.62 L 347.33 266.99 L 347.09 267.70 L 347.33 269.12 L 389.53 311.32 L 390.24 311.55 L 391.65 311.32 L 419.71 283.03 L 421.83 283.03 L 524.62 385.82 L 524.62 389.82 L 523.67 390.77 L 521.55 390.77 L 519.90 392.65 L 517.78 392.65 L 516.13 394.54 L 514.01 394.54 L 512.36 396.42 L 506.46 396.42 L 504.81 398.31 L 502.69 398.31 L 501.04 400.20 L 495.15 400.20 L 493.50 402.08 L 485.72 402.08 L 484.07 403.97 L 451.77 403.97 L 450.12 402.08 L 442.34 402.08 L 440.69 400.20 L 432.91 400.20 L 431.26 398.31 L 427.25 398.31 L 425.60 396.42 L 419.71 396.42 L 418.06 394.54 L 415.93 394.54 L 414.28 392.65 L 408.39 392.65 L 406.74 390.77 L 404.62 390.77 L 402.97 388.88 L 400.84 388.88 L 399.19 386.99 L 397.07 386.99 L 395.42 385.11 L 393.30 385.11 L 391.65 383.22 L 389.53 383.22 L 385.99 379.45 L 383.87 379.45 L 382.22 377.56 L 380.10 377.56 L 376.56 373.79 L 374.44 373.79 L 369.02 368.13 L 366.90 368.13 L 357.70 358.70 L 355.58 358.70 L 354.64 357.76 L 354.64 355.64 L 350.16 351.16 L 348.04 351.16 L 344.73 347.39 L 344.03 347.39 L 343.08 348.80 L 271.41 420.47 L 270.00 421.41 L 270.00 422.12 L 271.41 423.06 L 288.86 440.51 L 289.10 443.10 L 291.69 443.34 L 300.88 452.77 L 301.59 453.01 L 303.01 452.77 L 342.38 413.16 L 344.97 412.93 L 345.21 410.33 L 349.92 405.62 L 353.93 405.62 L 366.90 418.82 L 369.02 418.82 L 374.44 424.48 L 376.56 424.48 L 381.98 430.14 L 384.11 430.14 L 387.64 433.91 L 389.76 433.91 L 391.41 435.80 L 393.54 435.80 L 397.07 439.57 L 401.08 439.57 L 402.73 441.45 L 404.85 441.45 L 406.50 443.34 L 408.62 443.34 L 410.28 445.23 L 412.40 445.23 L 414.05 447.11 L 418.06 447.11 L 419.71 449.00 L 423.71 449.00 L 425.36 450.88 L 431.26 450.88 L 432.91 452.77 L 436.92 452.77 L 438.57 454.66 L 448.23 454.66 L 449.88 456.54 L 489.72 456.54 L 491.38 454.66 L 502.93 454.66 L 504.58 452.77 L 510.47 452.77 L 512.12 450.88 L 518.02 450.88 L 519.67 449.00 L 521.79 449.00 L 523.44 447.11 L 527.45 447.11 L 529.10 445.23 L 531.22 445.23 L 532.87 443.34 L 536.88 443.34 L 538.53 441.45 L 540.65 441.45 L 542.30 439.57 L 544.42 439.57 L 546.07 437.68 L 548.19 437.68 L 551.73 433.91 L 553.85 433.91 L 555.50 432.02 L 557.62 432.02 L 561.16 428.25 L 567.05 428.25 L 591.34 452.77 L 593.46 452.77 L 628.59 417.41 L 630.00 416.46 L 630.00 415.76 L 628.11 414.34 L 628.11 412.22 L 612.32 396.42 L 610.20 396.42 L 609.25 395.48 L 609.25 393.36 L 606.66 390.77 L 604.54 390.77 L 603.60 389.82 L 603.60 383.93 L 607.37 380.39 L 607.37 378.27 L 609.25 376.62 L 609.25 374.50 L 611.14 372.85 L 611.14 370.73 L 613.03 369.08 L 613.03 366.95 L 614.91 365.30 L 614.91 363.18 L 616.80 361.53 L 616.80 357.52 L 618.68 355.87 L 618.68 351.87 L 620.57 350.22 L 620.57 346.21 L 622.46 344.56 L 622.46 338.66 L 624.34 337.01 L 624.34 333.01 L 626.23 331.36 L 626.23 323.58 L 628.11 321.93 L 628.11 278.31 L 626.23 276.66 L 626.23 266.99 L 624.34 265.34 L 624.34 261.34 L 622.46 259.69 L 622.46 253.79 L 620.57 252.14 L 620.57 248.13 L 618.68 246.48 L 618.68 244.36 L 616.80 242.71 L 616.80 238.70 L 614.91 237.05 L 614.91 234.93 L 613.03 233.28 L 613.03 231.16 L 611.14 229.51 L 611.14 227.39 L 609.25 225.74 L 609.25 223.61 L 607.37 221.96 L 607.37 219.84 L 605.48 218.19 L 605.48 216.07 L 601.71 212.53 L 601.71 210.41 L 597.94 206.88 L 597.94 204.75 L 584.73 191.79 Z" fill="#ffff00"/></svg>
+                <svg class="flag-icon-vn" viewBox="0 0 900 600" width="34" height="22" style="border-radius: 3px; box-shadow: 0 1px 3px rgba(0,0,0,0.5);" aria-label="Cờ Tổ quốc Việt Nam"><rect width="900" height="600" fill="#da251d"/><polygon points="450.00,120.00 490.41,244.38 621.19,244.38 515.39,321.25 555.80,445.62 450.00,368.75 344.20,445.62 384.61,321.25 278.81,244.38 409.59,244.38" fill="#ffff00"/></svg>
+            </div>
             <div class="brand-text">
                 <h1>BAN TỔ CHỨC TỈNH ỦY ĐẮK LẮK</h1>
-                <small>HỆ THỐNG QUẢN LÝ VÀ ĐÁNH GIÁ KPI THEO QUY ĐỊNH 01-QĐ/BTCTU</small>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="brand-motto"><svg class="flag-icon-dang" viewBox="0 0 900 600" width="22" height="15" style="vertical-align: -2px; border-radius: 2px; margin-right: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.5); display: inline-block;" aria-label="Cờ Đảng Cộng sản Việt Nam (QĐ 99-QĐ/TW)"><rect width="900" height="600" fill="#da251d"/><path d="M 584.73 189.67 L 580.26 185.19 L 578.13 185.19 L 575.30 182.36 L 575.07 179.76 L 572.48 179.53 L 567.05 173.87 L 564.93 173.87 L 561.39 170.10 L 559.27 170.10 L 555.74 166.33 L 553.61 166.33 L 550.08 162.55 L 547.96 162.55 L 546.31 160.67 L 544.18 160.67 L 542.53 158.78 L 540.41 158.78 L 538.76 156.90 L 534.75 156.90 L 531.22 153.12 L 527.21 153.12 L 525.56 151.24 L 521.55 151.24 L 519.90 149.35 L 515.89 149.35 L 514.24 147.47 L 508.35 147.47 L 506.70 145.58 L 500.81 145.58 L 499.16 143.69 L 489.72 143.46 L 488.78 144.17 L 488.78 144.87 L 490.20 145.82 L 491.38 147.23 L 493.50 147.23 L 498.92 152.89 L 501.04 152.89 L 506.46 158.55 L 508.59 158.55 L 517.78 167.98 L 519.90 167.98 L 522.73 170.81 L 522.73 172.93 L 535.93 185.89 L 535.93 188.02 L 541.59 193.44 L 541.59 195.56 L 547.25 200.98 L 547.25 203.10 L 551.02 206.64 L 551.02 208.76 L 554.79 212.30 L 554.79 214.42 L 556.68 216.07 L 556.68 218.19 L 558.57 219.84 L 558.57 221.96 L 560.45 223.61 L 560.45 225.74 L 562.34 227.39 L 562.34 229.51 L 564.22 231.16 L 564.22 235.17 L 566.11 236.82 L 566.11 240.83 L 568.00 242.48 L 568.00 244.60 L 569.88 246.25 L 569.88 250.26 L 571.77 251.91 L 571.77 257.80 L 573.65 259.45 L 573.65 265.34 L 575.54 266.99 L 575.54 274.77 L 577.43 276.42 L 577.43 310.61 L 575.54 312.26 L 575.54 321.93 L 573.65 323.58 L 573.65 331.36 L 571.77 333.01 L 571.77 335.13 L 569.88 336.78 L 569.88 340.79 L 568.00 342.44 L 568.00 344.56 L 565.17 347.39 L 564.46 347.62 L 563.05 347.39 L 519.90 304.01 L 517.78 304.01 L 516.84 303.06 L 516.84 300.94 L 502.93 287.03 L 500.81 287.03 L 499.86 286.09 L 499.86 283.97 L 489.72 273.83 L 487.60 273.83 L 486.66 272.89 L 486.66 270.77 L 472.75 256.86 L 470.63 256.86 L 469.69 255.91 L 469.69 253.79 L 460.26 244.60 L 460.26 242.48 L 496.09 206.88 L 496.33 206.17 L 496.09 204.75 L 476.52 185.19 L 470.63 185.19 L 468.98 187.07 L 464.97 187.07 L 463.32 188.96 L 459.31 188.96 L 457.66 190.84 L 451.77 190.84 L 450.12 192.73 L 440.45 192.73 L 438.80 194.62 L 419.71 194.62 L 347.33 266.99 L 347.09 267.70 L 347.33 269.12 L 389.53 311.32 L 390.24 311.55 L 391.65 311.32 L 419.71 283.03 L 421.83 283.03 L 524.62 385.82 L 524.62 389.82 L 523.67 390.77 L 521.55 390.77 L 519.90 392.65 L 517.78 392.65 L 516.13 394.54 L 514.01 394.54 L 512.36 396.42 L 506.46 396.42 L 504.81 398.31 L 502.69 398.31 L 501.04 400.20 L 495.15 400.20 L 493.50 402.08 L 485.72 402.08 L 484.07 403.97 L 451.77 403.97 L 450.12 402.08 L 442.34 402.08 L 440.69 400.20 L 432.91 400.20 L 431.26 398.31 L 427.25 398.31 L 425.60 396.42 L 419.71 396.42 L 418.06 394.54 L 415.93 394.54 L 414.28 392.65 L 408.39 392.65 L 406.74 390.77 L 404.62 390.77 L 402.97 388.88 L 400.84 388.88 L 399.19 386.99 L 397.07 386.99 L 395.42 385.11 L 393.30 385.11 L 391.65 383.22 L 389.53 383.22 L 385.99 379.45 L 383.87 379.45 L 382.22 377.56 L 380.10 377.56 L 376.56 373.79 L 374.44 373.79 L 369.02 368.13 L 366.90 368.13 L 357.70 358.70 L 355.58 358.70 L 354.64 357.76 L 354.64 355.64 L 350.16 351.16 L 348.04 351.16 L 344.73 347.39 L 344.03 347.39 L 343.08 348.80 L 271.41 420.47 L 270.00 421.41 L 270.00 422.12 L 271.41 423.06 L 288.86 440.51 L 289.10 443.10 L 291.69 443.34 L 300.88 452.77 L 301.59 453.01 L 303.01 452.77 L 342.38 413.16 L 344.97 412.93 L 345.21 410.33 L 349.92 405.62 L 353.93 405.62 L 366.90 418.82 L 369.02 418.82 L 374.44 424.48 L 376.56 424.48 L 381.98 430.14 L 384.11 430.14 L 387.64 433.91 L 389.76 433.91 L 391.41 435.80 L 393.54 435.80 L 397.07 439.57 L 401.08 439.57 L 402.73 441.45 L 404.85 441.45 L 406.50 443.34 L 408.62 443.34 L 410.28 445.23 L 412.40 445.23 L 414.05 447.11 L 418.06 447.11 L 419.71 449.00 L 423.71 449.00 L 425.36 450.88 L 431.26 450.88 L 432.91 452.77 L 436.92 452.77 L 438.57 454.66 L 448.23 454.66 L 449.88 456.54 L 489.72 456.54 L 491.38 454.66 L 502.93 454.66 L 504.58 452.77 L 510.47 452.77 L 512.12 450.88 L 518.02 450.88 L 519.67 449.00 L 521.79 449.00 L 523.44 447.11 L 527.45 447.11 L 529.10 445.23 L 531.22 445.23 L 532.87 443.34 L 536.88 443.34 L 538.53 441.45 L 540.65 441.45 L 542.30 439.57 L 544.42 439.57 L 546.07 437.68 L 548.19 437.68 L 551.73 433.91 L 553.85 433.91 L 555.50 432.02 L 557.62 432.02 L 561.16 428.25 L 567.05 428.25 L 591.34 452.77 L 593.46 452.77 L 628.59 417.41 L 630.00 416.46 L 630.00 415.76 L 628.11 414.34 L 628.11 412.22 L 612.32 396.42 L 610.20 396.42 L 609.25 395.48 L 609.25 393.36 L 606.66 390.77 L 604.54 390.77 L 603.60 389.82 L 603.60 383.93 L 607.37 380.39 L 607.37 378.27 L 609.25 376.62 L 609.25 374.50 L 611.14 372.85 L 611.14 370.73 L 613.03 369.08 L 613.03 366.95 L 614.91 365.30 L 614.91 363.18 L 616.80 361.53 L 616.80 357.52 L 618.68 355.87 L 618.68 351.87 L 620.57 350.22 L 620.57 346.21 L 622.46 344.56 L 622.46 338.66 L 624.34 337.01 L 624.34 333.01 L 626.23 331.36 L 626.23 323.58 L 628.11 321.93 L 628.11 278.31 L 626.23 276.66 L 626.23 266.99 L 624.34 265.34 L 624.34 261.34 L 622.46 259.69 L 622.46 253.79 L 620.57 252.14 L 620.57 248.13 L 618.68 246.48 L 618.68 244.36 L 616.80 242.71 L 616.80 238.70 L 614.91 237.05 L 614.91 234.93 L 613.03 233.28 L 613.03 231.16 L 611.14 229.51 L 611.14 227.39 L 609.25 225.74 L 609.25 223.61 L 607.37 221.96 L 607.37 219.84 L 605.48 218.19 L 605.48 216.07 L 601.71 212.53 L 601.71 210.41 L 597.94 206.88 L 597.94 204.75 L 584.73 191.79 Z" fill="#ffff00"/></svg><svg class="flag-icon-vn" viewBox="0 0 900 600" width="22" height="15" style="vertical-align: -2px; border-radius: 2px; margin-right: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.5); display: inline-block;" aria-label="Cờ Tổ quốc Việt Nam"><rect width="900" height="600" fill="#da251d"/><polygon points="450.00,120.00 490.41,244.38 621.19,244.38 515.39,321.25 555.80,445.62 450.00,368.75 344.20,445.62 384.61,321.25 278.81,244.38 409.59,244.38" fill="#ffff00"/></svg>ĐẢNG CỘNG SẢN VIỆT NAM QUANG VINH MUÔN NĂM</span>
+                    <span class="text-white-50 d-none d-lg-inline">•</span>
+                    <span class="brand-sub d-none d-lg-inline">Hệ thống Đánh giá KPI & Quản lý Cán bộ theo Vị trí việc làm</span>
+                </div>
             </div>
         </div>
         <div class="d-flex align-items-center gap-3 text-white">
-            <a th:href="@{/}" class="btn btn-outline-light btn-sm"><i class="fa-solid fa-house me-1"></i> Bàn làm việc</a>
-            <a th:href="@{/tasks}" class="btn btn-outline-light btn-sm"><i class="fa-solid fa-list-check me-1"></i> Nhiệm vụ</a>
-            <a th:href="@{/approvals}" class="btn btn-outline-light btn-sm"><i class="fa-solid fa-check-to-slot me-1"></i> Phê duyệt</a>
-            <a th:href="@{/org-chart}" class="btn btn-warning btn-sm text-dark fw-bold"><i class="fa-solid fa-sitemap me-1"></i> Cây sơ đồ Ban</a>
-            <div class="dropdown">
-                <span class="user-badge" th:text="${user.fullName + ' (' + user.roleBadge + ')'}">Họ và tên</span>
+            <div class="cadre-profile-badge d-none d-sm-flex">
+                <div class="cadre-avatar-circle" title="Cán bộ đảng viên">
+                    <i class="fa-solid fa-user-tie"></i>
+                </div>
+                <div class="text-start">
+                    <div class="fw-bold small text-white" th:text="'Đ/c ' + ${user != null ? user.fullName : 'Cán bộ'}">Đ/c Cán bộ</div>
+                    <div class="d-flex align-items-center gap-1">
+                        <span class="badge badge-org-level" th:text="'Cấp ' + ${user != null ? user.orgLevel : '5'}">Cấp 5</span>
+                        <small class="text-warning fw-semibold" th:text="${user != null ? user.roleDisplayName : ''}">Chuyên viên</small>
+                    </div>
+                </div>
             </div>
-            <a th:href="@{/logout}" class="btn btn-outline-danger btn-sm"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a>
+            <button class="btn btn-sm btn-dang-gold" data-bs-toggle="modal" data-bs-target="#profileModal" title="Xem hồ sơ cán bộ">
+                <i class="fa-solid fa-id-card me-1"></i> Hồ sơ
+            </button>
+            <a th:href="@{/logout}" class="btn btn-sm btn-outline-light" title="Đăng xuất khỏi hệ thống">
+                <i class="fa-solid fa-right-from-bracket me-1"></i> Đăng xuất
+            </a>
         </div>
     </header>
 
-    <main class="container-fluid px-4 py-3">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div>
-                <h4 class="fw-bold text-danger mb-0"><i class="fa-solid fa-sitemap me-2"></i> CÂY SƠ ĐỒ PHÂN CÔNG NHIỆM VỤ BAN TỔ CHỨC TỈNH ỦY</h4>
-                <small class="text-muted">Căn cứ: Quyết định phân công nhiệm vụ và Cây sơ đồ 39 vị trí việc làm chính thức</small>
+    <!-- 2. NAVIGATION BAR CHUẨN HỆ THỐNG -->
+    <nav class="navbar navbar-expand-lg navbar-custom py-1 px-4 mb-4">
+        <div class="container-fluid px-0">
+            <button class="navbar-toggler border-warning text-warning py-1 px-2" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/}">
+                            <i class="fa-solid fa-landmark me-1 text-warning"></i> Bàn làm việc (Dashboard)
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/tasks}">
+                            <i class="fa-solid fa-list-check me-1"></i> Nhiệm vụ công tác
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/job-catalog}">
+                            <i class="fa-solid fa-book-bookmark me-1"></i> Danh mục việc BTCTU (49 Mã)
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/evaluation}">
+                            <i class="fa-solid fa-file-signature me-1"></i> Tự chấm điểm KPI
+                        </a>
+                    </li>
+                    
+                    <!-- 1. Đánh giá & Phê duyệt: CHỈ CẤP 1 - CẤP 4 (ẨN HOÀN TOÀN VỚI CẤP 5 CHUYÊN VIÊN, VĂN THƯ) -->
+                    <li class="nav-item" th:if="${canAccessApprovals}">
+                        <a class="nav-link" th:href="@{/approvals}">
+                            <i class="fa-solid fa-stamp me-1 text-warning"></i> Đánh giá & Phê duyệt
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/org-chart}">
+                            <i class="fa-solid fa-sitemap me-1"></i> Cây sơ đồ Ban
+                        </a>
+                    </li>
+                    
+                    <!-- 2. Báo cáo & Quyết định: CHỈ DÀNH CHO CÁN BỘ LÃNH ĐẠO (CẤP 1 - CẤP 4) -->
+                    <li class="nav-item" th:if="${canAccessReports}">
+                        <a class="nav-link" th:href="@{/reports}">
+                            <i class="fa-solid fa-file-invoice me-1"></i> Báo cáo & Quyết định
+                        </a>
+                    </li>
+                    
+                    <!-- 3. Nhật ký Kiểm toán: CẤP 1, 2 HOẶC ADMIN -->
+                    <li class="nav-item" th:if="${canAccessAuditLogs}">
+                        <a class="nav-link" th:href="@{/audit-logs}">
+                            <i class="fa-solid fa-shield-halved me-1 text-warning"></i> Nhật ký Kiểm toán
+                        </a>
+                    </li>
+                    
+                    <!-- 4. Quản trị CSDL: CHỈ DUY NHẤT ADMIN HỆ THỐNG -->
+                    <li class="nav-item" th:if="${canAccessDbAdmin}">
+                        <a class="nav-link" href="/db-admin">
+                            <i class="fa-solid fa-server me-1"></i> Quản trị CSDL
+                        </a>
+                    </li>
+                </ul>
             </div>
-            <div class="d-flex gap-3 bg-dark p-2 rounded">
-                <div class="legend-box"><div class="legend-color" style="background:#a81c24;"></div> Cấp 1: Trưởng ban</div>
-                <div class="legend-box"><div class="legend-color" style="background:#2b507d;"></div> Cấp 2: Phó Ban</div>
-                <div class="legend-box"><div class="legend-color" style="background:#236544;"></div> Cấp 3: Trưởng phòng</div>
-                <div class="legend-box"><div class="legend-color" style="background:#7d4d23;"></div> Cấp 4: Phó phòng</div>
-                <div class="legend-box"><div class="legend-color" style="background:#21262d; border:1px solid #484f58;"></div> Cấp 5: Chuyên viên</div>
+        </div>
+    </nav>
+
+    <main class="container-fluid px-4 py-2">
+
+        <!-- THÔNG BÁO FLASH MESSAGE -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show mb-3 shadow-sm border-0" role="alert">
+            <i class="fa-solid fa-circle-check me-2"></i><span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show mb-3 shadow-sm border-0" role="alert">
+            <i class="fa-solid fa-triangle-exclamation me-2"></i><span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- THANH CÔNG CỤ TƯƠNG TÁC (TOOLBAR) -->
+        <div class="toolbar-panel mb-4 shadow-sm">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                <div>
+                    <h4 class="fw-bold text-danger mb-0 d-flex align-items-center">
+                        <i class="fa-solid fa-sitemap text-warning me-2 fs-4"></i> CÂY SƠ ĐỒ BỘ MÁY BAN TỔ CHỨC TỈNH ỦY
+                    </h4>
+                    <small class="text-secondary">Căn cứ: Quyết định phân công nhiệm vụ 39 vị trí việc làm chính thức & cơ cấu 5 cấp bậc quản lý</small>
+                </div>
+
+                <div class="d-flex align-items-center gap-2 flex-wrap">
+                    <!-- Ô TÌM KIẾM NHANH CÁN BỘ -->
+                    <div class="input-group input-group-sm" style="width: 260px;">
+                        <span class="input-group-text bg-dark border-secondary text-secondary"><i class="fa-solid fa-magnifying-glass"></i></span>
+                        <input type="text" id="staffSearchInput" class="form-control bg-dark text-light border-secondary" placeholder="Tìm tên, chức vụ cán bộ...">
+                        <button class="btn btn-outline-secondary" type="button" id="btnClearSearch"><i class="fa-solid fa-xmark"></i></button>
+                    </div>
+
+                    <!-- BỘ LỌC PHÒNG BAN -->
+                    <select id="deptFilterSelect" class="form-select form-select-sm bg-dark text-light border-secondary" style="width: 190px;">
+                        <option value="ALL">-- Tất cả phòng ban --</option>
+                        <option th:each="d : ${departments}" th:value="${d.code}" th:text="${d.name}">Phòng TCCB</option>
+                    </select>
+
+                    <!-- CHUYỂN ĐỔI CHẾ ĐỘ XEM -->
+                    <div class="btn-group btn-group-sm" role="group">
+                        <button type="button" id="btnViewTree" class="btn btn-danger active"><i class="fa-solid fa-diagram-project me-1"></i> Sơ đồ Cụm phòng</button>
+                        <button type="button" id="btnViewMatrix" class="btn btn-outline-secondary"><i class="fa-solid fa-layer-group me-1"></i> Ma trận 5 Cấp</button>
+                    </div>
+
+                    <a th:href="@{/job-catalog}" class="btn btn-warning btn-sm fw-semibold text-dark"><i class="fa-solid fa-book-bookmark me-1"></i> 49 Mã công việc</a>
+                </div>
+            </div>
+
+            <!-- CHÚ GIẢI 5 CẤP BẬC CHUẨN CƠ QUAN ĐẢNG -->
+            <div class="d-flex align-items-center gap-2 flex-wrap mt-3 pt-2 border-top border-secondary small">
+                <span class="text-secondary fw-semibold">Chú giải phân cấp:</span>
+                <span class="badge bg-danger text-white">CẤP 1</span> Trưởng ban (Chỉ đạo toàn diện)
+                <span class="text-secondary">•</span>
+                <span class="badge bg-primary text-white">CẤP 2</span> Phó Trưởng ban (Phụ trách khối/phòng)
+                <span class="text-secondary">•</span>
+                <span class="badge bg-success text-white">CẤP 3</span> Trưởng phòng / Chánh VP (Điều hành phòng)
+                <span class="text-secondary">•</span>
+                <span class="badge bg-warning text-dark">CẤP 4</span> Phó phòng / Phó Chánh VP (Phụ trách mảng)
+                <span class="text-secondary">•</span>
+                <span class="badge bg-secondary text-white">CẤP 5</span> Chuyên viên, Nhân viên, Văn thư (Thực thi)
             </div>
         </div>
 
-        <div class="org-tree-container text-center">
-            
-            <!-- CẤP 1: TRƯỞNG BAN -->
-            <div class="d-inline-block text-center mb-2" style="width: 100%;">
-                <div th:each="tb : ${level1}" class="org-card level-1 text-center" th:onclick="'showStaffDetail(' + ${tb.id} + ')'">
-                    <span class="badge bg-warning text-dark badge-level mb-1">CẤP 1 — BAN</span>
-                    <div class="card-name" th:text="${tb.fullName}">Nguyễn Thượng Hải</div>
-                    <div class="card-title-role fw-bold">Trưởng Ban Tổ chức Tỉnh ủy</div>
-                    <small class="d-block mt-1 text-light opacity-75" style="font-size:0.75rem;" th:text="${tb.assignedScope}">Chỉ đạo toàn diện</small>
-                </div>
-            </div>
+        <!-- CANVAS CHÍNH HIỂN THỊ SƠ ĐỒ -->
+        <div class="org-canvas text-center">
 
-            <div class="tree-line-v"></div>
-
-            <!-- CẤP 2: PHÓ TRƯỞNG BAN (5 ĐỒNG CHÍ) -->
-            <div class="d-flex justify-content-center gap-3 flex-wrap my-2">
-                <div th:each="pb : ${level2}" class="org-card level-2 text-center" th:onclick="'showStaffDetail(' + ${pb.id} + ')'">
-                    <span class="badge bg-primary badge-level mb-1">CẤP 2 — PHÓ BAN</span>
-                    <div class="card-name" th:text="${pb.fullName}">Lưu Vĩnh Hưng</div>
-                    <div class="card-title-role fw-semibold" th:text="${pb.position.title}">Phó Trưởng ban</div>
-                    <small class="d-block mt-1 opacity-75" style="font-size:0.72rem;" th:text="${pb.assignedScope}">Nhiệm vụ phụ trách</small>
-                </div>
-            </div>
-
-            <div class="tree-line-v"></div>
-
-            <!-- CẤP 3: TRƯỞNG PHÒNG / CHÁNH VĂN PHÒNG (4 PHÒNG) -->
-            <div class="d-flex justify-content-center gap-4 flex-wrap my-2">
-                <div th:each="tp : ${level3}" class="org-card level-3 text-center" th:onclick="'showStaffDetail(' + ${tp.id} + ')'">
-                    <span class="badge bg-success badge-level mb-1">CẤP 3 — TRƯỞNG PHÒNG</span>
-                    <div class="card-name" th:text="${tp.fullName}">Trần Hải Triều</div>
-                    <div class="card-title-role fw-semibold" th:text="${tp.department.name}">Phòng Tổ chức cán bộ</div>
-                    <small class="d-block mt-1 opacity-75" style="font-size:0.72rem;" th:text="${tp.assignedScope}">Phụ trách chung</small>
-                </div>
-            </div>
-
-            <div class="tree-line-v"></div>
-
-            <!-- CẤP 4: PHÓ TRƯỞNG PHÒNG / PHÓ CHÁNH VĂN PHÒNG (9 ĐỒNG CHÍ) -->
-            <div class="d-flex justify-content-center gap-2 flex-wrap my-2">
-                <div th:each="pp : ${level4}" class="org-card level-4 text-center" th:onclick="'showStaffDetail(' + ${pp.id} + ')'">
-                    <span class="badge bg-warning text-dark badge-level mb-1">CẤP 4 — PHÓ PHÒNG</span>
-                    <div class="card-name" th:text="${pp.fullName}">Nguyễn Trần Thi</div>
-                    <div class="card-title-role" th:text="${pp.department.name}">Phòng TCCB</div>
-                    <small class="d-block mt-1 opacity-75" style="font-size:0.7rem;" th:text="${pp.assignedScope}">Mảng phụ trách</small>
-                </div>
-            </div>
-
-            <div class="tree-line-v"></div>
-
-            <!-- CẤP 5: CHUYÊN VIÊN, NHÂN VIÊN, VĂN THƯ (20 ĐỒNG CHÍ) -->
-            <div class="mt-3">
-                <h6 class="text-secondary text-uppercase fw-bold mb-3"><i class="fa-solid fa-users me-1"></i> ĐỘI NGŨ CHUYÊN VIÊN & NHÂN VIÊN TRỰC THUỘC (20 VỊ TRÍ)</h6>
-                <div class="d-flex justify-content-center gap-2 flex-wrap">
-                    <div th:each="cv : ${level5}" class="org-card level-5 text-start" th:onclick="'showStaffDetail(' + ${cv.id} + ')'">
+            <!-- ============================================================== -->
+            <!-- TẦNG 1: ĐỒNG CHÍ TRƯỞNG BAN (CẤP 1 - 01 ĐỒNG CHÍ) -->
+            <!-- ============================================================== -->
+            <div class="mb-2">
+                <div th:each="tb : ${level1}">
+                    <div class="staff-node node-l1 staff-card shadow-lg p-3" th:data-staff-id="${tb.id}">
                         <div class="d-flex justify-content-between align-items-center mb-1">
-                            <span class="card-name" th:text="${cv.fullName}">Hồ Lê Nhân</span>
-                            <span class="badge bg-secondary badge-level" th:text="${cv.roleBadge}">Chuyên viên</span>
+                            <span class="badge bg-warning text-dark badge-lvl fw-bold"><i class="fa-solid fa-award me-1"></i>CẤP 1 — TRƯỞNG BAN</span>
+                            <span class="badge bg-danger border border-warning text-warning"><i class="fa-solid fa-star me-1"></i>Lãnh đạo tối cao</span>
                         </div>
-                        <div class="card-title-role mb-1" th:text="${cv.department.name}">Phòng TCCB</div>
-                        <div class="small text-warning" style="font-size:0.72rem;">
-                            <i class="fa-solid fa-user-tie me-1"></i>QL: <span th:text="${cv.manager != null ? cv.manager.fullName : 'Chưa gán'}">Phạm Phong Thu</span>
+                        <div class="node-name fs-5 text-warning" th:text="${tb.fullName}">Nguyễn Thượng Hải</div>
+                        <div class="node-title text-light fw-bold">Trưởng Ban Tổ chức Tỉnh ủy Đắk Lắk</div>
+                        <div class="node-subtext text-warning opacity-90 mt-1">
+                            <i class="fa-solid fa-compass me-1"></i>Chỉ đạo, điều hành toàn diện công tác tổ chức xây dựng Đảng toàn tỉnh
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- ĐƯỜNG NỐI TỪ TRƯỞNG BAN XUỐNG CÁC PHÓ BAN -->
+            <div class="tree-line-vertical"></div>
+
+            <!-- ============================================================== -->
+            <!-- TẦNG 2: TẬP THỂ LÃNH ĐẠO BAN (05 ĐỒNG CHÍ PHÓ TRƯỞNG BAN - DÀN ĐỀU CÂN ĐỐI) -->
+            <!-- ============================================================== -->
+            <div class="mb-4">
+                <h6 class="text-info fw-bold text-uppercase mb-2" style="font-size:0.8rem; letter-spacing:1px;">
+                    <i class="fa-solid fa-users-gear me-1"></i> TẬP THỂ LÃNH ĐẠO BAN (05 ĐỒNG CHÍ PHÓ TRƯỞNG BAN - CẤP 2)
+                </h6>
+                <div class="deputy-grid">
+                    <div th:each="pb : ${level2}" class="staff-node node-l2 staff-card" th:data-staff-id="${pb.id}">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="badge bg-light text-primary badge-lvl">CẤP 2 — PHÓ BAN</span>
+                            <i class="fa-solid fa-user-tie text-info"></i>
+                        </div>
+                        <div class="node-name" th:text="${pb.fullName}">Lưu Vĩnh Hưng</div>
+                        <div class="node-title text-info fw-semibold" th:text="${pb.position != null ? pb.position.title : 'Phó Trưởng ban'}">Phó Trưởng ban</div>
+                        <div class="node-subtext text-light mt-1" th:text="${pb.assignedScope}">Khối phụ trách</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ĐƯỜNG NỐI XUỐNG CÁC CỤM PHÒNG BAN -->
+            <div class="tree-line-vertical"></div>
+
+            <!-- ============================================================== -->
+            <!-- CHẾ ĐỘ 1: CÂY SƠ ĐỒ 4 KHỐI PHÒNG BAN CHUYÊN MÔN (DEFAULT - 4 CỘT CÂN XỨNG) -->
+            <!-- ============================================================== -->
+            <div id="viewTreeContainer" class="mt-2">
+                <div class="tree-dept-grid">
+                    
+                    <!-- LẶP QUA TỪNG NHÁNH PHÒNG BAN CHUYÊN MÔN -->
+                    <div th:each="branch : ${deptBranches}" class="dept-column d-flex flex-column" th:data-dept-code="${branch.department.code}">
+                        
+                        <!-- HEADER PHÒNG BAN -->
+                        <div class="dept-header d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="fw-bold text-danger mb-0" th:text="${branch.department.name}">Phòng Tổ chức cán bộ</h6>
+                                <small class="text-secondary" th:text="'Mã: ' + ${branch.department.code}">PHONG_TCCB</small>
+                            </div>
+                            <span class="badge bg-secondary" th:text="${branch.totalStaff + ' Vị trí'}">8 Vị trí</span>
+                        </div>
+
+                        <!-- CẤP 3: TRƯỞNG PHÒNG / CHÁNH VĂN PHÒNG -->
+                        <div class="mb-3">
+                            <div class="section-label label-l3 text-start">
+                                <i class="fa-solid fa-crown text-warning me-1"></i>TRƯỞNG PHÒNG / CHÁNH VP (CẤP 3):
+                            </div>
+                            <div th:if="${branch.deptHead != null}" class="staff-node node-l3 staff-card p-2" th:data-staff-id="${branch.deptHead.id}">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="badge bg-light text-success badge-lvl">CẤP 3 — TRƯỞNG PHÒNG</span>
+                                    <i class="fa-solid fa-star text-warning" style="font-size:0.7rem;"></i>
+                                </div>
+                                <div class="node-name" th:text="${branch.deptHead.fullName}">Trần Hải Triều</div>
+                                <div class="node-title text-light opacity-90" th:text="${branch.deptHead.position != null ? branch.deptHead.position.title : 'Trưởng phòng'}">Trưởng phòng</div>
+                                <div class="node-subtext text-warning mt-1" th:text="${branch.deptHead.assignedScope}">Quản lý chung</div>
+                            </div>
+                            <div th:if="${branch.deptHead == null}" class="empty-state-box">
+                                <i class="fa-solid fa-circle-question me-1"></i> Chưa kiện toàn Trưởng phòng
+                            </div>
+                        </div>
+
+                        <!-- CẤP 4: CÁC PHÓ TRƯỞNG PHÒNG / PHÓ CHÁNH VĂN PHÒNG -->
+                        <div class="mb-3">
+                            <div class="section-label label-l4 text-start">
+                                <i class="fa-solid fa-user-group text-warning me-1"></i>PHÓ TRƯỞNG PHÒNG (CẤP 4):
+                            </div>
+                            <div class="d-flex flex-column gap-2">
+                                <div th:each="pp : ${branch.deputyHeads}" class="staff-node node-l4 staff-card p-2" th:data-staff-id="${pp.id}">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <span class="badge bg-light text-warning badge-lvl">CẤP 4 — PHÓ PHÒNG</span>
+                                    </div>
+                                    <div class="node-name" th:text="${pp.fullName}">Nguyễn Trần Thi</div>
+                                    <div class="node-title text-light opacity-90" th:text="${pp.position != null ? pp.position.title : 'Phó Trưởng phòng'}">Phó Trưởng phòng</div>
+                                    <div class="node-subtext text-light mt-1" th:text="${pp.assignedScope}">Mảng chuyên môn phụ trách</div>
+                                </div>
+                                <div th:if="${#lists.isEmpty(branch.deputyHeads)}" class="empty-state-box">
+                                    <i class="fa-solid fa-shield-halved me-1"></i> Chưa phân công Phó Trưởng phòng
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CẤP 5: ĐỘI NGŨ CHUYÊN VIÊN & NHÂN VIÊN TRỰC THUỘC -->
+                        <div class="flex-grow-1">
+                            <div class="section-label label-l5 text-start">
+                                <i class="fa-solid fa-users text-secondary me-1"></i>CHUYÊN VIÊN / NHÂN VIÊN (CẤP 5):
+                            </div>
+                            <div class="d-flex flex-column gap-2">
+                                <div th:each="cv : ${branch.officers}" class="staff-node node-l5 staff-card p-2" th:data-staff-id="${cv.id}">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <span class="node-name text-light" style="font-size:0.85rem;" th:text="${cv.fullName}">Hồ Lê Nhân</span>
+                                        <span class="badge bg-secondary" style="font-size:0.62rem;" th:text="${cv.roleBadge}">Chuyên viên</span>
+                                    </div>
+                                    <div class="node-title text-secondary" style="font-size:0.7rem;" th:text="${cv.position != null ? cv.position.title : 'Chuyên viên'}">Chuyên viên</div>
+                                    <div class="node-subtext text-info mt-1" style="font-size:0.68rem;" th:if="${cv.manager != null}">
+                                        <i class="fa-solid fa-user-check me-1"></i>QL: <span th:text="${cv.manager.fullName}">Đoàn Đức Dũng</span>
+                                    </div>
+                                </div>
+                                <div th:if="${#lists.isEmpty(branch.officers)}" class="empty-state-box">
+                                    <i class="fa-solid fa-user-plus me-1"></i> Vị trí đang kiện toàn nhân sự
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- ============================================================== -->
+            <!-- CHẾ ĐỘ 2: MA TRẬN 5 CẤP BẬC QUẢN LÝ (PHÂN THEO CẤP TỪ 1 ĐẾN 5) -->
+            <!-- ============================================================== -->
+            <div id="viewMatrixContainer" class="d-none mt-3">
+
+                <!-- MA TRẬN CẤP 3: CÁC TRƯỞNG PHÒNG (04 ĐỒNG CHÍ) -->
+                <div class="mb-4">
+                    <h6 class="text-success fw-bold text-uppercase mb-2" style="font-size:0.8rem; letter-spacing:1px;">
+                        <i class="fa-solid fa-crown text-warning me-1"></i> CẤP 3 — TRƯỞNG PHÒNG / CHÁNH VĂN PHÒNG (04 ĐỒNG CHÍ)
+                    </h6>
+                    <div class="matrix-grid-4">
+                        <div th:each="tp : ${level3}" class="staff-node node-l3 staff-card p-3" th:data-staff-id="${tp.id}">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="badge bg-light text-success badge-lvl">CẤP 3 — TRƯỞNG PHÒNG</span>
+                                <i class="fa-solid fa-star text-warning"></i>
+                            </div>
+                            <div class="node-name fs-6" th:text="${tp.fullName}">Trần Hải Triều</div>
+                            <div class="node-title text-light fw-semibold" th:text="${tp.position != null ? tp.position.title : 'Trưởng phòng'}">Trưởng phòng</div>
+                            <div class="text-warning small mt-1" style="font-size:0.75rem;" th:text="${tp.department != null ? tp.department.name : 'Phòng chuyên môn'}">Phòng TCCB</div>
+                            <div class="node-subtext text-light mt-1" th:text="${tp.assignedScope}">Nhiệm vụ quản lý chung</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tree-line-vertical"></div>
+
+                <!-- MA TRẬN CẤP 4: CÁC PHÓ TRƯỞNG PHÒNG (09 ĐỒNG CHÍ) -->
+                <div class="mb-4">
+                    <h6 class="text-warning fw-bold text-uppercase mb-2" style="font-size:0.8rem; letter-spacing:1px;">
+                        <i class="fa-solid fa-user-group me-1"></i> CẤP 4 — PHÓ TRƯỞNG PHÒNG / PHÓ CHÁNH VP (09 ĐỒNG CHÍ)
+                    </h6>
+                    <div class="matrix-grid-3">
+                        <div th:each="pp : ${level4}" class="staff-node node-l4 staff-card p-3" th:data-staff-id="${pp.id}">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="badge bg-light text-warning badge-lvl">CẤP 4 — PHÓ PHÒNG</span>
+                            </div>
+                            <div class="node-name fs-6" th:text="${pp.fullName}">Nguyễn Trần Thi</div>
+                            <div class="node-title text-light fw-semibold" th:text="${pp.department != null ? pp.department.name : 'Phòng chuyên môn'}">Phòng TCCB</div>
+                            <div class="node-subtext text-light mt-1" th:text="${pp.assignedScope}">Mảng phụ trách chuyên môn</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tree-line-vertical"></div>
+
+                <!-- MA TRẬN CẤP 5: CHUYÊN VIÊN, NHÂN VIÊN, VĂN THƯ (20 VỊ TRÍ) -->
+                <div class="mb-3">
+                    <h6 class="text-secondary fw-bold text-uppercase mb-2" style="font-size:0.8rem; letter-spacing:1px;">
+                        <i class="fa-solid fa-users me-1"></i> CẤP 5 — CHUYÊN VIÊN, NHÂN VIÊN, VĂN THƯ (20 VỊ TRÍ)
+                    </h6>
+                    <div class="matrix-grid-4">
+                        <div th:each="cv : ${level5}" class="staff-node node-l5 staff-card p-2" th:data-staff-id="${cv.id}">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="node-name text-light" th:text="${cv.fullName}">Hồ Lê Nhân</span>
+                                <span class="badge bg-secondary badge-lvl" th:text="${cv.roleBadge}">Chuyên viên</span>
+                            </div>
+                            <div class="node-title text-secondary small" th:text="${cv.department != null ? cv.department.name : 'Ban Tổ chức Tỉnh ủy'}">Phòng TCCB</div>
+                            <div class="node-subtext text-warning mt-1" th:if="${cv.manager != null}">
+                                <i class="fa-solid fa-user-check me-1"></i>QL: <span th:text="${cv.manager.fullName}">Phạm Phong Thu</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
         </div>
+
     </main>
 
-    <!-- Modal Chi tiết Cán bộ -->
-    <div class="modal fade" id="staffDetailModal" tabindex="-1">
+    <!-- MODAL CHI TIẾT CÁN BỘ (HỒ SƠ ĐIỆN TỬ 39 VỊ TRÍ) -->
+    <div class="modal fade" id="staffDetailModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content bg-dark text-light border-secondary">
-                <div class="modal-header border-secondary">
-                    <h5 class="modal-title text-danger fw-bold"><i class="fa-solid fa-id-card me-2"></i> THÔNG TIN VỊ TRÍ VIỆC LÀM</h5>
+            <div class="modal-content bg-dark text-light border border-secondary shadow-lg">
+                <div class="modal-header border-secondary py-2">
+                    <h6 class="modal-title fw-bold text-warning mb-0">
+                        <i class="fa-solid fa-id-badge me-2"></i> HỒ SƠ ĐIỆN TỬ VỊ TRÍ VIỆC LÀM (39 VTVL BTCTU)
+                    </h6>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body" id="staffModalBody">
-                    Đang tải thông tin...
+                <div class="modal-body p-4" id="staffModalBody">
+                    <!-- NỘI DUNG CHI TIẾT SẼ ĐƯỢC CHÈN BẰNG JAVASCRIPT -->
+                </div>
+                <div class="modal-footer border-secondary py-2 d-flex justify-content-between">
+                    <small class="text-secondary">Trích xuất cơ sở dữ liệu nhân sự BTCTU</small>
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Đóng</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- BOOTSTRAP 5 BUNDLE JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function showStaffDetail(staffId) {
+        document.addEventListener('DOMContentLoaded', function() {
+            let staffCache = [];
+
+            // Tải dữ liệu cán bộ từ API
             fetch('/api/org-chart/data')
                 .then(res => res.json())
                 .then(data => {
-                    const staff = data.staff.find(s => s.id === staffId);
-                    if (staff) {
-                        const html = `
-                            <div class="text-center mb-3">
-                                <div class="avatar-circle mx-auto mb-2 bg-danger text-white rounded-circle d-flex align-items-center justify-content-center" style="width:60px;height:60px;font-size:24px;font-weight:bold;">
-                                    ${staff.name.charAt(0)}
+                    staffCache = data.staff || [];
+                })
+                .catch(err => console.error('Error fetching org-chart data:', err));
+
+            // Gắn sự kiện click mở modal cho tất cả các thẻ cán bộ
+            document.querySelectorAll('.staff-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const staffId = parseInt(this.getAttribute('data-staff-id'));
+                    openStaffModal(staffId);
+                });
+            });
+
+            function openStaffModal(staffId) {
+                const staff = staffCache.find(s => s.id === staffId);
+                if (staff) {
+                    const levelBadgeColors = {
+                        1: 'bg-danger text-white',
+                        2: 'bg-primary text-white',
+                        3: 'bg-success text-white',
+                        4: 'bg-warning text-dark',
+                        5: 'bg-secondary text-white'
+                    };
+                    const badgeClass = levelBadgeColors[staff.orgLevel] || 'bg-secondary text-white';
+
+                    const html = `
+                        <div class="text-center mb-3">
+                            <div class="mx-auto mb-2 bg-danger text-white rounded-circle d-flex align-items-center justify-content-center shadow" style="width:70px;height:70px;font-size:28px;font-weight:bold;border:3px solid #f59e0b;">
+                                ${staff.name.charAt(staff.name.lastIndexOf(' ') + 1) || 'C'}
+                            </div>
+                            <h5 class="fw-bold mb-1 text-light">${staff.name}</h5>
+                            <div class="text-warning fw-semibold">${staff.title}</div>
+                            <div class="text-muted small">${staff.department || 'Ban Tổ chức Tỉnh ủy'}</div>
+                        </div>
+                        <hr class="border-secondary">
+                        <div class="small">
+                            <div class="row g-2 mb-2">
+                                <div class="col-5 text-muted">Cấp bậc hành chính:</div>
+                                <div class="col-7"><span class="badge ${badgeClass}">CẤP ${staff.orgLevel} (${staff.role})</span></div>
+                            </div>
+                            <div class="row g-2 mb-2">
+                                <div class="col-5 text-muted">Phòng ban chuyên môn:</div>
+                                <div class="col-7 fw-semibold text-light">${staff.department || 'Lãnh đạo Ban'}</div>
+                            </div>
+                            <div class="row g-2 mb-2">
+                                <div class="col-5 text-muted">Cấp trên phụ trách trực tiếp:</div>
+                                <div class="col-7 text-info fw-semibold">
+                                    <i class="fa-solid fa-user-tie me-1"></i>${staff.managerName || 'Trưởng Ban / Thường trực Tỉnh ủy'}
                                 </div>
-                                <h5 class="fw-bold mb-0">${staff.name}</h5>
-                                <div class="text-warning fw-semibold">${staff.title}</div>
-                                <div class="text-muted small">${staff.department}</div>
                             </div>
-                            <hr class="border-secondary">
-                            <div class="small">
-                                <p class="mb-2"><strong>Cấp bậc:</strong> Cấp ${staff.orgLevel} (${staff.role})</p>
-                                <p class="mb-2"><strong>Nhiệm vụ phụ trách:</strong> ${staff.scope || 'Theo phân công nhiệm vụ chuyên môn'}</p>
-                                <p class="mb-2"><strong>Thư điện tử:</strong> ${staff.email || 'Chưa cập nhật'}</p>
-                                <p class="mb-0"><strong>Điện thoại:</strong> ${staff.phone || 'Chưa cập nhật'}</p>
+                            <div class="row g-2 mb-2">
+                                <div class="col-5 text-muted">Nhiệm vụ phân công:</div>
+                                <div class="col-7 text-warning">${staff.scope || 'Thực hiện theo phân công nhiệm vụ chuyên môn và quy định BTCTU'}</div>
                             </div>
-                        `;
-                        document.getElementById('staffModalBody').innerHTML = html;
-                        new bootstrap.Modal(document.getElementById('staffDetailModal')).show();
+                            <div class="row g-2 mb-2">
+                                <div class="col-5 text-muted">Thư điện tử công vụ:</div>
+                                <div class="col-7 text-light"><i class="fa-regular fa-envelope me-1 text-secondary"></i>${staff.email || 'Chưa cập nhật'}</div>
+                            </div>
+                            <div class="row g-2 mb-0">
+                                <div class="col-5 text-muted">Số điện thoại liên hệ:</div>
+                                <div class="col-7 text-light"><i class="fa-solid fa-phone me-1 text-secondary"></i>${staff.phone || 'Chưa cập nhật'}</div>
+                            </div>
+                        </div>
+                    `;
+                    document.getElementById('staffModalBody').innerHTML = html;
+                    new bootstrap.Modal(document.getElementById('staffDetailModal')).show();
+                }
+            }
+
+            // CHUYỂN ĐỔI CHẾ ĐỘ XEM
+            const btnViewTree = document.getElementById('btnViewTree');
+            const btnViewMatrix = document.getElementById('btnViewMatrix');
+            const viewTree = document.getElementById('viewTreeContainer');
+            const viewMatrix = document.getElementById('viewMatrixContainer');
+
+            btnViewTree.addEventListener('click', function() {
+                btnViewTree.classList.add('btn-danger', 'active');
+                btnViewTree.classList.remove('btn-outline-secondary');
+                btnViewMatrix.classList.remove('btn-danger', 'active');
+                btnViewMatrix.classList.add('btn-outline-secondary');
+                viewTree.classList.remove('d-none');
+                viewMatrix.classList.add('d-none');
+            });
+
+            btnViewMatrix.addEventListener('click', function() {
+                btnViewMatrix.classList.add('btn-danger', 'active');
+                btnViewMatrix.classList.remove('btn-outline-secondary');
+                btnViewTree.classList.remove('btn-danger', 'active');
+                btnViewTree.classList.add('btn-outline-secondary');
+                viewMatrix.classList.remove('d-none');
+                viewTree.classList.add('d-none');
+            });
+
+            // TÌM KIẾM CÁN BỘ TỨC THÌ
+            const searchInput = document.getElementById('staffSearchInput');
+            const btnClear = document.getElementById('btnClearSearch');
+
+            searchInput.addEventListener('input', function() {
+                const query = this.value.trim().toLowerCase();
+                document.querySelectorAll('.staff-card').forEach(card => {
+                    const text = card.textContent.toLowerCase();
+                    if (query.length > 0 && text.includes(query)) {
+                        card.classList.add('highlight-match');
+                        card.style.opacity = '1';
+                    } else if (query.length > 0) {
+                        card.classList.remove('highlight-match');
+                        card.style.opacity = '0.35';
+                    } else {
+                        card.classList.remove('highlight-match');
+                        card.style.opacity = '1';
                     }
                 });
-        }
+            });
+
+            btnClear.addEventListener('click', function() {
+                searchInput.value = '';
+                searchInput.dispatchEvent(new Event('input'));
+            });
+
+            // LỌC THEO PHÒNG BAN
+            const deptFilter = document.getElementById('deptFilterSelect');
+            deptFilter.addEventListener('change', function() {
+                const selectedCode = this.value;
+                document.querySelectorAll('.dept-column').forEach(col => {
+                    const colCode = col.getAttribute('data-dept-code');
+                    if (selectedCode === 'ALL' || colCode === selectedCode) {
+                        col.style.display = 'flex';
+                    } else {
+                        col.style.display = 'none';
+                    }
+                });
+            });
+        });
     </script>
+    <script src="/js/chatbot.js?v=2"></script>
 </body>
 </html>

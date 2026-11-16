@@ -1,67 +1,131 @@
 /* ==========================================================================
-   HỆ THỐNG QUẢN LÝ VÀ ĐÁNH GIÁ KPI - BAN TỔ CHỨC TỈNH ỦY ĐẮK LẮK
-   Thiết kế giao diện Tiêu chuẩn Cơ quan Đảng cấp Tỉnh (Enterprise UI / UX)
-   Font chuẩn: Inter, HSL tailoring, Glassmorphism, Micro-interactions
+   HỆ THỐNG QUẢN LÝ VÀ ĐÁNH GIÁ CÁN BỘ THEO VỊ TRÍ VIỆC LÀM & KPI
+   BAN TỔ CHỨC TỈNH ỦY ĐẮK LẮK
+   ==========================================================================
+   Tiêu chuẩn Thiết kế: CHUẨN ĐẢNG CỘNG SẢN VIỆT NAM + UI/UX PRO MAX HEURISTICS
+   (Deep Crimson Red, Emblem Gold, Ivory White, Swiss Modernism, WCAG AAA)
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cinzel:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Merriweather:ital,wght@0,400;0,700;1,400&display=swap');
 
 :root {
-    /* Bộ màu cơ quan Đảng chuẩn hóa cao cấp */
-    --primary-red: #991b1b;
-    --dark-red: #7f1d1d;
-    --deep-red: #5c0f14;
-    --accent-gold: #eab308;
-    --light-gold: #fef08a;
-    --gold-glow: rgba(234, 179, 8, 0.35);
-    
-    --navy-blue: #0f172a;
-    --navy-surface: #1e293b;
-    --navy-accent: #334155;
-    
-    --slate-50: #f8fafc;
-    --slate-100: #f1f5f9;
-    --slate-200: #e2e8f0;
-    --slate-300: #cbd5e1;
+    /* ================= BẢNG MÀU CHUẨN ĐẢNG CỘNG SẢN VIỆT NAM ================= */
+    /* Đỏ cờ Đảng & Cách mạng (Sacred Party Crimson) */
+    --party-red-950: #450a0a;
+    --party-red-900: #5c0f14;
+    --party-red-800: #7f1d1d;
+    --party-red-700: #991b1b; /* Màu đỏ chủ đạo */
+    --party-red-600: #b91c1c;
+    --party-red-500: #dc2626;
+    --party-red-100: #fee2e2;
+    --party-red-50:  #fef2f2;
+
+    /* Vàng Sao & Búa Liềm (Emblem & Star Gold) */
+    --party-gold-700: #b45309;
+    --party-gold-600: #d97706; /* Màu vàng búa liềm chuẩn */
+    --party-gold-500: #f59e0b;
+    --party-gold-400: #fbbf24;
+    --party-gold-200: #fde68a;
+    --party-gold-100: #fef3c7;
+    --party-gold-50:  #fffbeb;
+    --party-gold-glow: rgba(217, 119, 6, 0.35);
+
+    /* Màu trung tính hành chính (Administrative Slate & Ivory) */
+    --slate-900: #0f172a; /* Tiêu đề chính, tương phản 14:1 */
+    --slate-800: #1e293b; /* Chữ thân bài chính, tương phản 11:1 */
+    --slate-700: #334155; /* Chữ phụ, tương phản 8:1 */
     --slate-600: #475569;
-    --slate-700: #334155;
-    --slate-800: #1e293b;
-    --slate-900: #0f172a;
+    --slate-500: #64748b;
+    --slate-400: #94a3b8;
+    --slate-300: #cbd5e1;
+    --slate-200: #e2e8f0;
+    --slate-100: #f1f5f9;
+    --slate-50:  #f8fafc;
+    --surface-white: #ffffff;
 
-    --success: #10b981;
-    --warning: #f59e0b;
-    --info: #0284c7;
-    --danger: #ef4444;
+    /* Màu trạng thái nghiệp vụ (Executive Status Colors) */
+    --status-success: #059669; /* Hoàn thành xuất sắc / Đúng hạn */
+    --status-success-bg: #ecfdf5;
+    --status-success-border: #a7f3d0;
+    
+    --status-info: #1d4ed8;    /* Đang thực hiện / Văn bản */
+    --status-info-bg: #eff6ff;
+    --status-info-border: #bfdbfe;
 
-    /* Shadow đa tầng tạo chiều sâu */
-    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --status-warning: #b45309; /* Chờ duyệt / Cần bổ sung */
+    --status-warning-bg: #fffbeb;
+    --status-warning-border: #fde68a;
+
+    --status-danger: #b91c1c;  /* Quá hạn / Mật / Cần xử lý gấp */
+    --status-danger-bg: #fef2f2;
+    --status-danger-border: #fecaca;
+
+    /* Độ bóng chiều sâu (Elevation Shadows - UI/UX Pro Max) */
+    --shadow-xs: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+    --shadow-sm: 0 1px 3px 0 rgba(15, 23, 42, 0.08), 0 1px 2px -1px rgba(15, 23, 42, 0.06);
     --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.06);
-    --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.09), 0 4px 6px -4px rgba(15, 23, 42, 0.05);
-    --shadow-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.12), 0 8px 10px -6px rgba(15, 23, 42, 0.08);
-    --shadow-glow-red: 0 4px 20px rgba(153, 27, 27, 0.25);
+    --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+    --shadow-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.06);
+    --shadow-glow-red: 0 4px 20px rgba(153, 27, 27, 0.22);
+    --shadow-glow-gold: 0 4px 16px rgba(217, 119, 6, 0.28);
+
+    /* Bo góc chuẩn mực hành chính (Không quá tròn, nghiêm túc) */
+    --radius-sm: 6px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+
+    /* Chuyển động vi mô (Micro-interactions Token) */
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --duration-fast: 160ms;
+    --duration-normal: 240ms;
 }
 
-* {
+/* ================= RESET & CẤU TRÚC CHUNG ================= */
+*, *::before, *::after {
     box-sizing: border-box;
 }
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background-color: #f4f6f9;
-    color: var(--slate-700);
+    background-color: var(--slate-50);
+    color: var(--slate-800);
     line-height: 1.6;
     letter-spacing: -0.011em;
     min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Khả năng tiếp cận: Tôn trọng người dùng giảm chuyển động */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Con trỏ tương tác rõ ràng cho tất cả phần tử bấm được */
+button, a, select, input[type="submit"], input[type="button"], .clickable {
+    cursor: pointer;
+}
+
+/* Vòng focus tiếp cận rõ ràng (Focus Visible Ring - WCAG AAA) */
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+    outline: 2.5px solid var(--party-gold-500) !important;
+    outline-offset: 2px !important;
 }
 
 /* ==========================================================================
-   HEADER BAN TỔ CHỨC TỈNH ỦY
+   HEADER BAN TỔ CHỨC TỈNH ỦY ĐẮK LẮK (CHUẨN ĐẢNG CỘNG SẢN VIỆT NAM)
    ========================================================================== */
 .dang-header {
-    background: linear-gradient(135deg, var(--deep-red) 0%, var(--primary-red) 60%, #b91c1c 100%);
+    background: linear-gradient(135deg, var(--party-red-950) 0%, var(--party-red-900) 45%, var(--party-red-700) 100%);
     color: #ffffff;
     box-shadow: var(--shadow-glow-red);
-    border-bottom: 3.5px solid var(--accent-gold);
+    border-bottom: 3px solid var(--party-gold-500);
     position: relative;
     z-index: 100;
 }
@@ -69,50 +133,116 @@ body {
 .dang-header::after {
     content: '';
     position: absolute;
-    bottom: -3.5px;
+    bottom: -3px;
     left: 0;
     right: 0;
     height: 1px;
-    background: linear-gradient(90deg, transparent, #fff, transparent);
+    background: linear-gradient(90deg, transparent, #ffffff, transparent);
     opacity: 0.6;
+    pointer-events: none;
+}
+
+.header-brand-wrap {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Huy hiệu Đảng Búa Liềm SVG */
+.dang-crest-svg {
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+    transition: transform var(--duration-normal) var(--ease-smooth);
+    flex-shrink: 0;
+}
+
+.dang-crest-svg:hover {
+    transform: scale(1.05) rotate(2deg);
 }
 
 .brand-text h1 {
-    font-size: 1.28rem;
+    font-size: 1.3rem;
     font-weight: 800;
     margin: 0;
     text-transform: uppercase;
-    letter-spacing: 0.6px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
+    letter-spacing: 0.8px;
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.45);
+    line-height: 1.25;
 }
 
-.brand-text small {
-    font-size: 0.82rem;
-    color: var(--light-gold);
-    font-weight: 600;
-    letter-spacing: 0.3px;
+.brand-text .brand-motto {
+    font-size: 0.78rem;
+    color: var(--party-gold-200);
+    font-weight: 700;
+    letter-spacing: 0.6px;
     display: block;
-    margin-top: 2px;
+    margin-top: 3px;
+    text-transform: uppercase;
+}
+
+.brand-text .brand-sub {
+    font-size: 0.82rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+    letter-spacing: 0.2px;
+}
+
+/* Khối thông tin Cán bộ (Cadre Profile Badge) */
+.cadre-profile-badge {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(251, 191, 36, 0.35);
+    border-radius: var(--radius-lg);
+    padding: 0.45rem 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: all var(--duration-fast) var(--ease-smooth);
+}
+
+.cadre-profile-badge:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--party-gold-400);
+}
+
+.cadre-avatar-circle {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--party-gold-500) 0%, var(--party-gold-700) 100%);
+    color: var(--party-red-950);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.95rem;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+    flex-shrink: 0;
 }
 
 /* ==========================================================================
-   NAVIGATION BAR
+   NAVIGATION BAR (ĐỒNG BỘ ĐỎ SẪM UY NGHIÊM + ĐIỂM NHẤN HOÀNG KIM)
    ========================================================================== */
 .navbar-custom {
-    background: linear-gradient(180deg, var(--navy-surface) 0%, var(--navy-blue) 100%);
+    background: linear-gradient(180deg, var(--party-red-950) 0%, var(--party-red-900) 100%);
     box-shadow: var(--shadow-md);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 2px solid var(--party-gold-600);
+    padding: 0.25rem 1rem;
 }
 
 .navbar-custom .nav-link {
-    color: #cbd5e1;
-    font-weight: 500;
-    font-size: 0.92rem;
-    padding: 0.65rem 1.15rem;
-    border-radius: 6px;
-    transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #e2e8f0;
+    font-weight: 600;
+    font-size: 0.91rem;
+    padding: 0.65rem 1.1rem;
+    border-radius: var(--radius-md);
+    transition: all var(--duration-fast) var(--ease-smooth);
     display: inline-flex;
     align-items: center;
+    gap: 0.45rem;
+    position: relative;
 }
 
 .navbar-custom .nav-link:hover {
@@ -123,22 +253,23 @@ body {
 
 .navbar-custom .nav-link.active {
     color: #ffffff;
-    background: linear-gradient(135deg, var(--primary-red) 0%, #b91c1c 100%);
-    box-shadow: 0 2px 8px rgba(153, 27, 27, 0.4);
-    font-weight: 600;
+    background: linear-gradient(135deg, var(--party-red-700) 0%, var(--party-red-600) 100%);
+    border-bottom: 2.5px solid var(--party-gold-400);
+    box-shadow: 0 3px 10px rgba(185, 28, 28, 0.4);
+    font-weight: 700;
 }
 
 /* ==========================================================================
-   CARDS & DASHBOARD METRICS
+   THẺ THỐNG KÊ & CHỈ SỐ LÃNH ĐẠO (EXECUTIVE STAT CARDS)
    ========================================================================== */
 .stat-card {
-    background: #ffffff;
-    border-radius: 12px;
+    background: var(--surface-white);
+    border-radius: var(--radius-lg);
     padding: 1.35rem 1.25rem;
-    box-shadow: var(--shadow-md);
-    border: 1px solid rgba(226, 232, 240, 0.8);
-    border-left: 5px solid var(--navy-surface);
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--slate-200);
+    border-left: 5px solid var(--slate-700);
+    transition: all var(--duration-normal) var(--ease-smooth);
     position: relative;
     overflow: hidden;
 }
@@ -148,179 +279,439 @@ body {
     position: absolute;
     top: 0;
     right: 0;
-    width: 80px;
-    height: 80px;
-    background: radial-gradient(circle, rgba(226, 232, 240, 0.4) 0%, transparent 70%);
-    border-radius: 0 12px 0 0;
+    width: 70px;
+    height: 70px;
+    background: radial-gradient(circle, rgba(226, 232, 240, 0.45) 0%, transparent 70%);
+    border-radius: 0 var(--radius-lg) 0 0;
     pointer-events: none;
 }
 
 .stat-card:hover {
     transform: translateY(-3px);
-    box-shadow: var(--shadow-xl);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--slate-300);
 }
 
-.stat-card.red { border-left-color: var(--primary-red); }
-.stat-card.green { border-left-color: var(--success); }
-.stat-card.gold { border-left-color: var(--warning); }
-.stat-card.blue { border-left-color: var(--info); }
+.stat-card.red  { border-left-color: var(--party-red-700); }
+.stat-card.gold { border-left-color: var(--party-gold-500); }
+.stat-card.green{ border-left-color: var(--status-success); }
+.stat-card.blue { border-left-color: var(--status-info); }
 
 .stat-card h3 {
-    font-size: 2.1rem;
+    font-size: 2.15rem;
     font-weight: 800;
-    margin: 0.4rem 0 0.1rem 0;
+    margin: 0.35rem 0 0.15rem 0;
     color: var(--slate-900);
-    letter-spacing: -0.03em;
+    letter-spacing: -0.035em;
+    line-height: 1.15;
 }
 
-.stat-card span {
-    font-size: 0.82rem;
+.stat-card span.stat-label {
+    font-size: 0.8rem;
     color: var(--slate-600);
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.6px;
+    display: block;
 }
 
-/* Card tổng quát */
+.stat-card small.stat-desc {
+    font-size: 0.84rem;
+    color: var(--slate-500);
+    display: block;
+    margin-top: 0.25rem;
+}
+
+/* ==========================================================================
+   CARDS TỔNG QUÁT (PRO MAX CARD SYSTEM)
+   ========================================================================== */
 .card-custom {
-    background: #ffffff;
-    border-radius: 12px;
+    background: var(--surface-white);
+    border-radius: var(--radius-lg);
     border: 1px solid var(--slate-200);
-    box-shadow: var(--shadow-md);
-    transition: box-shadow 0.2s ease;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--duration-normal) var(--ease-smooth);
+    overflow: hidden;
 }
 
 .card-custom:hover {
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-md);
 }
 
 .card-custom .card-header {
-    background-color: #ffffff;
+    background-color: var(--surface-white);
     border-bottom: 1px solid var(--slate-200);
-    padding: 1.1rem 1.4rem;
+    padding: 1rem 1.4rem;
     font-weight: 700;
+    font-size: 1.02rem;
     color: var(--slate-900);
-    border-radius: 12px 12px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card-custom .card-header.header-dang {
+    background: linear-gradient(135deg, var(--party-red-900) 0%, var(--party-red-800) 100%);
+    color: #ffffff;
+    border-bottom: 2px solid var(--party-gold-500);
+}
+
+.card-custom .card-header.header-dang h5, 
+.card-custom .card-header.header-dang h4 {
+    color: #ffffff;
+    margin: 0;
 }
 
 /* ==========================================================================
-   TABLES
+   BẢNG DỮ LIỆU CHUẨN CƠ QUAN ĐẢNG (TABLE DESIGN SYSTEM)
    ========================================================================== */
-.table-custom {
-    background: #ffffff;
-    border-radius: 10px;
+.table-custom, .table-dang {
+    background: var(--surface-white);
+    border-radius: var(--radius-md);
     overflow: hidden;
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-xs);
     border: 1px solid var(--slate-200);
+    width: 100%;
 }
 
-.table-custom thead {
-    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+.table-custom thead, .table-dang thead {
+    background: linear-gradient(180deg, var(--slate-50) 0%, var(--slate-100) 100%);
     color: var(--slate-800);
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.6px;
     border-bottom: 2px solid var(--slate-200);
 }
 
-.table-custom th {
-    padding: 0.9rem 1rem;
+.table-custom th, .table-dang th {
+    padding: 0.95rem 1.1rem;
     font-weight: 700;
+    vertical-align: middle;
+    border: none;
 }
 
-.table-custom td {
-    padding: 0.9rem 1rem;
+.table-custom td, .table-dang td {
+    padding: 0.95rem 1.1rem;
     vertical-align: middle;
     font-size: 0.92rem;
-    border-bottom: 1px solid #f1f5f9;
+    border-top: 1px solid var(--slate-100);
+    color: var(--slate-700);
 }
 
-.table-custom tbody tr:hover {
-    background-color: #f8fafc;
+.table-custom tbody tr:hover, .table-dang tbody tr:hover {
+    background-color: rgba(248, 250, 252, 0.9);
 }
 
 /* ==========================================================================
-   BADGES & NHÃN PHÂN LOẠI
+   BADGES & NHÃN XẾP LOẠI CÁN BỘ (CHUẨN HƯỚNG DẪN 05-HD/TU & QUY ĐỊNH 39)
    ========================================================================== */
-.badge-vanban { background-color: #e0f2fe; color: #0284c7; border: 1px solid #bae6fd; font-weight: 600; padding: 0.35rem 0.65rem; border-radius: 6px; }
-.badge-hop { background-color: #fef3c7; color: #d97706; border: 1px solid #fde68a; font-weight: 600; padding: 0.35rem 0.65rem; border-radius: 6px; }
-.badge-congtac { background-color: #f3e8ff; color: #9333ea; border: 1px solid #e9d5ff; font-weight: 600; padding: 0.35rem 0.65rem; border-radius: 6px; }
-.badge-congso { background-color: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; font-weight: 600; padding: 0.35rem 0.65rem; border-radius: 6px; }
+.badge-status {
+    font-weight: 700;
+    padding: 0.38rem 0.72rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    letter-spacing: 0.3px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
 
-.badge-kho { background-color: #fee2e2; color: #dc2626; font-weight: 700; border: 1px solid #fecaca; }
-.badge-tb { background-color: #fef9c3; color: #ca8a04; font-weight: 600; border: 1px solid #fef08a; }
-.badge-de { background-color: #f1f5f9; color: #64748b; font-weight: 600; border: 1px solid #e2e8f0; }
+/* Hoàn thành Xuất sắc */
+.badge-status-completed, .badge-xuat-sac {
+    background-color: var(--status-success-bg);
+    color: var(--status-success);
+    border: 1px solid var(--status-success-border);
+}
 
-.badge-status-todo { background-color: #f1f5f9; color: #475569; }
-.badge-status-in_progress { background-color: #e0f2fe; color: #0369a1; }
-.badge-status-completed { background-color: #dcfce7; color: #15803d; }
-.badge-status-overdue { background-color: #fee2e2; color: #b91c1c; }
+/* Hoàn thành Tốt */
+.badge-status-in_progress, .badge-tot {
+    background-color: var(--status-info-bg);
+    color: var(--status-info);
+    border: 1px solid var(--status-info-border);
+}
+
+/* Hoàn thành / Chờ xử lý */
+.badge-status-todo, .badge-hoan-thanh {
+    background-color: var(--status-warning-bg);
+    color: var(--status-warning);
+    border: 1px solid var(--status-warning-border);
+}
+
+/* Chưa hoàn thành / Quá hạn */
+.badge-status-overdue, .badge-chua-hoan-thanh {
+    background-color: var(--status-danger-bg);
+    color: var(--status-danger);
+    border: 1px solid var(--status-danger-border);
+}
+
+/* Nhãn Văn bản MẬT (Nghị định 63/2026/NĐ-CP & NĐ 85/2016) */
+.badge-security-mat {
+    background: linear-gradient(135deg, var(--party-red-900) 0%, var(--party-red-700) 100%);
+    color: #ffffff;
+    font-weight: 800;
+    border: 1px solid var(--party-gold-500);
+    padding: 0.3rem 0.65rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.76rem;
+    letter-spacing: 0.5px;
+    box-shadow: 0 1px 3px rgba(185, 28, 28, 0.3);
+}
+
+.badge-security-thuong {
+    background-color: var(--slate-100);
+    color: var(--slate-700);
+    border: 1px solid var(--slate-200);
+    font-weight: 600;
+    padding: 0.3rem 0.65rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.76rem;
+}
+
+/* Cấp độ quản lý hành chính */
+.badge-org-level {
+    background: linear-gradient(135deg, var(--party-gold-100) 0%, var(--party-gold-50) 100%);
+    color: var(--party-gold-700);
+    border: 1px solid var(--party-gold-400);
+    font-weight: 800;
+    padding: 0.25rem 0.6rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+}
 
 /* ==========================================================================
-   BUTTONS & FORM CONTROLS
+   BUTTONS (HỆ THỐNG NÚT BẤM CHUẨN ĐẢNG & HIỆU ỨNG CAO CẤP)
    ========================================================================== */
 .btn-dang-primary {
-    background: linear-gradient(135deg, var(--primary-red) 0%, #b91c1c 100%);
-    color: #ffffff;
-    font-weight: 600;
-    border: none;
-    box-shadow: 0 2px 6px rgba(153, 27, 27, 0.3);
-    transition: all 0.2s;
-    border-radius: 6px;
+    background: linear-gradient(135deg, var(--party-red-800) 0%, var(--party-red-700) 50%, var(--party-red-600) 100%);
+    color: #ffffff !important;
+    font-weight: 700;
+    border: 1px solid rgba(251, 191, 36, 0.4);
+    box-shadow: 0 2px 6px rgba(153, 27, 27, 0.35);
+    transition: all var(--duration-fast) var(--ease-smooth);
+    border-radius: var(--radius-md);
+    padding: 0.55rem 1.15rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
 }
 
 .btn-dang-primary:hover {
-    background: linear-gradient(135deg, var(--dark-red) 0%, var(--primary-red) 100%);
+    background: linear-gradient(135deg, var(--party-red-900) 0%, var(--party-red-800) 100%);
+    color: #ffffff !important;
+    transform: translateY(-1.5px);
+    box-shadow: 0 4px 14px rgba(153, 27, 27, 0.45);
+    border-color: var(--party-gold-400);
+}
+
+.btn-dang-primary:active {
+    transform: scale(0.98);
+}
+
+.btn-dang-gold {
+    background: linear-gradient(135deg, var(--party-gold-400) 0%, var(--party-gold-500) 60%, var(--party-gold-600) 100%);
+    color: var(--party-red-950) !important;
+    font-weight: 800;
+    border: 1px solid var(--party-gold-200);
+    box-shadow: 0 2px 6px rgba(217, 119, 6, 0.35);
+    transition: all var(--duration-fast) var(--ease-smooth);
+    border-radius: var(--radius-md);
+    padding: 0.55rem 1.15rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+}
+
+.btn-dang-gold:hover {
+    background: linear-gradient(135deg, var(--party-gold-300) 0%, var(--party-gold-500) 100%);
+    color: var(--party-red-950) !important;
+    transform: translateY(-1.5px);
+    box-shadow: 0 4px 14px rgba(217, 119, 6, 0.45);
+}
+
+.btn-dang-outline {
+    background: transparent;
+    color: var(--party-red-700);
+    font-weight: 700;
+    border: 1.5px solid var(--party-red-700);
+    border-radius: var(--radius-md);
+    padding: 0.5rem 1.1rem;
+    transition: all var(--duration-fast) var(--ease-smooth);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.btn-dang-outline:hover {
+    background-color: var(--party-red-700);
     color: #ffffff;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(153, 27, 27, 0.4);
+    box-shadow: 0 3px 8px rgba(153, 27, 27, 0.25);
+}
+
+/* ==========================================================================
+   FORM CONTROLS (TƯƠNG TÁC FORM CHUẨN MỰC & TRÁNH LỖI NHẬP LIỆU)
+   ========================================================================== */
+.form-label {
+    font-weight: 600;
+    color: var(--slate-800);
+    font-size: 0.88rem;
+    margin-bottom: 0.35rem;
 }
 
 .form-control, .form-select {
-    border-radius: 8px;
-    border: 1px solid var(--slate-300);
-    padding: 0.65rem 0.9rem;
-    font-size: 0.93rem;
-    transition: all 0.15s ease-in-out;
+    border-radius: var(--radius-md);
+    border: 1.5px solid var(--slate-300);
+    padding: 0.65rem 0.95rem;
+    font-size: 0.92rem;
+    color: var(--slate-800);
+    background-color: var(--surface-white);
+    transition: all var(--duration-fast) var(--ease-smooth);
 }
 
 .form-control:focus, .form-select:focus {
-    border-color: var(--primary-red);
-    box-shadow: 0 0 0 3px rgba(153, 27, 27, 0.12);
+    border-color: var(--party-red-700);
+    box-shadow: 0 0 0 3px rgba(153, 27, 27, 0.14);
+    background-color: #ffffff;
+}
+
+/* ==========================================================================
+   BẢO MẬT & DẤU CHÌM (WATERMARK NĐ 63/2026/NĐ-CP & NĐ 85/2016)
+   ========================================================================== */
+.watermark-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9999;
+    background-image: repeating-linear-gradient(45deg, rgba(153, 27, 27, 0.02) 0, rgba(153, 27, 27, 0.02) 160px, transparent 160px, transparent 320px);
+}
+
+.watermark-text {
+    position: fixed;
+    bottom: 12px;
+    right: 15px;
+    font-size: 0.72rem;
+    color: rgba(153, 27, 27, 0.45);
+    font-family: monospace;
+    pointer-events: none;
+    z-index: 10000;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
+   LOGIN CARD & TRANG ĐĂNG NHẬP (CHUẨN TRANG TRỌNG ĐẢNG)
+   ========================================================================== */
+.login-body {
+    background: radial-gradient(circle at 50% 30%, #5c0f14 0%, #350608 60%, #1e0304 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.login-body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: radial-gradient(rgba(245, 158, 11, 0.12) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+}
+
+.login-card {
+    border-radius: var(--radius-xl);
+    border: 1px solid rgba(251, 191, 36, 0.4);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 35px rgba(153, 27, 27, 0.35);
+    overflow: hidden;
+    background: var(--surface-white);
+    max-width: 480px;
+    width: 100%;
+}
+
+.login-header-dang {
+    background: linear-gradient(135deg, var(--party-red-950) 0%, var(--party-red-900) 50%, var(--party-red-800) 100%);
+    border-bottom: 3.5px solid var(--party-gold-500);
+    position: relative;
+}
+
+.login-header-dang::after {
+    content: '';
+    position: absolute;
+    bottom: -3.5px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #ffffff, transparent);
+    opacity: 0.7;
+}
+
+/* Khung chọn nhanh Cán bộ kiểm thử (Quick Selector Helper) */
+.cadre-selector-box {
+    background: var(--slate-50);
+    border: 1px dashed var(--slate-300);
+    border-radius: var(--radius-md);
+    padding: 0.85rem;
+    margin-top: 1.25rem;
+}
+
+.cadre-btn-pill {
+    font-size: 0.78rem;
+    padding: 0.35rem 0.65rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--slate-300);
+    background: #ffffff;
+    color: var(--slate-800);
+    font-weight: 600;
+    transition: all var(--duration-fast) var(--ease-smooth);
+}
+
+.cadre-btn-pill:hover {
+    background: var(--party-gold-50);
+    border-color: var(--party-gold-500);
+    color: var(--party-gold-700);
 }
 
 /* ==========================================================================
    TIÊU THỨC VĂN BẢN QUYẾT ĐỊNH / BÁO CÁO (CHUẨN THỂ THỨC ĐẢNG)
    ========================================================================== */
 .decision-paper {
-    background: #ffffff;
-    padding: 3.5rem 3rem;
+    background: var(--surface-white);
+    padding: 3.5rem 3.2rem;
     box-shadow: var(--shadow-xl);
-    max-width: 860px;
+    max-width: 880px;
     margin: 1.5rem auto;
     font-family: 'Times New Roman', Times, serif;
     color: #000000;
-    line-height: 1.45;
-    border: 1px solid #e2e8f0;
+    line-height: 1.5;
+    border: 1px solid var(--slate-200);
 }
 
-.decision-paper h2, .decision-paper h3 {
+.decision-paper h2, .decision-paper h3, .decision-paper h4 {
     font-family: 'Times New Roman', Times, serif;
     font-weight: bold;
 }
 
-/* ==========================================================================
-   LOGIN CARD GLASSMORPHISM ACCENT
-   ========================================================================== */
-.login-card {
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+.decision-paper .quoc-hieu {
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 1.15rem;
+    letter-spacing: 0.5px;
 }
 
-.login-header-glow {
-    background: linear-gradient(135deg, var(--deep-red) 0%, var(--primary-red) 100%);
-    position: relative;
-    border-bottom: 3.5px solid var(--accent-gold);
+.decision-paper .tieu-ngu {
+    font-weight: bold;
+    font-size: 1rem;
+    border-bottom: 1.5px solid #000000;
+    display: inline-block;
+    padding-bottom: 2px;
 }

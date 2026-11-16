@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -26,37 +26,126 @@
     <div class="watermark-text" th:text="'BAN TỔ CHỨC TỈNH ỦY ĐẮK LẮK • ' + ${user != null ? user.fullName : 'CÁN BỘ'} + ' • ' + ${#dates.format(#dates.createNow(), 'yyyy-MM-dd HH:mm')}">BTCTU DAKLAK</div>
 
     <header class="dang-header py-2 px-4 d-flex align-items-center justify-content-between">
-        <div class="d-flex align-items-center">
-            <i class="fa-solid fa-star text-warning fa-2x me-3"></i>
+        <div class="header-brand-wrap">
+            <div class="d-inline-flex align-items-center gap-1 me-2">
+                <svg class="flag-icon-dang" viewBox="0 0 900 600" width="34" height="22" style="border-radius: 3px; box-shadow: 0 1px 3px rgba(0,0,0,0.5);" aria-label="Cờ Đảng Cộng sản Việt Nam"><rect width="900" height="600" fill="#da251d"/><path d="M 584.73 189.67 L 580.26 185.19 L 578.13 185.19 L 575.30 182.36 L 575.07 179.76 L 572.48 179.53 L 567.05 173.87 L 564.93 173.87 L 561.39 170.10 L 559.27 170.10 L 555.74 166.33 L 553.61 166.33 L 550.08 162.55 L 547.96 162.55 L 546.31 160.67 L 544.18 160.67 L 542.53 158.78 L 540.41 158.78 L 538.76 156.90 L 534.75 156.90 L 531.22 153.12 L 527.21 153.12 L 525.56 151.24 L 521.55 151.24 L 519.90 149.35 L 515.89 149.35 L 514.24 147.47 L 508.35 147.47 L 506.70 145.58 L 500.81 145.58 L 499.16 143.69 L 489.72 143.46 L 488.78 144.17 L 488.78 144.87 L 490.20 145.82 L 491.38 147.23 L 493.50 147.23 L 498.92 152.89 L 501.04 152.89 L 506.46 158.55 L 508.59 158.55 L 517.78 167.98 L 519.90 167.98 L 522.73 170.81 L 522.73 172.93 L 535.93 185.89 L 535.93 188.02 L 541.59 193.44 L 541.59 195.56 L 547.25 200.98 L 547.25 203.10 L 551.02 206.64 L 551.02 208.76 L 554.79 212.30 L 554.79 214.42 L 556.68 216.07 L 556.68 218.19 L 558.57 219.84 L 558.57 221.96 L 560.45 223.61 L 560.45 225.74 L 562.34 227.39 L 562.34 229.51 L 564.22 231.16 L 564.22 235.17 L 566.11 236.82 L 566.11 240.83 L 568.00 242.48 L 568.00 244.60 L 569.88 246.25 L 569.88 250.26 L 571.77 251.91 L 571.77 257.80 L 573.65 259.45 L 573.65 265.34 L 575.54 266.99 L 575.54 274.77 L 577.43 276.42 L 577.43 310.61 L 575.54 312.26 L 575.54 321.93 L 573.65 323.58 L 573.65 331.36 L 571.77 333.01 L 571.77 335.13 L 569.88 336.78 L 569.88 340.79 L 568.00 342.44 L 568.00 344.56 L 565.17 347.39 L 564.46 347.62 L 563.05 347.39 L 519.90 304.01 L 517.78 304.01 L 516.84 303.06 L 516.84 300.94 L 502.93 287.03 L 500.81 287.03 L 499.86 286.09 L 499.86 283.97 L 489.72 273.83 L 487.60 273.83 L 486.66 272.89 L 486.66 270.77 L 472.75 256.86 L 470.63 256.86 L 469.69 255.91 L 469.69 253.79 L 460.26 244.60 L 460.26 242.48 L 496.09 206.88 L 496.33 206.17 L 496.09 204.75 L 476.52 185.19 L 470.63 185.19 L 468.98 187.07 L 464.97 187.07 L 463.32 188.96 L 459.31 188.96 L 457.66 190.84 L 451.77 190.84 L 450.12 192.73 L 440.45 192.73 L 438.80 194.62 L 419.71 194.62 L 347.33 266.99 L 347.09 267.70 L 347.33 269.12 L 389.53 311.32 L 390.24 311.55 L 391.65 311.32 L 419.71 283.03 L 421.83 283.03 L 524.62 385.82 L 524.62 389.82 L 523.67 390.77 L 521.55 390.77 L 519.90 392.65 L 517.78 392.65 L 516.13 394.54 L 514.01 394.54 L 512.36 396.42 L 506.46 396.42 L 504.81 398.31 L 502.69 398.31 L 501.04 400.20 L 495.15 400.20 L 493.50 402.08 L 485.72 402.08 L 484.07 403.97 L 451.77 403.97 L 450.12 402.08 L 442.34 402.08 L 440.69 400.20 L 432.91 400.20 L 431.26 398.31 L 427.25 398.31 L 425.60 396.42 L 419.71 396.42 L 418.06 394.54 L 415.93 394.54 L 414.28 392.65 L 408.39 392.65 L 406.74 390.77 L 404.62 390.77 L 402.97 388.88 L 400.84 388.88 L 399.19 386.99 L 397.07 386.99 L 395.42 385.11 L 393.30 385.11 L 391.65 383.22 L 389.53 383.22 L 385.99 379.45 L 383.87 379.45 L 382.22 377.56 L 380.10 377.56 L 376.56 373.79 L 374.44 373.79 L 369.02 368.13 L 366.90 368.13 L 357.70 358.70 L 355.58 358.70 L 354.64 357.76 L 354.64 355.64 L 350.16 351.16 L 348.04 351.16 L 344.73 347.39 L 344.03 347.39 L 343.08 348.80 L 271.41 420.47 L 270.00 421.41 L 270.00 422.12 L 271.41 423.06 L 288.86 440.51 L 289.10 443.10 L 291.69 443.34 L 300.88 452.77 L 301.59 453.01 L 303.01 452.77 L 342.38 413.16 L 344.97 412.93 L 345.21 410.33 L 349.92 405.62 L 353.93 405.62 L 366.90 418.82 L 369.02 418.82 L 374.44 424.48 L 376.56 424.48 L 381.98 430.14 L 384.11 430.14 L 387.64 433.91 L 389.76 433.91 L 391.41 435.80 L 393.54 435.80 L 397.07 439.57 L 401.08 439.57 L 402.73 441.45 L 404.85 441.45 L 406.50 443.34 L 408.62 443.34 L 410.28 445.23 L 412.40 445.23 L 414.05 447.11 L 418.06 447.11 L 419.71 449.00 L 423.71 449.00 L 425.36 450.88 L 431.26 450.88 L 432.91 452.77 L 436.92 452.77 L 438.57 454.66 L 448.23 454.66 L 449.88 456.54 L 489.72 456.54 L 491.38 454.66 L 502.93 454.66 L 504.58 452.77 L 510.47 452.77 L 512.12 450.88 L 518.02 450.88 L 519.67 449.00 L 521.79 449.00 L 523.44 447.11 L 527.45 447.11 L 529.10 445.23 L 531.22 445.23 L 532.87 443.34 L 536.88 443.34 L 538.53 441.45 L 540.65 441.45 L 542.30 439.57 L 544.42 439.57 L 546.07 437.68 L 548.19 437.68 L 551.73 433.91 L 553.85 433.91 L 555.50 432.02 L 557.62 432.02 L 561.16 428.25 L 567.05 428.25 L 591.34 452.77 L 593.46 452.77 L 628.59 417.41 L 630.00 416.46 L 630.00 415.76 L 628.11 414.34 L 628.11 412.22 L 612.32 396.42 L 610.20 396.42 L 609.25 395.48 L 609.25 393.36 L 606.66 390.77 L 604.54 390.77 L 603.60 389.82 L 603.60 383.93 L 607.37 380.39 L 607.37 378.27 L 609.25 376.62 L 609.25 374.50 L 611.14 372.85 L 611.14 370.73 L 613.03 369.08 L 613.03 366.95 L 614.91 365.30 L 614.91 363.18 L 616.80 361.53 L 616.80 357.52 L 618.68 355.87 L 618.68 351.87 L 620.57 350.22 L 620.57 346.21 L 622.46 344.56 L 622.46 338.66 L 624.34 337.01 L 624.34 333.01 L 626.23 331.36 L 626.23 323.58 L 628.11 321.93 L 628.11 278.31 L 626.23 276.66 L 626.23 266.99 L 624.34 265.34 L 624.34 261.34 L 622.46 259.69 L 622.46 253.79 L 620.57 252.14 L 620.57 248.13 L 618.68 246.48 L 618.68 244.36 L 616.80 242.71 L 616.80 238.70 L 614.91 237.05 L 614.91 234.93 L 613.03 233.28 L 613.03 231.16 L 611.14 229.51 L 611.14 227.39 L 609.25 225.74 L 609.25 223.61 L 607.37 221.96 L 607.37 219.84 L 605.48 218.19 L 605.48 216.07 L 601.71 212.53 L 601.71 210.41 L 597.94 206.88 L 597.94 204.75 L 584.73 191.79 Z" fill="#ffff00"/></svg>
+                <svg class="flag-icon-vn" viewBox="0 0 900 600" width="34" height="22" style="border-radius: 3px; box-shadow: 0 1px 3px rgba(0,0,0,0.5);" aria-label="Cờ Tổ quốc Việt Nam"><rect width="900" height="600" fill="#da251d"/><polygon points="450.00,120.00 490.41,244.38 621.19,244.38 515.39,321.25 555.80,445.62 450.00,368.75 344.20,445.62 384.61,321.25 278.81,244.38 409.59,244.38" fill="#ffff00"/></svg>
+            </div>
             <div class="brand-text">
                 <h1>BAN TỔ CHỨC TỈNH ỦY ĐẮK LẮK</h1>
-                <small>HỆ THỐNG QUẢN LÝ VÀ ĐÁNH GIÁ KPI THEO QUY ĐỊNH 01-QĐ/BTCTU</small>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="brand-motto"><svg class="flag-icon-dang" viewBox="0 0 900 600" width="22" height="15" style="vertical-align: -2px; border-radius: 2px; margin-right: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.5); display: inline-block;" aria-label="Cờ Đảng Cộng sản Việt Nam (QĐ 99-QĐ/TW)"><rect width="900" height="600" fill="#da251d"/><path d="M 584.73 189.67 L 580.26 185.19 L 578.13 185.19 L 575.30 182.36 L 575.07 179.76 L 572.48 179.53 L 567.05 173.87 L 564.93 173.87 L 561.39 170.10 L 559.27 170.10 L 555.74 166.33 L 553.61 166.33 L 550.08 162.55 L 547.96 162.55 L 546.31 160.67 L 544.18 160.67 L 542.53 158.78 L 540.41 158.78 L 538.76 156.90 L 534.75 156.90 L 531.22 153.12 L 527.21 153.12 L 525.56 151.24 L 521.55 151.24 L 519.90 149.35 L 515.89 149.35 L 514.24 147.47 L 508.35 147.47 L 506.70 145.58 L 500.81 145.58 L 499.16 143.69 L 489.72 143.46 L 488.78 144.17 L 488.78 144.87 L 490.20 145.82 L 491.38 147.23 L 493.50 147.23 L 498.92 152.89 L 501.04 152.89 L 506.46 158.55 L 508.59 158.55 L 517.78 167.98 L 519.90 167.98 L 522.73 170.81 L 522.73 172.93 L 535.93 185.89 L 535.93 188.02 L 541.59 193.44 L 541.59 195.56 L 547.25 200.98 L 547.25 203.10 L 551.02 206.64 L 551.02 208.76 L 554.79 212.30 L 554.79 214.42 L 556.68 216.07 L 556.68 218.19 L 558.57 219.84 L 558.57 221.96 L 560.45 223.61 L 560.45 225.74 L 562.34 227.39 L 562.34 229.51 L 564.22 231.16 L 564.22 235.17 L 566.11 236.82 L 566.11 240.83 L 568.00 242.48 L 568.00 244.60 L 569.88 246.25 L 569.88 250.26 L 571.77 251.91 L 571.77 257.80 L 573.65 259.45 L 573.65 265.34 L 575.54 266.99 L 575.54 274.77 L 577.43 276.42 L 577.43 310.61 L 575.54 312.26 L 575.54 321.93 L 573.65 323.58 L 573.65 331.36 L 571.77 333.01 L 571.77 335.13 L 569.88 336.78 L 569.88 340.79 L 568.00 342.44 L 568.00 344.56 L 565.17 347.39 L 564.46 347.62 L 563.05 347.39 L 519.90 304.01 L 517.78 304.01 L 516.84 303.06 L 516.84 300.94 L 502.93 287.03 L 500.81 287.03 L 499.86 286.09 L 499.86 283.97 L 489.72 273.83 L 487.60 273.83 L 486.66 272.89 L 486.66 270.77 L 472.75 256.86 L 470.63 256.86 L 469.69 255.91 L 469.69 253.79 L 460.26 244.60 L 460.26 242.48 L 496.09 206.88 L 496.33 206.17 L 496.09 204.75 L 476.52 185.19 L 470.63 185.19 L 468.98 187.07 L 464.97 187.07 L 463.32 188.96 L 459.31 188.96 L 457.66 190.84 L 451.77 190.84 L 450.12 192.73 L 440.45 192.73 L 438.80 194.62 L 419.71 194.62 L 347.33 266.99 L 347.09 267.70 L 347.33 269.12 L 389.53 311.32 L 390.24 311.55 L 391.65 311.32 L 419.71 283.03 L 421.83 283.03 L 524.62 385.82 L 524.62 389.82 L 523.67 390.77 L 521.55 390.77 L 519.90 392.65 L 517.78 392.65 L 516.13 394.54 L 514.01 394.54 L 512.36 396.42 L 506.46 396.42 L 504.81 398.31 L 502.69 398.31 L 501.04 400.20 L 495.15 400.20 L 493.50 402.08 L 485.72 402.08 L 484.07 403.97 L 451.77 403.97 L 450.12 402.08 L 442.34 402.08 L 440.69 400.20 L 432.91 400.20 L 431.26 398.31 L 427.25 398.31 L 425.60 396.42 L 419.71 396.42 L 418.06 394.54 L 415.93 394.54 L 414.28 392.65 L 408.39 392.65 L 406.74 390.77 L 404.62 390.77 L 402.97 388.88 L 400.84 388.88 L 399.19 386.99 L 397.07 386.99 L 395.42 385.11 L 393.30 385.11 L 391.65 383.22 L 389.53 383.22 L 385.99 379.45 L 383.87 379.45 L 382.22 377.56 L 380.10 377.56 L 376.56 373.79 L 374.44 373.79 L 369.02 368.13 L 366.90 368.13 L 357.70 358.70 L 355.58 358.70 L 354.64 357.76 L 354.64 355.64 L 350.16 351.16 L 348.04 351.16 L 344.73 347.39 L 344.03 347.39 L 343.08 348.80 L 271.41 420.47 L 270.00 421.41 L 270.00 422.12 L 271.41 423.06 L 288.86 440.51 L 289.10 443.10 L 291.69 443.34 L 300.88 452.77 L 301.59 453.01 L 303.01 452.77 L 342.38 413.16 L 344.97 412.93 L 345.21 410.33 L 349.92 405.62 L 353.93 405.62 L 366.90 418.82 L 369.02 418.82 L 374.44 424.48 L 376.56 424.48 L 381.98 430.14 L 384.11 430.14 L 387.64 433.91 L 389.76 433.91 L 391.41 435.80 L 393.54 435.80 L 397.07 439.57 L 401.08 439.57 L 402.73 441.45 L 404.85 441.45 L 406.50 443.34 L 408.62 443.34 L 410.28 445.23 L 412.40 445.23 L 414.05 447.11 L 418.06 447.11 L 419.71 449.00 L 423.71 449.00 L 425.36 450.88 L 431.26 450.88 L 432.91 452.77 L 436.92 452.77 L 438.57 454.66 L 448.23 454.66 L 449.88 456.54 L 489.72 456.54 L 491.38 454.66 L 502.93 454.66 L 504.58 452.77 L 510.47 452.77 L 512.12 450.88 L 518.02 450.88 L 519.67 449.00 L 521.79 449.00 L 523.44 447.11 L 527.45 447.11 L 529.10 445.23 L 531.22 445.23 L 532.87 443.34 L 536.88 443.34 L 538.53 441.45 L 540.65 441.45 L 542.30 439.57 L 544.42 439.57 L 546.07 437.68 L 548.19 437.68 L 551.73 433.91 L 553.85 433.91 L 555.50 432.02 L 557.62 432.02 L 561.16 428.25 L 567.05 428.25 L 591.34 452.77 L 593.46 452.77 L 628.59 417.41 L 630.00 416.46 L 630.00 415.76 L 628.11 414.34 L 628.11 412.22 L 612.32 396.42 L 610.20 396.42 L 609.25 395.48 L 609.25 393.36 L 606.66 390.77 L 604.54 390.77 L 603.60 389.82 L 603.60 383.93 L 607.37 380.39 L 607.37 378.27 L 609.25 376.62 L 609.25 374.50 L 611.14 372.85 L 611.14 370.73 L 613.03 369.08 L 613.03 366.95 L 614.91 365.30 L 614.91 363.18 L 616.80 361.53 L 616.80 357.52 L 618.68 355.87 L 618.68 351.87 L 620.57 350.22 L 620.57 346.21 L 622.46 344.56 L 622.46 338.66 L 624.34 337.01 L 624.34 333.01 L 626.23 331.36 L 626.23 323.58 L 628.11 321.93 L 628.11 278.31 L 626.23 276.66 L 626.23 266.99 L 624.34 265.34 L 624.34 261.34 L 622.46 259.69 L 622.46 253.79 L 620.57 252.14 L 620.57 248.13 L 618.68 246.48 L 618.68 244.36 L 616.80 242.71 L 616.80 238.70 L 614.91 237.05 L 614.91 234.93 L 613.03 233.28 L 613.03 231.16 L 611.14 229.51 L 611.14 227.39 L 609.25 225.74 L 609.25 223.61 L 607.37 221.96 L 607.37 219.84 L 605.48 218.19 L 605.48 216.07 L 601.71 212.53 L 601.71 210.41 L 597.94 206.88 L 597.94 204.75 L 584.73 191.79 Z" fill="#ffff00"/></svg><svg class="flag-icon-vn" viewBox="0 0 900 600" width="22" height="15" style="vertical-align: -2px; border-radius: 2px; margin-right: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.5); display: inline-block;" aria-label="Cờ Tổ quốc Việt Nam"><rect width="900" height="600" fill="#da251d"/><polygon points="450.00,120.00 490.41,244.38 621.19,244.38 515.39,321.25 555.80,445.62 450.00,368.75 344.20,445.62 384.61,321.25 278.81,244.38 409.59,244.38" fill="#ffff00"/></svg>ĐẢNG CỘNG SẢN VIỆT NAM QUANG VINH MUÔN NĂM</span>
+                    <span class="text-white-50 d-none d-lg-inline">•</span>
+                    <span class="brand-sub d-none d-lg-inline">Hệ thống Đánh giá KPI & Quản lý Cán bộ theo Vị trí việc làm</span>
+                </div>
             </div>
         </div>
         <div class="d-flex align-items-center gap-3 text-white">
-            <div class="text-end d-none d-md-block">
-                <div class="fw-bold" th:text="${user != null ? user.fullName : 'Cán bộ'}">Đồng chí</div>
-                <small class="text-warning" th:text="${user != null ? user.roleDisplayName : ''}">Chuyên viên</small>
+            <div class="cadre-profile-badge d-none d-sm-flex">
+                <div class="cadre-avatar-circle" title="Cán bộ đảng viên">
+                    <i class="fa-solid fa-user-tie"></i>
+                </div>
+                <div class="text-start">
+                    <div class="fw-bold small text-white" th:text="'Đ/c ' + ${user != null ? user.fullName : 'Cán bộ'}">Đ/c Cán bộ</div>
+                    <div class="d-flex align-items-center gap-1">
+                        <span class="badge badge-org-level" th:text="'Cấp ' + ${user != null ? user.orgLevel : '5'}">Cấp 5</span>
+                        <small class="text-warning fw-semibold" th:text="${user != null ? user.roleDisplayName : ''}">Chuyên viên</small>
+                    </div>
+                </div>
             </div>
-            <a th:href="@{/logout}" class="btn btn-outline-light btn-sm"><i class="fa-solid fa-right-from-bracket me-1"></i> Đăng xuất</a>
+            <button class="btn btn-sm btn-dang-gold" data-bs-toggle="modal" data-bs-target="#profileModal" title="Xem hồ sơ cán bộ">
+                <i class="fa-solid fa-id-card me-1"></i> Hồ sơ
+            </button>
+            <a th:href="@{/logout}" class="btn btn-sm btn-outline-light" title="Đăng xuất khỏi hệ thống">
+                <i class="fa-solid fa-right-from-bracket me-1"></i> Đăng xuất
+            </a>
         </div>
     </header>
     <nav class="navbar navbar-expand-lg navbar-custom py-1 px-4 mb-4">
         <div class="container-fluid px-0">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1">
-                <li class="nav-item"><a class="nav-link" th:href="@{/}"><i class="fa-solid fa-chart-pie me-1"></i> Bàn làm việc (Dashboard)</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/tasks}"><i class="fa-solid fa-list-check me-1"></i> Nhiệm vụ công tác</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/job-catalog}"><i class="fa-solid fa-book-bookmark me-1"></i> Danh mục công việc BTCTU (49 Mã)</a></li>
-                <li class="nav-item"><a class="nav-link active" th:href="@{/evaluation}"><i class="fa-solid fa-file-signature me-1"></i> Tự chấm điểm KPI</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/approvals}"><i class="fa-solid fa-stamp me-1"></i> Đánh giá & Phê duyệt</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/org-chart}"><i class="fa-solid fa-sitemap me-1"></i> Cây sơ đồ Ban</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/reports}"><i class="fa-solid fa-file-invoice me-1"></i> Báo cáo & Quyết định</a></li>
-                <li class="nav-item"><a class="nav-link" href="/h2-console" target="_blank"><i class="fa-solid fa-database me-1"></i> Tra cứu SQL</a></li>
-            </ul>
+            <button class="navbar-toggler border-warning text-warning py-1 px-2" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar" aria-controls="mainNavbar" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/}">
+                            <i class="fa-solid fa-landmark me-1 text-warning"></i> Bàn làm việc (Dashboard)
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/tasks}">
+                            <i class="fa-solid fa-list-check me-1"></i> Nhiệm vụ công tác
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/job-catalog}">
+                            <i class="fa-solid fa-book-bookmark me-1"></i> Danh mục việc BTCTU (49 Mã)
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" th:href="@{/evaluation}">
+                            <i class="fa-solid fa-file-signature me-1"></i> Tự chấm điểm KPI
+                        </a>
+                    </li>
+                    
+                    <!-- 1. Đánh giá & Phê duyệt: CHỈ CẤP 1 - CẤP 4 (ẨN HOÀN TOÀN VỚI CẤP 5 CHUYÊN VIÊN, VĂN THƯ) -->
+                    <li class="nav-item" th:if="${canAccessApprovals}">
+                        <a class="nav-link" th:href="@{/approvals}">
+                            <i class="fa-solid fa-stamp me-1 text-warning"></i> Đánh giá & Phê duyệt
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/org-chart}">
+                            <i class="fa-solid fa-sitemap me-1"></i> Cây sơ đồ Ban
+                        </a>
+                    </li>
+                    
+                    <!-- 2. Báo cáo & Quyết định: CHỈ DÀNH CHO CÁN BỘ LÃNH ĐẠO (CẤP 1 - CẤP 4) -->
+                    <li class="nav-item" th:if="${canAccessReports}">
+                        <a class="nav-link" th:href="@{/reports}">
+                            <i class="fa-solid fa-file-invoice me-1"></i> Báo cáo & Quyết định
+                        </a>
+                    </li>
+                    
+                    <!-- 3. Nhật ký Kiểm toán: CẤP 1, 2 HOẶC ADMIN -->
+                    <li class="nav-item" th:if="${canAccessAuditLogs}">
+                        <a class="nav-link" th:href="@{/audit-logs}">
+                            <i class="fa-solid fa-shield-halved me-1 text-warning"></i> Nhật ký Kiểm toán
+                        </a>
+                    </li>
+                    
+                    <!-- 4. Quản trị CSDL: CHỈ DUY NHẤT ADMIN HỆ THỐNG -->
+                    <li class="nav-item" th:if="${canAccessDbAdmin}">
+                        <a class="nav-link" href="/db-admin">
+                            <i class="fa-solid fa-server me-1"></i> Quản trị CSDL
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
     
     <div class="container px-4">
+
+        <!-- THÔNG BÁO FLASH MESSAGE THÀNH CÔNG / THẤT BẠI -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show mb-4 border-0 shadow-sm rounded-4 d-flex align-items-center" role="alert">
+            <i class="fa-solid fa-circle-check text-success fs-4 me-3"></i>
+            <div class="flex-grow-1">
+                <div class="fw-bold">Thao tác thành công!</div>
+                <div class="small" th:text="${success}">Nội dung thông báo</div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show mb-4 border-0 shadow-sm rounded-4 d-flex align-items-center" role="alert">
+            <i class="fa-solid fa-triangle-exclamation text-danger fs-4 me-3"></i>
+            <div class="flex-grow-1">
+                <div class="fw-bold">Thông báo lỗi:</div>
+                <div class="small" th:text="${error}">Nội dung lỗi</div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
 
         <!-- THANH CHỌN KỲ ĐÁNH GIÁ (THÁNG, QUÝ IV, NĂM) THEO HD 05-HD/TU & QD 39-QD/TU -->
         <div class="card border-0 shadow-sm rounded-4 mb-4 bg-white">
@@ -215,5 +304,116 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- MODAL XEM & SỬA LÝ LỊCH CÁN BỘ + ĐỔI MẬT KHẨU (YÊU CẦU 2.1) -->
+    <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title fw-bold" id="profileModalLabel">
+                        <i class="fa-solid fa-user-tie me-2"></i> THÔNG TIN LÝ LỊCH CÁN BỘ & BẢO MẬT TÀI KHOẢN
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <!-- THÔNG BÁO FLASH MESSAGE NẾU CÓ -->
+                    <div th:if="${success}" class="alert alert-success py-2 small" th:text="${success}"></div>
+                    <div th:if="${error}" class="alert alert-danger py-2 small" th:text="${error}"></div>
+
+                    <ul class="nav nav-pills mb-4" id="profileTabs" role="tablist">
+                        <li class="nav-item">
+                            <button class="nav-link active" id="tab-info-btn" data-bs-toggle="pill" data-bs-target="#tab-info" type="button">
+                                <i class="fa-solid fa-address-card me-1"></i> Thông tin cá nhân
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <button class="nav-link" id="tab-password-btn" data-bs-toggle="pill" data-bs-target="#tab-password" type="button">
+                                <i class="fa-solid fa-key me-1"></i> Đổi mật khẩu
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="profileTabsContent">
+                        <!-- TAB 1: THÔNG TIN LÝ LỊCH -->
+                        <div class="tab-pane fade show active" id="tab-info" role="tabpanel">
+                            <form th:action="@{/profile/update}" method="post">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold">Tên đăng nhập:</label>
+                                        <input type="text" class="form-control form-control-sm bg-light" th:value="${user != null ? user.username : ''}" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold">Cấp bậc hành chính:</label>
+                                        <input type="text" class="form-control form-control-sm bg-light fw-bold text-danger" 
+                                               th:value="${user != null ? 'Cấp ' + user.orgLevel + ' (' + user.roleDisplayName + ')' : ''}" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold">Họ và tên cán bộ <span class="text-danger">*</span>:</label>
+                                        <input type="text" name="fullName" class="form-control form-control-sm" th:value="${user != null ? user.fullName : ''}" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold">Phòng chuyên môn:</label>
+                                        <input type="text" class="form-control form-control-sm bg-light" th:value="${user != null and user.department != null ? user.department.name : 'Chưa phân bổ'}" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold">Vị trí việc làm / Chức danh:</label>
+                                        <input type="text" class="form-control form-control-sm bg-light" th:value="${user != null and user.position != null ? user.position.title : 'Chuyên viên'}" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold">Người quản lý trực tiếp:</label>
+                                        <input type="text" class="form-control form-control-sm bg-light" th:value="${user != null and user.manager != null ? user.manager.fullName : 'Lãnh đạo Ban'}" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold">Hộp thư điện tử (Email):</label>
+                                        <input type="email" name="email" class="form-control form-control-sm" th:value="${user != null ? user.email : ''}">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold">Số điện thoại liên hệ:</label>
+                                        <input type="text" name="phone" class="form-control form-control-sm" th:value="${user != null ? user.phone : ''}">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold">Số thẻ Đảng viên:</label>
+                                        <input type="text" name="partyMemberCardId" class="form-control form-control-sm font-monospace" th:value="${user != null ? user.partyMemberCardId : ''}">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label small fw-bold">Số CCCD / Định danh:</label>
+                                        <input type="text" name="citizenId" class="form-control form-control-sm font-monospace" th:value="${user != null ? user.citizenId : ''}">
+                                    </div>
+                                </div>
+                                <div class="text-end mt-4">
+                                    <button type="button" class="btn btn-secondary btn-sm me-2" data-bs-dismiss="modal">Đóng</button>
+                                    <button type="submit" class="btn btn-danger btn-sm px-4 fw-bold"><i class="fa-solid fa-floppy-disk me-1"></i> Lưu thông tin</button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- TAB 2: ĐỔI MẬT KHẨU -->
+                        <div class="tab-pane fade" id="tab-password" role="tabpanel">
+                            <form th:action="@{/profile/change-password}" method="post">
+                                <div class="row g-3" style="max-width: 500px; margin: 0 auto;">
+                                    <div class="col-12">
+                                        <label class="form-label small fw-bold">Mật khẩu hiện tại <span class="text-danger">*</span>:</label>
+                                        <input type="password" name="oldPassword" class="form-control form-control-sm" required>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label small fw-bold">Mật khẩu mới (tối thiểu 6 ký tự) <span class="text-danger">*</span>:</label>
+                                        <input type="password" name="newPassword" class="form-control form-control-sm" required minlength="6">
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label small fw-bold">Xác nhận mật khẩu mới <span class="text-danger">*</span>:</label>
+                                        <input type="password" name="confirmNewPassword" class="form-control form-control-sm" required minlength="6">
+                                    </div>
+                                    <div class="col-12 text-center mt-4">
+                                        <button type="button" class="btn btn-secondary btn-sm me-2" data-bs-dismiss="modal">Hủy bỏ</button>
+                                        <button type="submit" class="btn btn-danger btn-sm px-4 fw-bold"><i class="fa-solid fa-key me-1"></i> Cập nhật mật khẩu</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/js/chatbot.js?v=2"></script>
 </body>
 </html>

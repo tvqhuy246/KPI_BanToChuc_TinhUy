@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trung tâm Quản trị Cơ sở dữ liệu | BTCTU Đắk Lắk</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #450a0a 0%, #5c0f14 50%, #7f1d1d 100%);
+            --accent-color: #3b82f6;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --card-bg: rgba(255, 255, 255, 0.95);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+            color: #334155;
+            min-height: 100vh;
+        }
+        .navbar-custom {
+            background: linear-gradient(135deg, #991b1b 0%, #7f1d1d 100%);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        .db-header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 2.5rem 0;
+            border-bottom: 3.5px solid #d97706; box-shadow: 0 4px 15px rgba(153, 27, 27, 0.25);
+            margin-bottom: 2rem;
+        }
+        .metric-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.25rem;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .metric-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .table-list-container {
+            max-height: 520px;
+            overflow-y: auto;
+        }
+        .table-item {
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        .table-item:hover, .table-item.active {
+            background-color: #eff6ff !important;
+            border-left-color: #2563eb;
+            color: #1d4ed8;
+            font-weight: 600;
+        }
+        .sql-editor {
+            font-family: 'Consolas', 'Courier New', monospace;
+            background-color: #0f172a;
+            color: #38bdf8;
+            border-radius: 8px;
+            padding: 1rem;
+            font-size: 0.95rem;
+            resize: vertical;
+        }
+        .sql-editor:focus {
+            background-color: #0f172a;
+            color: #38bdf8;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
+        }
+        .result-table {
+            font-size: 0.85rem;
+        }
+        .result-table thead {
+            background-color: #1e293b;
+            color: white;
+            position: sticky;
+            top: 0;
+        }
+        .badge-sql-type {
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand d-flex align-items-center" href="/dashboard">
+                <i class="fa-solid fa-shield-halved fa-2x me-2 text-warning"></i>
+                <div>
+                    <span class="fw-bold d-block" style="font-size: 1.1rem; line-height: 1.2;">BAN TỔ CHỨC TỈNH ỦY ĐẮK LẮK</span>
+                    <small class="text-white-50" style="font-size: 0.75rem;">Hệ thống Đánh giá KPI & Quản trị CSDL Doanh nghiệp</small>
+                </div>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item"><a class="nav-link" href="/dashboard"><i class="fa-solid fa-gauge me-1"></i> Tổng quan</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/tasks"><i class="fa-solid fa-list-check me-1"></i> Nhiệm vụ</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/job-catalog"><i class="fa-solid fa-book-bookmark me-1"></i> 49 Mã BTCTU</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/org-chart"><i class="fa-solid fa-sitemap me-1"></i> Sơ đồ tổ chức</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/db-admin"><i class="fa-solid fa-server me-1 text-warning"></i> Quản trị CSDL</a></li>
+                </ul>
+                <div class="d-flex align-items-center text-white">
+                    <div class="text-end me-3 d-none d-md-block">
+                        <div class="fw-bold" th:text="${user.fullName}">Lãnh đạo Ban</div>
+                        <small class="text-warning"><i class="fa-solid fa-shield me-1"></i>Quản trị CSDL</small>
+                    </div>
+                    <a href="/logout" class="btn btn-outline-light btn-sm rounded-pill px-3">
+                        <i class="fa-solid fa-right-from-bracket me-1"></i> Đăng xuất
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HEADER -->
+    <div class="db-header">
+        <div class="container-fluid px-4">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="badge bg-warning text-dark px-3 py-1 rounded-pill me-2 fw-bold">
+                            <i class="fa-solid fa-bolt me-1"></i> SQL ENTERPRISE ENGINE
+                        </span>
+                        <span class="text-white-50"><i class="fa-solid fa-circle-check text-success me-1"></i> Hệ thống sẵn sàng</span>
+                    </div>
+                    <h2 class="fw-bold mb-1">Trung tâm Quản trị Cơ sở dữ liệu Cấp Tỉnh</h2>
+                    <p class="text-white-50 mb-0">Giám sát cấu trúc bảng, truy vấn trực tiếp, tối ưu hóa chỉ mục hiệu năng cao</p>
+                </div>
+                <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                    <button class="btn btn-primary me-2" onclick="optimizeDb()">
+                        <i class="fa-solid fa-wand-magic-sparkles me-1"></i> Tối ưu hóa Index
+                    </button>
+                    <a href="/h2-console" target="_blank" class="btn btn-outline-light">
+                        <i class="fa-solid fa-arrow-up-right-from-square me-1"></i> Mở Console gốc
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN BODY -->
+    <div class="container-fluid px-4 pb-5">
+        <!-- STATS CARDS -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="metric-card d-flex align-items-center">
+                    <div class="rounded-circle p-3 bg-primary bg-opacity-10 text-primary me-3">
+                        <i class="fa-solid fa-table fa-2x"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Tổng số bảng dữ liệu</div>
+                        <div class="fs-4 fw-bold text-dark" th:text="${overview.totalTables}">18</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card d-flex align-items-center">
+                    <div class="rounded-circle p-3 bg-success bg-opacity-10 text-success me-3">
+                        <i class="fa-solid fa-database fa-2x"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Tổng số bản ghi (Rows)</div>
+                        <div class="fs-4 fw-bold text-dark" th:text="${overview.totalRows}">1,250</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card d-flex align-items-center">
+                    <div class="rounded-circle p-3 bg-warning bg-opacity-10 text-warning me-3">
+                        <i class="fa-solid fa-microchip fa-2x"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Hệ quản trị CSDL</div>
+                        <div class="fs-6 fw-bold text-dark" th:text="${overview.productName}">H2 Database</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="metric-card d-flex align-items-center">
+                    <div class="rounded-circle p-3 bg-danger bg-opacity-10 text-danger me-3">
+                        <i class="fa-solid fa-shield-halved fa-2x"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Trạng thái toàn vẹn</div>
+                        <div class="fs-6 fw-bold text-success"><i class="fa-solid fa-check-double me-1"></i>BẢO VỆ CHECK</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- SIDEBAR: TABLE LIST -->
+            <div class="col-lg-3">
+                <div class="card border-0 shadow-sm rounded-3">
+                    <div class="card-header bg-white border-bottom py-3">
+                        <h6 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-layer-group me-2 text-primary"></i>Danh mục Bảng SQL</h6>
+                    </div>
+                    <div class="card-body p-0 table-list-container">
+                        <div class="list-group list-group-flush" id="tableList">
+                            <th:block th:each="tbl : ${overview.tables}">
+                                <a href="javascript:void(0)" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center py-2 px-3 table-item"
+                                   th:data-table="${tbl.name}"
+                                   onclick="loadTableDetails(this.getAttribute('data-table'))">
+                                    <div>
+                                        <i class="fa-solid fa-table-cells text-muted me-2"></i>
+                                        <span th:text="${tbl.name}" class="font-monospace text-dark">users</span>
+                                    </div>
+                                    <span class="badge bg-secondary rounded-pill" th:text="${tbl.rowCount}">0</span>
+                                </a>
+                            </th:block>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MAIN WORKSPACE -->
+            <div class="col-lg-9">
+                <!-- QUERY CONSOLE -->
+                <div class="card border-0 shadow-sm rounded-3 mb-4">
+                    <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+                        <h6 class="fw-bold mb-0 text-dark"><i class="fa-solid fa-terminal me-2 text-success"></i>Bảng điều khiển Truy vấn SQL (Live Console)</h6>
+                        <div>
+                            <button class="btn btn-sm btn-outline-secondary me-1" onclick="loadSampleQuery('users')">SELECT users</button>
+                            <button class="btn btn-sm btn-outline-secondary me-1" onclick="loadSampleQuery('tasks')">SELECT tasks</button>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="loadSampleQuery('v_kpi')">SELECT views</button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <textarea id="sqlInput" class="form-control sql-editor mb-3" rows="4" placeholder="Nhập câu lệnh SQL (SELECT * FROM users WHERE status = 'ACTIVE' LIMIT 20;)...">SELECT id, username, full_name, role, org_level, status, created_at FROM users ORDER BY id DESC;</textarea>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="small text-muted"><i class="fa-solid fa-keyboard me-1"></i>Nhấn <strong>Thực thi SQL</strong> hoặc bấm vào bảng bên trái để truy vấn tự động.</span>
+                            <div>
+                                <button class="btn btn-light me-2" onclick="clearEditor()"><i class="fa-solid fa-trash me-1"></i> Xóa</button>
+                                <button class="btn btn-success fw-bold px-4" id="btnExecute" onclick="executeSql()">
+                                    <i class="fa-solid fa-play me-1"></i> Thực thi SQL
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RESULTS / SCHEMA DETAILS -->
+                <div class="card border-0 shadow-sm rounded-3">
+                    <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+                        <ul class="nav nav-pills card-header-pills" id="adminTabs" role="tablist">
+                            <li class="nav-item">
+                                <button class="nav-link active" id="tab-results-btn" data-bs-toggle="pill" data-bs-target="#tab-results" type="button">
+                                    <i class="fa-solid fa-square-poll-horizontal me-1"></i> Kết quả truy vấn
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <button class="nav-link" id="tab-schema-btn" data-bs-toggle="pill" data-bs-target="#tab-schema" type="button">
+                                    <i class="fa-solid fa-circle-nodes me-1"></i> Cấu trúc Schema & Cột
+                                </button>
+                            </li>
+                        </ul>
+                        <div id="queryMeta" class="text-muted small"></div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="tab-content" id="adminTabsContent">
+                            <!-- TAB RESULT -->
+                            <div class="tab-pane fade show active p-3" id="tab-results" role="tabpanel">
+                                <div id="resultContainer" class="table-responsive" style="max-height: 450px;">
+                                    <div class="text-center py-5 text-muted">
+                                        <i class="fa-solid fa-chart-simple fa-3x mb-3 text-secondary opacity-50"></i>
+                                        <p>Chưa có kết quả truy vấn. Hãy nhấn <strong>Thực thi SQL</strong> để xem dữ liệu.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- TAB SCHEMA -->
+                            <div class="tab-pane fade p-3" id="tab-schema" role="tabpanel">
+                                <div id="schemaContainer" class="table-responsive" style="max-height: 450px;">
+                                    <div class="text-center py-5 text-muted">
+                                        <i class="fa-solid fa-database fa-3x mb-3 text-secondary opacity-50"></i>
+                                        <p>Chọn một bảng từ danh mục bên trái để xem chi tiết các trường, kiểu dữ liệu và thuộc tính.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function loadSampleQuery(type) {
+            const editor = document.getElementById('sqlInput');
+            if (type === 'users') {
+                editor.value = "SELECT id, username, full_name, role, org_level, status, created_at FROM users ORDER BY id DESC;";
+            } else if (type === 'tasks') {
+                editor.value = "SELECT id, title, task_code, priority, status, progress, deadline FROM tasks ORDER BY id DESC LIMIT 20;";
+            } else if (type === 'v_kpi') {
+                editor.value = "SELECT * FROM v_department_kpi_summary;";
+            }
+            executeSql();
+        }
+
+        function clearEditor() {
+            document.getElementById('sqlInput').value = '';
+        }
+
+        function loadTableDetails(tableName) {
+            // Đặt active item
+            document.querySelectorAll('.table-item').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            // Nạp query nhanh
+            if (tableName.toUpperCase() === 'USERS') {
+    document.getElementById('sqlInput').value = `SELECT id, username, full_name, role, org_level, status, created_at FROM users ORDER BY id DESC;`;
+} else {
+    document.getElementById('sqlInput').value = `SELECT * FROM ${tableName} ORDER BY id DESC LIMIT 100;`;
+}
+            executeSql();
+
+            // Tải cấu trúc cột
+            fetch(`/db-admin/api/tables/${tableName}/schema`)
+                .then(res => res.json())
+                .then(cols => {
+                    let html = `<div class="mb-2"><strong>Bảng:</strong> <span class="badge bg-primary fs-6 font-monospace">${tableName}</span> (${cols.length} cột)</div>`;
+                    html += `<table class="table table-sm table-bordered table-striped font-monospace result-table">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Tên cột (Column)</th>
+                                        <th>Kiểu dữ liệu (Type)</th>
+                                        <th>Độ dài tối đa</th>
+                                        <th>Cho phép NULL</th>
+                                        <th>Giá trị mặc định</th>
+                                    </tr>
+                                </thead>
+                                <tbody>`;
+                    cols.forEach((col, idx) => {
+                        html += `<tr>
+                                    <td>${idx + 1}</td>
+                                    <td class="fw-bold text-primary">${col.name}</td>
+                                    <td><span class="badge bg-secondary badge-sql-type">${col.type}</span></td>
+                                    <td>${col.maxLength || '-'}</td>
+                                    <td>${col.nullable === 'YES' ? '<span class="text-success">YES</span>' : '<span class="text-danger fw-bold">NO</span>'}</td>
+                                    <td class="text-muted">${col.defaultValue || '-'}</td>
+                                 </tr>`;
+                    });
+                    html += `</tbody></table>`;
+                    document.getElementById('schemaContainer').innerHTML = html;
+                })
+                .catch(err => {
+                    document.getElementById('schemaContainer').innerHTML = `<div class="alert alert-danger">Lỗi tải schema: ${err}</div>`;
+                });
+        }
+
+        function executeSql() {
+            const query = document.getElementById('sqlInput').value;
+            const btn = document.getElementById('btnExecute');
+            const meta = document.getElementById('queryMeta');
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-1"></i> Đang chạy...`;
+            btn.disabled = true;
+
+            fetch('/db-admin/api/execute-sql', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ sql: query })
+            })
+            .then(res => res.json())
+            .then(res => {
+                btn.innerHTML = `<i class="fa-solid fa-play me-1"></i> Thực thi SQL`;
+                btn.disabled = false;
+
+                // Chuyển về tab kết quả
+                const tabTrigger = new bootstrap.Tab(document.getElementById('tab-results-btn'));
+                tabTrigger.show();
+
+                if (!res.success) {
+                    meta.innerHTML = `<span class="text-danger"><i class="fa-solid fa-circle-exclamation me-1"></i>Lỗi (${res.durationMs || 0}ms)</span>`;
+                    document.getElementById('resultContainer').innerHTML = `
+                        <div class="alert alert-danger font-monospace">
+                            <strong><i class="fa-solid fa-triangle-exclamation me-1"></i> SQL Error:</strong><br/>
+                            ${res.error || res.message}
+                        </div>`;
+                    return;
+                }
+
+                meta.innerHTML = `<span class="text-success"><i class="fa-solid fa-check-circle me-1"></i>Thành công (${res.durationMs}ms) - ${res.rowCount || res.affectedRows || 0} dòng</span>`;
+
+                if (res.type === 'UPDATE') {
+                    document.getElementById('resultContainer').innerHTML = `
+                        <div class="alert alert-success">
+                            <i class="fa-solid fa-circle-check me-2"></i> ${res.message} (Thời gian thực thi: ${res.durationMs}ms)
+                        </div>`;
+                } else {
+                    if (!res.data || res.data.length === 0) {
+                        document.getElementById('resultContainer').innerHTML = `
+                            <div class="alert alert-info">Truy vấn thực thi thành công nhưng không có bản ghi nào được trả về.</div>`;
+                        return;
+                    }
+
+                    const cols = res.columns;
+                    let tableHtml = `<table class="table table-sm table-bordered table-hover result-table font-monospace">
+                                        <thead><tr><th>#</th>`;
+                    cols.forEach(c => {
+                        tableHtml += `<th>${c}</th>`;
+                    });
+                    tableHtml += `</tr></thead><tbody>`;
+
+                    res.data.forEach((row, idx) => {
+                        tableHtml += `<tr><td class="text-muted">${idx + 1}</td>`;
+                        cols.forEach(c => {
+                            let val = row[c];
+                            if (val === null) val = '<span class="text-muted fst-italic">NULL</span>';
+                            tableHtml += `<td>${val}</td>`;
+                        });
+                        tableHtml += `</tr>`;
+                    });
+                    tableHtml += `</tbody></table>`;
+                    document.getElementById('resultContainer').innerHTML = tableHtml;
+                }
+            })
+            .catch(err => {
+                btn.innerHTML = `<i class="fa-solid fa-play me-1"></i> Thực thi SQL`;
+                btn.disabled = false;
+                document.getElementById('resultContainer').innerHTML = `<div class="alert alert-danger">Lỗi kết nối API: ${err}</div>`;
+            });
+        }
+
+        function optimizeDb() {
+            if (confirm("Đồng chí có chắc chắn muốn tiến hành tối ưu hóa bộ nhớ và đánh chỉ mục (Index Analyze)?")) {
+                fetch('/db-admin/api/optimize', { method: 'POST' })
+                    .then(res => res.json())
+                    .then(res => {
+                        alert(res.message);
+                    })
+                    .catch(err => alert("Lỗi: " + err));
+            }
+        }
+    </script>
+    <script src="/js/chatbot.js?v=2"></script>
+</body>
+</html>
