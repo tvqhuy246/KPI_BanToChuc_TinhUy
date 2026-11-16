@@ -19,6 +19,14 @@ public class WorkLog {
     @JoinColumn(name = "task_id")
     private Task task;
 
+    // Liên kết với danh mục công việc BTCTU
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "job_catalog_id")
+    private JobCatalog jobCatalog;
+
+    @Column(name = "is_over_standard")
+    private Boolean isOverStandard = false;
+
     @Column(name = "log_date", nullable = false)
     private LocalDate logDate;
 
@@ -28,16 +36,16 @@ public class WorkLog {
     @Column(name = "month_val", nullable = false)
     private String monthVal;
 
-    @Column(name = "work_content", nullable = false, columnDefinition = TEXT)
+    @Column(name = "work_content", nullable = false, columnDefinition = "TEXT")
     private String workContent;
 
     @Column(name = "hours_spent")
     private Double hoursSpent = 8.0;
 
     @Column(name = "result_status")
-    private String resultStatus = HOAN_THANH; // HOAN_THANH, DANG_XU_LY, VUONG_MAC
+    private String resultStatus = "HOAN_THANH"; // HOAN_THANH, DANG_XU_LY, VUONG_MAC
 
-    @Column(name = "supervisor_comment", columnDefinition = TEXT)
+    @Column(name = "supervisor_comment", columnDefinition = "TEXT")
     private String supervisorComment;
 
     @Column(name = "created_at")
@@ -51,6 +59,12 @@ public class WorkLog {
     public void setUser(User user) { this.user = user; }
     public Task getTask() { return task; }
     public void setTask(Task task) { this.task = task; }
+
+    public JobCatalog getJobCatalog() { return jobCatalog; }
+    public void setJobCatalog(JobCatalog jobCatalog) { this.jobCatalog = jobCatalog; }
+    public Boolean getIsOverStandard() { return isOverStandard; }
+    public void setIsOverStandard(Boolean isOverStandard) { this.isOverStandard = isOverStandard; }
+
     public LocalDate getLogDate() { return logDate; }
     public void setLogDate(LocalDate logDate) { this.logDate = logDate; }
     public Integer getWeekNumber() { return weekNumber; }

@@ -21,11 +21,11 @@ public class KpiCriteria {
     @Column(name = "max_score", nullable = false)
     private Double maxScore;
 
-    @Column(name = "scoring_guide", columnDefinition = TEXT)
+    @Column(name = "scoring_guide", columnDefinition = "TEXT")
     private String scoringGuide;
 
     @Column(name = "target_role")
-    private String targetRole = ALL;
+    private String targetRole = "ALL";
 
     public KpiCriteria() {}
 
@@ -45,8 +45,8 @@ public class KpiCriteria {
     public void setTargetRole(String targetRole) { this.targetRole = targetRole; }
 
     public String getGroupDisplayName() {
-        if (A.equals(groupType)) return Nhóm A: Tư tưởng, Đạo đức, Kỷ luật (20đ);
-        if (B.equals(groupType)) return Nhóm B: Chuyên môn vị trí (70đ);
-        return Nhóm C: Sáng kiến & Chuyển đổi số (10đ);
+        if ("A".equals(groupType)) return "Nhóm A: Tư tưởng, Đạo đức, Kỷ luật (20đ)";
+        if ("B".equals(groupType)) return "Nhóm B: Chuyên môn vị trí (70đ)";
+        return "Nhóm C: Sáng kiến & Chuyển đổi số (10đ)";
     }
 }

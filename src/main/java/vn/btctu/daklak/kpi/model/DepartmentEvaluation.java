@@ -40,7 +40,7 @@ public class DepartmentEvaluation {
 
     private String ranking; // XUAT_SAC, TOT, HOAN_THANH, KHONG_HOAN_THANH
 
-    @Column(name = "leader_feedback", columnDefinition = TEXT)
+    @Column(name = "leader_feedback", columnDefinition = "TEXT")
     private String leaderFeedback;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -82,9 +82,9 @@ public class DepartmentEvaluation {
     public void setEvaluatedAt(LocalDateTime evaluatedAt) { this.evaluatedAt = evaluatedAt; }
 
     public String getRankingDisplayName() {
-        if (XUAT_SAC.equals(ranking)) return Tập thể Xuất sắc;
-        if (TOT.equals(ranking)) return Tập thể Tốt;
-        if (HOAN_THANH.equals(ranking)) return Tập thể Hoàn thành nhiệm vụ;
-        return Tập thể Không hoàn thành;
+        if ("XUAT_SAC".equals(ranking)) return "Tập thể Xuất sắc";
+        if ("TOT".equals(ranking)) return "Tập thể Tốt";
+        if ("HOAN_THANH".equals(ranking)) return "Tập thể Hoàn thành nhiệm vụ";
+        return "Tập thể Không hoàn thành";
     }
 }

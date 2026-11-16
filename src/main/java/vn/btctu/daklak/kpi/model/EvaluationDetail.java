@@ -26,7 +26,7 @@ public class EvaluationDetail {
     @Column(name = "final_points")
     private Double finalPoints = 0.0;
 
-    @Column(columnDefinition = TEXT)
+    @Column(columnDefinition = "TEXT")
     private String notes;
 
     public EvaluationDetail() {}

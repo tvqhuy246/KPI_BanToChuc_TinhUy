@@ -24,11 +24,21 @@ public class AuditLog {
     @Column(name = "entity_id")
     private Long entityId;
 
-    @Column(columnDefinition = TEXT)
+    @Column(columnDefinition = "TEXT")
     private String details;
 
     @Column(name = "ip_address")
     private String ipAddress;
+
+    // === BẢO ĐẢM AN TOÀN HỆ THỐNG CẤP ĐỘ 3 & BẢO VỆ BÍ MẬT NHÀ NƯỚC (NĐ 63/2026 & NĐ 85/2016) ===
+    @Column(name = "user_agent")
+    private String userAgent;
+
+    @Column(name = "security_classification", length = 30)
+    private String securityClassification = "NOI_BO"; // TUYET_MAT, TOI_MAT, MAT, NOI_BO
+
+    @Column(name = "is_suspicious")
+    private Boolean isSuspicious = false;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -43,6 +53,19 @@ public class AuditLog {
         this.entityId = entityId;
         this.details = details;
         this.ipAddress = ipAddress;
+        this.createdAt = LocalDateTime.now();
+    }
+
+    public AuditLog(Long userId, String username, String action, String entityName, Long entityId, String details, String ipAddress, String userAgent, String securityClassification) {
+        this.userId = userId;
+        this.username = username;
+        this.action = action;
+        this.entityName = entityName;
+        this.entityId = entityId;
+        this.details = details;
+        this.ipAddress = ipAddress;
+        this.userAgent = userAgent;
+        this.securityClassification = securityClassification != null ? securityClassification : "NOI_BO";
         this.createdAt = LocalDateTime.now();
     }
 
@@ -62,6 +85,14 @@ public class AuditLog {
     public void setDetails(String details) { this.details = details; }
     public String getIpAddress() { return ipAddress; }
     public void setIpAddress(String ipAddress) { this.ipAddress = ipAddress; }
+
+    public String getUserAgent() { return userAgent; }
+    public void setUserAgent(String userAgent) { this.userAgent = userAgent; }
+    public String getSecurityClassification() { return securityClassification; }
+    public void setSecurityClassification(String securityClassification) { this.securityClassification = securityClassification; }
+    public Boolean getIsSuspicious() { return isSuspicious; }
+    public void setIsSuspicious(Boolean isSuspicious) { this.isSuspicious = isSuspicious; }
+
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }

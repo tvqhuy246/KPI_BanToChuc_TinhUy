@@ -14,7 +14,7 @@ public class Task {
     @Column(nullable = false)
     private String title;
 
-    @Column(columnDefinition = TEXT)
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -33,12 +33,35 @@ public class Task {
     @JoinColumn(name = "criteria_id")
     private KpiCriteria criteria;
 
+    // Liên kết với 49 mã công việc chuẩn BTCTU
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "job_catalog_id")
+    private JobCatalog jobCatalog;
+
+    // Sản phẩm đầu ra cụ thể
+    @Column(name = "deliverable_product", columnDefinition = "TEXT")
+    private String deliverableProduct;
+
+    // Bảo vệ bí mật nhà nước (NĐ 63/2026/NĐ-CP)
+    @Column(name = "is_confidential")
+    private Boolean isConfidential = false;
+
+    @Column(name = "security_level")
+    private String securityLevel = "THUONG"; // THUONG, MAT, TOI_MAT, TUYET_MAT
+
+    // Định mức giờ chuẩn và giờ thực tế
+    @Column(name = "standard_hours")
+    private Double standardHours = 8.0;
+
+    @Column(name = "actual_hours")
+    private Double actualHours = 0.0;
+
     // Phân loại: VAN_BAN, HOP, CONG_TAC, CONG_SO
     @Column(name = "task_type")
-    private String taskType = VAN_BAN;
+    private String taskType = "VAN_BAN";
 
     // Độ phức tạp: DE (x1.0), TRUNG_BINH (x1.2), KHO (x1.5), DAC_BIET (x2.0)
-    private String complexity = TRUNG_BINH;
+    private String complexity = "TRUNG_BINH";
 
     // Nghiệp vụ Họp: Xây dựng bài phát biểu / tham luận được duyệt
     @Column(name = "speech_approved")
@@ -48,14 +71,14 @@ public class Task {
     @Column(name = "field_trip_location")
     private String fieldTripLocation;
 
-    @Column(name = "field_trip_result", columnDefinition = TEXT)
+    @Column(name = "field_trip_result", columnDefinition = "TEXT")
     private String fieldTripResult;
 
     // Nghiệp vụ Văn hóa công sở, kỷ cương giờ giấc
-    @Column(name = "office_discipline_note", columnDefinition = TEXT)
+    @Column(name = "office_discipline_note", columnDefinition = "TEXT")
     private String officeDisciplineNote;
 
-    private String priority = NORMAL; // LOW, NORMAL, HIGH, URGENT
+    private String priority = "NORMAL"; // LOW, NORMAL, HIGH, URGENT
 
     @Column(name = "start_date", nullable = false)
     private LocalDate startDate;
@@ -68,9 +91,9 @@ public class Task {
 
     private Integer progress = 0; // 0 - 100%
 
-    private String status = IN_PROGRESS; // TODO, IN_PROGRESS, COMPLETED, OVERDUE
+    private String status = "IN_PROGRESS"; // TODO, IN_PROGRESS, COMPLETED, OVERDUE
 
-    @Column(name = "evidence_text", columnDefinition = TEXT)
+    @Column(name = "evidence_text", columnDefinition = "TEXT")
     private String evidenceText;
 
     private Double weight = 1.0;
@@ -94,6 +117,20 @@ public class Task {
     public void setDepartment(Department department) { this.department = department; }
     public KpiCriteria getCriteria() { return criteria; }
     public void setCriteria(KpiCriteria criteria) { this.criteria = criteria; }
+
+    public JobCatalog getJobCatalog() { return jobCatalog; }
+    public void setJobCatalog(JobCatalog jobCatalog) { this.jobCatalog = jobCatalog; }
+    public String getDeliverableProduct() { return deliverableProduct; }
+    public void setDeliverableProduct(String deliverableProduct) { this.deliverableProduct = deliverableProduct; }
+    public Boolean getIsConfidential() { return isConfidential; }
+    public void setIsConfidential(Boolean isConfidential) { this.isConfidential = isConfidential; }
+    public String getSecurityLevel() { return securityLevel; }
+    public void setSecurityLevel(String securityLevel) { this.securityLevel = securityLevel; }
+    public Double getStandardHours() { return standardHours; }
+    public void setStandardHours(Double standardHours) { this.standardHours = standardHours; }
+    public Double getActualHours() { return actualHours; }
+    public void setActualHours(Double actualHours) { this.actualHours = actualHours; }
+
     public String getTaskType() { return taskType; }
     public void setTaskType(String taskType) { this.taskType = taskType; }
     public String getComplexity() { return complexity; }
@@ -126,21 +163,25 @@ public class Task {
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
     public String getTaskTypeBadge() {
-        if (VAN_BAN.equals(taskType)) return Văn bản;
-        if (HOP.equals(taskType)) return Họp / Phát biểu;
-        if (CONG_TAC.equals(taskType)) return Đi công tác;
-        return Công sở / Kỷ cương;
+        if ("VAN_BAN".equals(taskType)) return "Văn bản";
+        if ("HOP".equals(taskType)) return "Họp / Phát biểu";
+        if ("CONG_TAC".equals(taskType)) return "Đi công tác";
+        return "Công sở / Kỷ cương";
     }
 
     public String getComplexityBadge() {
-        if (DE.equals(complexity)) return Dễ (x1.0);
-        if (TRUNG_BINH.equals(complexity)) return Trung bình (x1.2);
-        if (KHO.equals(complexity)) return Khó (x1.5);
-        return Đặc biệt (x2.0);
+        if ("DE".equals(complexity)) return "Dễ (x1.0)";
+        if ("TRUNG_BINH".equals(complexity)) return "Trung bình (x1.2)";
+        if ("KHO".equals(complexity)) return "Khó (x1.5)";
+        return "Đặc biệt (x2.0)";
     }
 
     public boolean isOverdue() {
-        if (COMPLETED.equals(status)) return false;
+        if ("COMPLETED".equals(status)) return false;
         return dueDate != null && dueDate.isBefore(LocalDate.now());
+    }
+
+    public boolean isOverStandardHours() {
+        return standardHours != null && actualHours != null && actualHours > standardHours;
     }
 }

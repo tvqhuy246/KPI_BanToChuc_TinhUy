@@ -22,6 +22,13 @@ public class User {
     private String email;
     private String phone;
 
+    // === CHUẨN TỪ ĐIỂN DỮ LIỆU DÙNG CHUNG PHIÊN BẢN 1.0 (QĐ 308-QĐ/VPTW & LUẬT DỮ LIỆU NĐ 165/2025) ===
+    @Column(name = "party_member_card_id", length = 50)
+    private String partyMemberCardId; // Số thẻ Đảng viên
+
+    @Column(name = "citizen_id", length = 20)
+    private String citizenId; // Số CCCD / Định danh công dân
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id")
     private Department department;
@@ -31,12 +38,22 @@ public class User {
     private Position position;
 
     @Column(nullable = false)
-    private String role; // ADMIN, LANH_DAO_BAN, TRUONG_PHONG, CHUYEN_VIEN
+    private String role; // ADMIN, LANH_DAO_BAN, PHO_TRUONG_BAN, TRUONG_PHONG, PHO_TRUONG_PHONG, CHUYEN_VIEN, VAN_THU
 
     private String status = "ACTIVE";
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "manager_id")
+    private User manager;
+
+    @Column(name = "org_level")
+    private Integer orgLevel = 5;
+
+    @Column(name = "assigned_scope", columnDefinition = "TEXT")
+    private String assignedScope;
 
     public User() {}
 
@@ -52,6 +69,12 @@ public class User {
     public void setEmail(String email) { this.email = email; }
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
+
+    public String getPartyMemberCardId() { return partyMemberCardId; }
+    public void setPartyMemberCardId(String partyMemberCardId) { this.partyMemberCardId = partyMemberCardId; }
+    public String getCitizenId() { return citizenId; }
+    public void setCitizenId(String citizenId) { this.citizenId = citizenId; }
+
     public Department getDepartment() { return department; }
     public void setDepartment(Department department) { this.department = department; }
     public Position getPosition() { return position; }
@@ -63,15 +86,24 @@ public class User {
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 
-    
+    public User getManager() { return manager; }
+    public void setManager(User manager) { this.manager = manager; }
+    public Integer getOrgLevel() { return orgLevel; }
+    public void setOrgLevel(Integer orgLevel) { this.orgLevel = orgLevel; }
+    public String getAssignedScope() { return assignedScope; }
+    public void setAssignedScope(String assignedScope) { this.assignedScope = assignedScope; }
+
     public String getRoleDisplayName() {
-        return getRoleBadge();
+        if ("LANH_DAO_BAN".equals(role)) return "Trưởng ban";
+        if ("PHO_TRUONG_BAN".equals(role)) return "Phó Trưởng ban";
+        if ("TRUONG_PHONG".equals(role)) return "Trưởng phòng";
+        if ("PHO_TRUONG_PHONG".equals(role)) return "Phó Trưởng phòng";
+        if ("VAN_THU".equals(role)) return "Văn thư";
+        if ("ADMIN".equals(role)) return "Quản trị viên";
+        return "Chuyên viên";
     }
 
     public String getRoleBadge() {
-        if ("ADMIN".equals(role)) return "Quản trị hệ thống";
-        if ("LANH_DAO_BAN".equals(role)) return "Lãnh đạo Ban";
-        if ("TRUONG_PHONG".equals(role)) return "Trưởng phòng";
-        return "Chuyên viên";
+        return getRoleDisplayName();
     }
 }

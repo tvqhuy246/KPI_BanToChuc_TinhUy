@@ -15,8 +15,12 @@ public class Position {
     @Column(nullable = false)
     private String title;
 
-    @Column(name = "job_description", columnDefinition = TEXT)
+    @Column(name = "job_description", columnDefinition = "TEXT")
     private String jobDescription;
+
+    // === CHUẨN TỪ ĐIỂN DỮ LIỆU DÙNG CHUNG PHIÊN BẢN 1.0 (QĐ 308-QĐ/VPTW) ===
+    @Column(name = "job_position_code", length = 50)
+    private String jobPositionCode; // Mã định danh vị trí việc làm chuẩn hóa Đảng
 
     public Position() {}
 
@@ -28,4 +32,6 @@ public class Position {
     public void setTitle(String title) { this.title = title; }
     public String getJobDescription() { return jobDescription; }
     public void setJobDescription(String jobDescription) { this.jobDescription = jobDescription; }
+    public String getJobPositionCode() { return jobPositionCode; }
+    public void setJobPositionCode(String jobPositionCode) { this.jobPositionCode = jobPositionCode; }
 }
