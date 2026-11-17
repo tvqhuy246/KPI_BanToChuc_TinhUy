@@ -12,7 +12,12 @@ public class AuditLogService {
     private AuditLogRepository auditLogRepo;
 
     public void log(Long userId, String username, String action, String entityName, Long entityId, String details, String ip) {
-        AuditLog al = new AuditLog(userId, username, action, entityName, entityId, details, ip != null ? ip : 127.0.0.1);
+        AuditLog al = new AuditLog(userId, username, action, entityName, entityId, details, ip != null ? ip : "127.0.0.1");
+        auditLogRepo.save(al);
+    }
+
+    public void logSecurity(Long userId, String username, String action, String entityName, Long entityId, String details, String ip, String userAgent, String securityLevel) {
+        AuditLog al = new AuditLog(userId, username, action, entityName, entityId, details, ip != null ? ip : "127.0.0.1", userAgent, securityLevel);
         auditLogRepo.save(al);
     }
 
