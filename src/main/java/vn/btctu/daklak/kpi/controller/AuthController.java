@@ -63,12 +63,8 @@ public class AuthController {
         return "redirect:/login?error=true";
     }
 
-    /**
-     * Màn hình đăng ký: Chỉ hiển thị các phòng chuyên môn và vị trí Cấp 5 thấp nhất (Chuyên viên, Văn thư)
-     */
     @GetMapping("/register")
     public String registerPage(Model model) {
-        // Chỉ lấy 4 phòng chuyên môn, loại trừ phòng Lãnh đạo Ban (ID=1)
         List<Department> allDepts = deptRepo.findAll();
         List<Department> filteredDepts = new ArrayList<>();
         for (Department d : allDepts) {
@@ -78,7 +74,6 @@ public class AuthController {
         }
         model.addAttribute("departments", filteredDepts);
 
-        // Chỉ hiển thị các vị trí việc làm Cấp 5 (Chuyên viên, Văn thư), tuyệt đối không hiển thị Trưởng ban, Phó ban, Trưởng phòng, Phó phòng
         List<Position> allPositions = posRepo.findAll();
         List<Position> lowestPositions = new ArrayList<>();
         for (Position p : allPositions) {
@@ -115,7 +110,6 @@ public class AuthController {
         }
 
         try {
-            // UserService khóa cứng việc tạo tài khoản ở Cấp 5 (Chuyên viên / Văn thư)
             User newUser = userService.registerUser(username, password, fullName, departmentId, positionId, email, phone, partyMemberCardId, citizenId);
             auditLogService.log(newUser.getId(), newUser.getUsername(), "REGISTER", "users", newUser.getId(), "Đăng ký tài khoản Chuyên viên mới (Cấp 5)", request.getRemoteAddr());
             return "redirect:/login?success=true";
@@ -123,6 +117,63 @@ public class AuthController {
             redirectAttrs.addFlashAttribute("error", "Có lỗi xảy ra trong quá trình đăng ký: " + e.getMessage());
             return "redirect:/register";
         }
+    }
+
+    @PostMapping("/profile/update")
+    public String updateProfile(@RequestParam("fullName") String fullName,
+                                @RequestParam(value = "email", required = false) String email,
+                                @RequestParam(value = "phone", required = false) String phone,
+                                @RequestParam(value = "partyMemberCardId", required = false) String partyMemberCardId,
+                                @RequestParam(value = "citizenId", required = false) String citizenId,
+                                HttpSession session,
+                                RedirectAttributes redirectAttrs,
+                                HttpServletRequest request) {
+        User currentUser = (User) session.getAttribute("CURRENT_USER");
+        if (currentUser == null) return "redirect:/login";
+
+        boolean updated = userService.updateProfile(currentUser.getId(), fullName, email, phone, partyMemberCardId, citizenId);
+        if (updated) {
+            userService.findById(currentUser.getId()).ifPresent(u -> session.setAttribute("CURRENT_USER", u));
+            auditLogService.log(currentUser.getId(), currentUser.getUsername(), "UPDATE_PROFILE", "users", currentUser.getId(), "Cập nhật thông tin lý lịch cán bộ", request.getRemoteAddr());
+            redirectAttrs.addFlashAttribute("success", "Cập nhật thông tin lý lịch cán bộ thành công!");
+        } else {
+            redirectAttrs.addFlashAttribute("error", "Không thể cập nhật hồ sơ cá nhân!");
+        }
+        String referer = request.getHeader("Referer");
+        return "redirect:" + (referer != null ? referer : "/");
+    }
+
+    @PostMapping("/profile/change-password")
+    public String changePassword(@RequestParam("oldPassword") String oldPassword,
+                                 @RequestParam("newPassword") String newPassword,
+                                 @RequestParam("confirmNewPassword") String confirmNewPassword,
+                                 HttpSession session,
+                                 RedirectAttributes redirectAttrs,
+                                 HttpServletRequest request) {
+        User currentUser = (User) session.getAttribute("CURRENT_USER");
+        if (currentUser == null) return "redirect:/login";
+
+        if (!newPassword.equals(confirmNewPassword)) {
+            redirectAttrs.addFlashAttribute("error", "Mật khẩu mới xác nhận không khớp!");
+            String referer = request.getHeader("Referer");
+            return "redirect:" + (referer != null ? referer : "/");
+        }
+
+        if (newPassword.length() < 6) {
+            redirectAttrs.addFlashAttribute("error", "Mật khẩu mới phải có tối thiểu 6 ký tự!");
+            String referer = request.getHeader("Referer");
+            return "redirect:" + (referer != null ? referer : "/");
+        }
+
+        boolean success = userService.changePassword(currentUser.getId(), oldPassword, newPassword);
+        if (success) {
+            auditLogService.log(currentUser.getId(), currentUser.getUsername(), "CHANGE_PASSWORD", "users", currentUser.getId(), "Đổi mật khẩu tài khoản thành công", request.getRemoteAddr());
+            redirectAttrs.addFlashAttribute("success", "Đổi mật khẩu tài khoản thành công!");
+        } else {
+            redirectAttrs.addFlashAttribute("error", "Mật khẩu hiện tại không chính xác!");
+        }
+        String referer = request.getHeader("Referer");
+        return "redirect:" + (referer != null ? referer : "/");
     }
 
     @GetMapping("/logout")
