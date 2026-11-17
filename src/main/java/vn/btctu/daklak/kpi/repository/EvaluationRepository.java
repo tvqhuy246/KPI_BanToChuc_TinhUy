@@ -10,11 +10,19 @@ import java.util.Optional;
 
 @Repository
 public interface EvaluationRepository extends JpaRepository<Evaluation, Long> {
-    List<Evaluation> findByUserIdOrderByEvaluatedAtDesc(Long userId);
-    List<Evaluation> findByDepartmentIdAndPeriodValue(Long deptId, String periodValue);
-    List<Evaluation> findByPeriodValue(String periodValue);
     Optional<Evaluation> findByUserIdAndPeriodValue(Long userId, String periodValue);
+    List<Evaluation> findByDepartmentIdAndPeriodValue(Long departmentId, String periodValue);
+    List<Evaluation> findByPeriodValue(String periodValue);
+    List<Evaluation> findByUserId(Long userId);
 
-    @Query(SELECT AVG(e.finalScore) FROM Evaluation e WHERE e.periodValue = :period AND e.status = 'APPROVED')
-    Double getAverageScoreByPeriod(@Param(period) String period);
+    @Query("SELECT AVG(e.finalScore) FROM Evaluation e WHERE e.periodValue = :period AND e.status = 'APPROVED'")
+    Double getAverageScoreByPeriod(@Param("period") String period);
+
+    // Smart Routing queries:
+    List<Evaluation> findByCurrentApproverIdOrderByEvaluatedAtDesc(Long approverId);
+    List<Evaluation> findByCurrentApproverIdAndStatusNot(Long approverId, String status);
+    List<Evaluation> findByStatusNotOrderByEvaluatedAtDesc(String status);
+    List<Evaluation> findByDepartmentIdAndStatusNotOrderByEvaluatedAtDesc(Long departmentId, String status);
+    List<Evaluation> findByStatusInOrderByEvaluatedAtDesc(List<String> statuses);
+    List<Evaluation> findByDepartmentIdAndStatusInOrderByEvaluatedAtDesc(Long departmentId, List<String> statuses);
 }
