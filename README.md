@@ -68,4 +68,61 @@ Phần mềm thiết lập các nhóm vai trò nghiệp vụ phản ánh đúng 
 * **Giải pháp An toàn dữ liệu:** Mật mã hóa khóa an toàn, mã băm toàn vẹn SHA-256, Audit Trail Logging
 
 ---
+
+## V. TRẢI NGHIỆM TRỰC TUYẾN & TRIỂN KHAI ĐÁM MÂY (DEMO)
+
+Nhằm phục vụ công tác nghiệm thu, trải nghiệm và đánh giá nhanh các tính năng mà không yêu cầu máy chủ cục bộ phải mở liên tục, hệ thống đã được chuẩn hóa theo kiến trúc Cloud-Native:
+
+* **Trải nghiệm trực tuyến (Cloud Demo):** Hệ thống sẵn sàng vận hành trên nền tảng đám mây (Cloud Web Service) thông qua liên kết kho mã nguồn tự động.
+* **Tự động triển khai (CI/CD Ready):** Dự án tích hợp sẵn tệp cấu hình `Dockerfile` và `render.yaml`, hỗ trợ triển khai tức thì (1-Click Deployment) lên các nền tảng đám mây chuẩn Container (Render, Railway, Docker Engine). Khi kho mã nguồn cập nhật, quy trình build tự động sẽ tái thiết lập môi trường mới nhất.
+
+> [!NOTE]
+> Thông tin tài khoản trải nghiệm thử nghiệm phục vụ công tác đánh giá chuyên môn được phân cấp và bàn giao nội bộ theo đúng nguyên tắc bảo đảm an toàn thông tin.
+
+---
+
+## VI. HƯỚNG DẪN CÀI ĐẶT & KHỞI CHẠY TẠI MÔI TRƯỜNG NỘI BỘ (LOCAL)
+
+### 1. Yêu cầu môi trường
+* **Hệ điều hành:** Windows / Linux / macOS
+* **Java Development Kit:** Java 21 LTS trở lên
+* **Công cụ đóng gói:** Apache Maven 3.8+ (hoặc môi trường Docker)
+
+### 2. Các phương thức khởi chạy
+
+#### Cách 1: Sử dụng kịch bản tự động (Khuyên dùng trên Windows)
+Thực hiện nhấp đúp hoặc chạy tệp lệnh trong thư mục gốc dự án:
+```cmd
+chay_he_thong.bat
+```
+*Kịch bản sẽ tự động kiểm tra biến môi trường Java, biên dịch mã nguồn và khởi động dịch vụ.*
+
+#### Cách 2: Biên dịch và chạy thủ công bằng Maven / Java CLI
+```bash
+# 1. Tải kho mã nguồn
+git clone -b qhuy https://github.com/tvqhuy246/KPI_BanToChuc_TinhUy.git
+cd KPI_BanToChuc_TinhUy
+
+# 2. Đóng gói ứng dụng (bỏ qua kiểm thử tự động)
+mvn clean package -DskipTests
+
+# 3. Khởi chạy ứng dụng
+java -jar target/kpi-btctu-daklak-1.0.0.jar
+```
+
+#### Cách 3: Chạy nhanh bằng Docker (Không cần cài đặt Java/Maven)
+```bash
+# 1. Đóng gói Container Image
+docker build -t kpi-btctu-daklak .
+
+# 2. Khởi chạy Container dịch vụ
+docker run -d -p 8080:8080 --name kpi-app kpi-btctu-daklak
+```
+
+### 3. Truy cập hệ thống
+Sau khi khởi động thành công, mở trình duyệt web và truy cập theo địa chỉ:
+* **Giao diện làm việc:** `http://localhost:8080` (hoặc cổng dịch vụ được cấu hình)
+* **Trang đăng nhập:** Tự động điều hướng đến màn hình xác thực người dùng.
+
+---
 *Tài liệu kỹ thuật hệ thống phần mềm — Thực hiện: **Trần Võ Quang Huy***
